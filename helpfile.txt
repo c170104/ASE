@@ -31,4 +31,63 @@
         - create a Class Model with admin.ModelAdmin in admin.py
         - ref to https://docs.djangoproject.com/en/2.1/ref/contrib/admin/#modeladmin-objects
         - register the model either using @admin.register(Class) wrapper or admin.site.register(Class, ClassModel)
-            - E.g admin.site.register(Test, TestModel)
+            -> E.g admin.site.register(Test, TestModel)
+
+4) Git
+    4.1 Clone
+        - git clone [some_repo.git]
+            -> does a copy of the repository into your current directory
+
+    4.2 Branch
+        - A branch is used to isolate development work without affecting other branches
+        - It create a copy where you can experiment your stuff
+        - It is to prevent mishaps (accidentally changing a code)
+        - Once you're satisfied with your changes, you can submit a pull request
+        - for more https://help.github.com/articles/about-branches/
+
+    4.3 Pull request
+        - A Pull request is to inform others about changes you have pushed to a branch
+        - Once you have commit your changes into the branch, you can submit a pull request
+        from the web (github.com), to merge your code with another branch
+        - for more https://help.github.com/articles/about-pull-requests/
+    
+    4.4 Commit
+        - git commit -m "some commit message"
+        - Commit is to save changes
+        - before commiting, remember to add the files you have changed
+
+    4.5 Add files
+        - git add [file1] [file2] ..
+            -> to add the file that you want to commit to the branch
+        - git add *
+            -> a faster way to add all files that have changes
+        - git status
+            -> use git status to check the current status of your commit. Green means
+        file added, red means otherwise.
+
+    4.6 Push
+        - git push
+            -> to push the commited changes onto the repository (master)
+        - git push origin [branch_name]
+            -> to push the commited changes onto the branch
+
+    4.6 Checkout
+        - git branch
+            -> allows you to see the branches you have
+        - git checkout -b [branch_name]
+            -> creates a new branch with branch_name
+        - git checkout [branch_name]
+            -> change to working branch branch_name
+    
+    4.7 Example of normal workflow
+        - git clone https://github.com/ibenrawkss/ASE.git
+        - git checkout -b newbranch
+        - git checkout newbranch
+        - Make some changes
+        - git add *
+        - git commit -m "Make some changes"
+        - git push origin newbranch
+        - Repeat process till feature or branch goal is met
+        - Do a pull request
+        - Verify changes and commits (Maintainer job)
+        - Merge branch
