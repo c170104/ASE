@@ -1,37 +1,42 @@
-Introduction
+# EduOne
+
+CZ3002 Advance Software Engineering project source code
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install [pipenv](https://github.com/pypa/pipenv).
+
+```bash
+pip install pipenv
+```
+
+Clone or download the [repository](https://github.com/ibenrawkss/ASE).
+
+```bash
+git clone https://github.com/ibenrawkss/ASE
+```
+
+Change directory into the folder ASE.
+
+```bash
+cd ASE
+```
+
+Use pipenv to install the packages that resides in the Pipfile.
+
+```bash
+pipenv install
+```
+
+## Starting the server (Developer mode)
+
+To run the server, enter:
+
+```bash
+python manage.py runserver [ip-address]:[port]
+```
 
 
--------Developers Note--------
-1) Server
-    1.1 To Start Server, run command:
-        - python manage.py runserver ip-address-to-run:port
+## License
 
-2) Database:
-    2.1 To create/update table, edit models.py
-        - Class = Table in database
-        - Class attributes = attributes in database
-        - FieldType and Field option can be found on https://docs.djangoproject.com/en/2.1/ref/models/fields/
-    
-    2.2 To update changes on sqlite3, run commands:
-        - python manage.py makemigrations
-        - python manage.py migrate
-
-    2.3 To see migration in terms of SQL queries, run command:
-        - python manage.py sqlmigrate [application_name] [migration_number]
-        - E.g My application = main, migration number = 0002,
-            -> python manage.py sqlmigrate main 0001
-
-3) Admin
-    3.1 To create super use, run command:
-        - python manage.py createsuperuser
-
-    3.2 To See the tables in Admin Panel
-        - Update admin.py
-            -> Register the model (Class)
-            -> E.g admin.site.register(Test_Class)
-
-    3.3 To beautify Admin panel
-        - create a Class Model with admin.ModelAdmin in admin.py
-        - ref to https://docs.djangoproject.com/en/2.1/ref/contrib/admin/#modeladmin-objects
-        - register the model either using @admin.register(Class) wrapper or admin.site.register(Class, ClassModel)
-            - E.g admin.site.register(Test, TestModel)
+[MIT](https://choosealicense.com/licenses/mit/)
