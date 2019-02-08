@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 # Create your models here.
 class ParentProfile(models.Model):
@@ -10,7 +11,7 @@ class ParentProfile(models.Model):
 
     user = models.OneToOneField(
         User, 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     contact_number = models.CharField(max_length=20)
     relation = models.CharField(max_length=6, choices=RELATION_CHOICES)
@@ -30,7 +31,7 @@ class Student(models.Model):
     child_of = models.ForeignKey(
         'ParentProfile', 
         null=True, 
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     nric = models.CharField(max_length=9, primary_key=True)
     first_name = models.CharField(max_length=50)
@@ -40,27 +41,30 @@ class Student(models.Model):
 
 
 class StudentToStaffSubject(models.Model):
-    # Create Composite key (staff,student)
     staff = models.ForeignKey(
         'StaffProfile', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     student = models.ForeignKey(
         'Student', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     subjectName = models.CharField(max_length=50)
+
+    class Meta:
+        # all db options go here; sort, order by, index etc..
+        unique_together = ("staff", "student")
 
 class ReportCard(models.Model):
     student = models.OneToOneField(
         'Student', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
 
 class ReportCardPage(models.Model):
     reportCard = models.ForeignKey(
         'ReportCard',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     examination_type = models.CharField(max_length=20)
     exam_date = models.DateField()
@@ -71,7 +75,7 @@ class ReportCardPage(models.Model):
 class SubjectGrade(models.Model):
     reportCardPage = models.ForeignKey(
         'ReportCardPage', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     subjectName = models.CharField(max_length=50)
     marks = models.DecimalField(max_digits=3, decimal_places=1)
@@ -80,16 +84,23 @@ class SubjectGrade(models.Model):
 class Comment(models.Model):
     student = models.ForeignKey(
         'Student', 
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     commentBy = models.CharField(max_length=50)
-    commentDate = models.DateField(auto_now=True)
-    commentTime = models.TimeField(auto_now=True)
+    commentDate = models.DateField(default=now())
+    commentTime = models.TimeField(default=now())
     comment = models.CharField(max_length=200)
 
 
 class Attendance(models.Model):
-    pass
+    student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField(default=now())
+    
+    class Meta:
+        unique_together = ("student", "date")
 
 
 class EventPlanner(models.Model):
@@ -108,6 +119,7 @@ class Event(models.Model):
     timeFrom = models.TimeField()
     timeTo = models.TimeField()
     description = models.CharField(max_length=200, blank=True, null=True)
+
 
 class Appointment(models.Model):
     eventPlanner = models.ForeignKey(
