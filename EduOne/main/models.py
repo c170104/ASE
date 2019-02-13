@@ -13,18 +13,60 @@ class ParentProfile(models.Model):
         User, 
         on_delete=models.CASCADE,
     )
+    firstname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50)
     contact_number = models.CharField(max_length=20)
     relation = models.CharField(max_length=6, choices=RELATION_CHOICES)
 
+    def __str__(self):
+        return "{} {}".format(self.lastname, self.firstname)
+
+
+class Class(models.Model):
+    className = models.CharField(max_length=10)
+
+    def __str__(self):
+        return "Class: {}".format(self.className)
+
+
+class SubjectClass(models.Model):
+    classOf = models.OneToOneField(
+        'Class',
+        on_delete=models.CASCADE,
+    )
+    student = models.ManyToManyField(
+        'Student',
+        through='StudentToSubjectClass',
+        through_fields=('subjectClass', 'student'),
+    )
+    teacher = models.ForeignKey(
+        'StaffProfile',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    subject = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "Class: {}, Subject: {}".format(self.classOf, self.subject)
+
 
 class StaffProfile(models.Model):
-    staff_of = models.ManyToManyField(
-        'Student', 
-        through='StudentToStaffSubject', 
-        through_fields=('staff', 'student'),
+
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    form_class = models.ForeignKey(
+        'Class',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    firstname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50)
     contact_number = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "{} {}".format(self.lastname, self.firstname)
 
 
 class Student(models.Model):
@@ -33,33 +75,49 @@ class Student(models.Model):
         null=True, 
         on_delete=models.SET_NULL,
     )
+    form_class = models.ForeignKey(
+        'Class',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    
     nric = models.CharField(max_length=9, primary_key=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     home_address = models.CharField(max_length=100)
     emergency_contact = models.CharField(max_length=20)
 
+    def __str__(self):
+        return "{} {}".format(self.last_name, self.first_name)
 
-class StudentToStaffSubject(models.Model):
-    staff = models.ForeignKey(
-        'StaffProfile', 
+
+class StudentToSubjectClass(models.Model):
+    subjectClass = models.ForeignKey(
+        'SubjectClass', 
         on_delete=models.CASCADE,
     )
     student = models.ForeignKey(
         'Student', 
         on_delete=models.CASCADE,
     )
-    subjectName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "{} {}".format(self.subjectClass, self.student)
 
     class Meta:
         # all db options go here; sort, order by, index etc..
-        unique_together = ("staff", "student")
+        unique_together = ("subjectClass", "student")
+
 
 class ReportCard(models.Model):
     student = models.OneToOneField(
         'Student', 
         on_delete=models.CASCADE,
     )
+
+    def __str__(self):
+        return "{}'s RCard".format(self.student)
+
 
 class ReportCardPage(models.Model):
     reportCard = models.ForeignKey(
@@ -71,6 +129,9 @@ class ReportCardPage(models.Model):
     description = models.CharField(max_length=200)
     acknowledgement = models.BooleanField(default=False)
 
+    def __str__(self):
+        return "{} | {} | {}".format(self.examination_type, self.exam_date, self.reportCard)
+
 
 class SubjectGrade(models.Model):
     reportCardPage = models.ForeignKey(
@@ -79,6 +140,9 @@ class SubjectGrade(models.Model):
     )
     subjectName = models.CharField(max_length=50)
     marks = models.DecimalField(max_digits=3, decimal_places=1)
+
+    def __str__(self):
+        return "{} {}".format(self.reportCardPage, self.subjectName)
 
 
 class Comment(models.Model):
@@ -91,6 +155,9 @@ class Comment(models.Model):
     commentTime = models.TimeField(default=now())
     comment = models.CharField(max_length=200)
 
+    def __str__(self):
+        return "Comment by: {} for {}".format(self.commentBy, self.student)
+
 
 class Attendance(models.Model):
     student = models.ForeignKey(
@@ -98,6 +165,9 @@ class Attendance(models.Model):
         on_delete=models.CASCADE,
     )
     date = models.DateField(default=now())
+
+    def __str__(self):
+        return "{} | {}".format(self.date, self.student)
     
     class Meta:
         unique_together = ("student", "date")
@@ -109,6 +179,9 @@ class EventPlanner(models.Model):
         on_delete=models.CASCADE,    
     )
 
+    def __str__(self):
+        return "{}'s Planner".format(self.user)
+
 
 class Event(models.Model):
     eventPlanner = models.ForeignKey(
@@ -119,6 +192,9 @@ class Event(models.Model):
     timeFrom = models.TimeField()
     timeTo = models.TimeField()
     description = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return "{}, Date: {}, From: {}, To: {}".format(self.eventPlanner, self.eventDate, self.timeFrom, self.timeTo)
 
 
 class Appointment(models.Model):
@@ -135,4 +211,19 @@ class Appointment(models.Model):
     apptTimeTo = models.TimeField()
     apptDescription = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "Appt by: {} | Approved: {}".format(self.parent, self.approved)
+
+
+class Announcement(models.Model):
+    creator = models.CharField(max_length=50)
+    description = models.CharField(max_length=500)
+    isEvent = models.BooleanField(default=False)
+    eventDate = models.DateField()
+    eventTimeFrom = models.TimeField()
+    eventTimeTo = models.TimeField()
+
+    def __str__(self):
+        return "Creator: {}, isEvent: {}".format(self.creator, self.isEvent)
 

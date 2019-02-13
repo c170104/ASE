@@ -1,0 +1,132 @@
+BEGIN;
+--
+-- Create model Announcement
+--
+CREATE TABLE "main_announcement" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "creator" varchar(50) NOT NULL, "description" varchar(500) NOT NULL, "isEvent" bool NOT NULL, "eventDate" date NOT NULL, "eventTimeFrom" time NOT NULL, "eventTimeTo" time NOT NULL);
+--
+-- Create model Appointment
+--
+CREATE TABLE "main_appointment" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "apptDate" date NOT NULL, "apptTimeFrom" time NOT NULL, "apptTimeTo" time NOT NULL, "apptDescription" varchar(200) NOT NULL, "approved" bool NOT NULL);
+--
+-- Create model Attendance
+--
+CREATE TABLE "main_attendance" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "date" date NOT NULL);
+--
+-- Create model Class
+--
+CREATE TABLE "main_class" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "className" varchar(10) NOT NULL);
+--
+-- Create model Comment
+--
+CREATE TABLE "main_comment" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "commentBy" varchar(50) NOT NULL, "commentDate" date NOT NULL, "commentTime" time NOT NULL, "comment" varchar(200) NOT NULL);
+--
+-- Create model Event
+--
+CREATE TABLE "main_event" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "eventDate" date NOT NULL, "timeFrom" time NOT NULL, "timeTo" time NOT NULL, "description" varchar(200) NULL);
+--
+-- Create model EventPlanner
+--
+CREATE TABLE "main_eventplanner" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "user_id" integer NOT NULL UNIQUE REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model ParentProfile
+--
+CREATE TABLE "main_parentprofile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "contact_number" varchar(20) NOT NULL, "relation" varchar(6) NOT NULL, "user_id" integer NOT NULL UNIQUE REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model ReportCard
+--
+CREATE TABLE "main_reportcard" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT);
+--
+-- Create model ReportCardPage
+--
+CREATE TABLE "main_reportcardpage" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "examination_type" varchar(20) NOT NULL, "exam_date" date NOT NULL, "description" varchar(200) NOT NULL, "acknowledgement" bool NOT NULL, "reportCard_id" integer NOT NULL REFERENCES "main_reportcard" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model StaffProfile
+--
+CREATE TABLE "main_staffprofile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "contact_number" varchar(20) NOT NULL, "form_class_id" integer NULL REFERENCES "main_class" ("id") DEFERRABLE INITIALLY DEFERRED, "user_id" integer NOT NULL UNIQUE REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Student
+--
+CREATE TABLE "main_student" ("nric" varchar(9) NOT NULL PRIMARY KEY, "first_name" varchar(50) NOT NULL, "last_name" varchar(50) NOT NULL, "home_address" varchar(100) NOT NULL, "emergency_contact" varchar(20) NOT NULL, "child_of_id" integer NULL REFERENCES "main_parentprofile" ("id") DEFERRABLE INITIALLY DEFERRED, "form_class_id" integer NULL REFERENCES "main_class" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model StudentToSubjectClass
+--
+CREATE TABLE "main_studenttosubjectclass" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "student_id" varchar(9) NOT NULL REFERENCES "main_student" ("nric") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model SubjectClass
+--
+CREATE TABLE "main_subjectclass" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "subject" varchar(20) NOT NULL, "classOf_id" integer NOT NULL UNIQUE REFERENCES "main_class" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model SubjectGrade
+--
+CREATE TABLE "main_subjectgrade" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "subjectName" varchar(50) NOT NULL, "marks" decimal NOT NULL, "reportCardPage_id" integer NOT NULL REFERENCES "main_reportcardpage" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Add field subjectClass to studenttosubjectclass
+--
+ALTER TABLE "main_studenttosubjectclass" RENAME TO "main_studenttosubjectclass__old";
+CREATE TABLE "main_studenttosubjectclass" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "student_id" varchar(9) NOT NULL REFERENCES "main_student" ("nric") DEFERRABLE INITIALLY DEFERRED, "subjectClass_id" integer NOT NULL REFERENCES "main_subjectclass" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_studenttosubjectclass" ("id", "student_id", "subjectClass_id") SELECT "id", "student_id", NULL FROM "main_studenttosubjectclass__old";
+DROP TABLE "main_studenttosubjectclass__old";
+CREATE INDEX "main_reportcardpage_reportCard_id_71ee7804" ON "main_reportcardpage" ("reportCard_id");
+CREATE INDEX "main_staffprofile_form_class_id_3847879f" ON "main_staffprofile" ("form_class_id");
+CREATE INDEX "main_student_child_of_id_6031c414" ON "main_student" ("child_of_id");
+CREATE INDEX "main_student_form_class_id_08c3fb43" ON "main_student" ("form_class_id");
+CREATE INDEX "main_subjectgrade_reportCardPage_id_0a9e910b" ON "main_subjectgrade" ("reportCardPage_id");
+CREATE INDEX "main_studenttosubjectclass_student_id_997516e0" ON "main_studenttosubjectclass" ("student_id");
+CREATE INDEX "main_studenttosubjectclass_subjectClass_id_8a4a86f6" ON "main_studenttosubjectclass" ("subjectClass_id");
+--
+-- Add field student to reportcard
+--
+ALTER TABLE "main_reportcard" RENAME TO "main_reportcard__old";
+CREATE TABLE "main_reportcard" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "student_id" varchar(9) NOT NULL UNIQUE REFERENCES "main_student" ("nric") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_reportcard" ("id", "student_id") SELECT "id", NULL FROM "main_reportcard__old";
+DROP TABLE "main_reportcard__old";
+--
+-- Add field eventPlanner to event
+--
+ALTER TABLE "main_event" RENAME TO "main_event__old";
+CREATE TABLE "main_event" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "eventDate" date NOT NULL, "timeFrom" time NOT NULL, "timeTo" time NOT NULL, "description" varchar(200) NULL, "eventPlanner_id" integer NOT NULL REFERENCES "main_eventplanner" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_event" ("id", "eventDate", "timeFrom", "timeTo", "description", "eventPlanner_id") SELECT "id", "eventDate", "timeFrom", "timeTo", "description", NULL FROM "main_event__old";
+DROP TABLE "main_event__old";
+CREATE INDEX "main_event_eventPlanner_id_583cf225" ON "main_event" ("eventPlanner_id");
+--
+-- Add field student to comment
+--
+ALTER TABLE "main_comment" RENAME TO "main_comment__old";
+CREATE TABLE "main_comment" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "commentBy" varchar(50) NOT NULL, "commentDate" date NOT NULL, "commentTime" time NOT NULL, "comment" varchar(200) NOT NULL, "student_id" varchar(9) NOT NULL REFERENCES "main_student" ("nric") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_comment" ("id", "commentBy", "commentDate", "commentTime", "comment", "student_id") SELECT "id", "commentBy", "commentDate", "commentTime", "comment", NULL FROM "main_comment__old";
+DROP TABLE "main_comment__old";
+CREATE INDEX "main_comment_student_id_83c8fd8c" ON "main_comment" ("student_id");
+--
+-- Add field student to attendance
+--
+ALTER TABLE "main_attendance" RENAME TO "main_attendance__old";
+CREATE TABLE "main_attendance" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "date" date NOT NULL, "student_id" varchar(9) NOT NULL REFERENCES "main_student" ("nric") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_attendance" ("id", "date", "student_id") SELECT "id", "date", NULL FROM "main_attendance__old";
+DROP TABLE "main_attendance__old";
+CREATE INDEX "main_attendance_student_id_07549adf" ON "main_attendance" ("student_id");
+--
+-- Add field eventPlanner to appointment
+--
+ALTER TABLE "main_appointment" RENAME TO "main_appointment__old";
+CREATE TABLE "main_appointment" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "apptDate" date NOT NULL, "apptTimeFrom" time NOT NULL, "apptTimeTo" time NOT NULL, "apptDescription" varchar(200) NOT NULL, "approved" bool NOT NULL, "eventPlanner_id" integer NOT NULL REFERENCES "main_eventplanner" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_appointment" ("id", "apptDate", "apptTimeFrom", "apptTimeTo", "apptDescription", "approved", "eventPlanner_id") SELECT "id", "apptDate", "apptTimeFrom", "apptTimeTo", "apptDescription", "approved", NULL FROM "main_appointment__old";
+DROP TABLE "main_appointment__old";
+CREATE INDEX "main_appointment_eventPlanner_id_deb94ef2" ON "main_appointment" ("eventPlanner_id");
+--
+-- Add field parent to appointment
+--
+ALTER TABLE "main_appointment" RENAME TO "main_appointment__old";
+CREATE TABLE "main_appointment" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "apptDate" date NOT NULL, "apptTimeFrom" time NOT NULL, "apptTimeTo" time NOT NULL, "apptDescription" varchar(200) NOT NULL, "approved" bool NOT NULL, "eventPlanner_id" integer NOT NULL REFERENCES "main_eventplanner" ("id") DEFERRABLE INITIALLY DEFERRED, "parent_id" integer NOT NULL REFERENCES "main_parentprofile" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "main_appointment" ("id", "apptDate", "apptTimeFrom", "apptTimeTo", "apptDescription", "approved", "eventPlanner_id", "parent_id") SELECT "id", "apptDate", "apptTimeFrom", "apptTimeTo", "apptDescription", "approved", "eventPlanner_id", NULL FROM "main_appointment__old";
+DROP TABLE "main_appointment__old";
+CREATE INDEX "main_appointment_eventPlanner_id_deb94ef2" ON "main_appointment" ("eventPlanner_id");
+CREATE INDEX "main_appointment_parent_id_bced9220" ON "main_appointment" ("parent_id");
+--
+-- Alter unique_together for studenttosubjectclass (1 constraint(s))
+--
+CREATE UNIQUE INDEX "main_studenttosubjectclass_subjectClass_id_student_id_a09c1854_uniq" ON "main_studenttosubjectclass" ("subjectClass_id", "student_id");
+--
+-- Alter unique_together for attendance (1 constraint(s))
+--
+CREATE UNIQUE INDEX "main_attendance_student_id_date_1bf057b8_uniq" ON "main_attendance" ("student_id", "date");
+COMMIT;
