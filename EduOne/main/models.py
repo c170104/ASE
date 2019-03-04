@@ -225,6 +225,12 @@ APPOINTMENT_STATUS = (
     ('rejected')
     )
 
+APPOINTMENT_STATUS = (
+    ('pending'),
+    ('approved'),
+    ('rejected')
+    )
+
 class Appointment(models.Model):
     eventPlanner = models.ForeignKey(
         'EventPlanner',

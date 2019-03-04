@@ -18,10 +18,10 @@
         <a class="navbar-brand" href="/"><img src="{% static 'logo/eduone.jpeg' %}" width="67" height="40" class="d-inline-block align-top" alt=""></a>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if active_page == 'home' %} active {% endif %}">
-                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="{% url 'main-home' %}">Home</a>
             </li>
-            <li class="nav-item {% if active_page == 'about' %} active {% endif %}">
-                <a class="nav-link" href="/about">About Us</a>
+            <li class="nav-item {% if active_page == 'logout' %} active {% endif %}">
+                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
             </li>
             <li class="nav-item {% if active_page == 'schedule' %} active {% endif %}">
                 <a class="nav-link" href="{%url 'schedule-home'%}">Schedule</a>

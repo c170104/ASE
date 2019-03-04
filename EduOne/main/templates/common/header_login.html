@@ -1,0 +1,46 @@
+<!--This is used by the login and logout page-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>EduOne</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load staticfiles  %}
+    <link rel='stylesheet' href="{% static 'common/css/bootstrap.min.css' %}" type='text/css' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static 'common/js/bootstrap.bundle.js' %}"></script>
+
+</head>
+
+<body class="body" style="background-color:#f6f6f6">
+	<img src="{% static 'logo/eduone.jpeg' %}" width="100" height="100" class="d-inline-block align-center" alt="">
+</body>
+
+    <main role="main">
+        {% block content %} {% endblock %}
+    </main>
+
+    <footer class="container">
+        <div class="row">
+            <div class="col">
+                <i>NTU CZ3005 2018/19 Semester 1<br>Advance Software Engineering Project<br><b>Team ReFormed</b></i>
+            </div>
+            <div class="col text-right">
+                Join us on telegram!
+            </div>
+        </div>
+    </footer>
+</body>
+
+<style>
+    .checked {
+    color: orange;
+}
+</style>
+
+
+</html>				
+
+
