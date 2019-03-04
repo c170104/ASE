@@ -1,0 +1,19 @@
+{% extends "common/header_login.html" %}
+
+{% block content %}
+
+	<div class = "content-section">
+		<form method = "POST">
+			{% csrf_token %}
+				<fieldset class = "form-group">
+					Log in
+					{{ form.as_p}}
+				</fieldset>
+			<div class = "form-group">
+				<button type = "submit"> Login </button>
+			</div>
+		</form>	
+	</div>
+
+
+{% endblock %}	
