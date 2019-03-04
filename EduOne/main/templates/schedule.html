@@ -1,0 +1,11 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+		
+		<!--Display calendar, need to pull all events related to user and pass it here-->
+
+		<p><a href="{% url 'schedule-add' %}"> Add Events </a><p>
+		<p><a href="{% url 'schedule-manage' %}"> Manage Events </a><p>
+
+
+{% endblock %}
