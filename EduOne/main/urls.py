@@ -19,4 +19,10 @@ from . import views
 
 urlpatterns = [
     path('', views.home),
+    path('schedule/', views.schedule, name='schedule-home' ),
+    path('schedule/add/', views.schedule_add, name='schedule-add'),
+    path('schedule/add=<slug:current>/', views.schedule_add, name='schedule-add'),
+    path('schedule/manage/', views.schedule_manage, name='schedule-manage'),
+    path('schedule/manage=<slug:current>/', views.schedule_manage, name='schedule-manage'),
+    path('schedule/manage/delete', views.event_delete, name='event-delete'),
 ]

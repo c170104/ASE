@@ -1,0 +1,37 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+
+		<h2>Manage Schedule</h2>
+		<!--Start of Display Errors-->
+		{% if messages %}
+			{% for message in messages %}
+				<!--<div class = "alert alert-{{message}}"></div>-->
+				{{message}}
+			{% endfor %}
+		{% endif %}		
+		<!--End of Display Errors-->
+		<p><a href="{% url 'schedule-manage' current='pending' %}"> Pending </a><p>
+		<p><a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a><p>
+		<p><a href="{% url 'schedule-manage' current='announcements'%}"> Announcements </a><p>	
+		<!--Display the contents of the respective tab from active_tab-->
+		<p>Output goes here in a table form<p>
+		
+		{% if active_tab == 'pending' %}
+			<!--The Approve & Reject functions here are for the pending appointments-->
+			<p><a href="#"> Approve </a><p>
+			<p><a href="#"> Reject </a><p>
+			<!--End of Approve & Reject functions-->
+
+		{% else %}	
+			<!--The Edit & Delete functions here are for the confirmed events and announcements-->
+			<p><a href="#"> Edit </a><p>
+			<p><a href="{% url 'event-delete' %}"> Delete </a><p>
+			<!--End of Edit & Delete functions-->
+
+		{% endif %}
+
+		
+
+
+{% endblock %}

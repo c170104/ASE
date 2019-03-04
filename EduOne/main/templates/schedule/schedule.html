@@ -1,0 +1,22 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+		
+		<!--Display calendar, need to pull all events related to user and pass it here-->
+
+		<!--
+		Check if the user is a parent or teacher
+		If teacher use block 1, if parent use block 2
+		-->
+		<!--Start of Block 1-->
+		<p><a href="{% url 'schedule-add' current='events' %}"> Add Events </a><p>
+		<p><a href="{% url 'schedule-manage' current='confirmed' %}"> Manage Events </a><p>
+		<!--End of Block 1-->
+
+		<!--Start of Block 2-->
+		<p><a href="#"> Add Appointments </a><p>
+		<p><a href="#"> Manage Appointments </a><p>
+		<!--End of Block 2-->
+
+
+{% endblock %}
