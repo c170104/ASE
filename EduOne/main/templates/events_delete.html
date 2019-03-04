@@ -1,0 +1,20 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+		<h2>Do you want to delete the following?</h2>
+		
+		<!--Start of Display Errors-->
+		{% if messages %}
+			{% for message in messages %}
+				<!--<div class = "alert alert-{{message}}"></div>-->
+				{{message}}
+			{% endfor %}
+		{% endif %}		
+		<!--End of Display Errors-->
+
+		<!--Start of form-->
+
+
+		<!--End of form-->
+
+{% endblock %}
