@@ -15,21 +15,60 @@
 		<p><a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a><p>
 		<p><a href="{% url 'schedule-manage' current='announcements'%}"> Announcements </a><p>	
 		<!--Display the contents of the respective tab from active_tab-->
-		<p>Output goes here in a table form<p>
 		
-		{% if active_tab == 'pending' %}
-			<!--The Approve & Reject functions here are for the pending appointments-->
-			<p><a href="#"> Approve </a><p>
-			<p><a href="#"> Reject </a><p>
-			<!--End of Approve & Reject functions-->
+		<h2>Event List ({{active_tab}})</h2>
+		<table>
+			{% if active_tab == 'pending' %}
+				<tr>
+				<th>Appointment Description</th>
+				<th>Requested by</th>
+				<th>Date</th>
+				<th>Time from</th>
+				<th>Time to</th>
+				<th>Status</th>
+				</tr>
+				<tr>
+				{% for event in events  %}	
+					<td>{{event.apptDescription}}</td>
+					<td>{{event.parent_id}}</td>
+					<td>{{event.apptDate}}</td>
+					<td>{{event.apptTimeFrom}}</td>
+					<td>{{event.apptTimeTo}}</td>
+					<td>{{event.approved}}</td>
+					<!--The Approve & Reject functions here are for the pending appointments-->
+					<td><a href="#"> Approve </a></td>
+					<td><a href="#"> Reject </a></td>
+					<!--End of Approve & Reject functions-->
+				{% endfor %}	
 
-		{% else %}	
-			<!--The Edit & Delete functions here are for the confirmed events and announcements-->
-			<p><a href="#"> Edit </a><p>
-			<p><a href="{% url 'event-delete' %}"> Delete </a><p>
-			<!--End of Edit & Delete functions-->
-
-		{% endif %}
+			{% else %}	
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Time from</th>
+					<th>Time to</th>
+				</tr>
+				{% for event in events  %}
+				<tr>
+					<td>{{event.description}}</td>
+					<td>{{event.eventDate}}</td>
+						<!--Class variable names for event and announcement is different *highlight about removing event*-->
+					{% if active_tab == 'announcements' %}
+							<td>{{event.eventTimeFrom}}</td>
+							<td>{{event.eventTimeTo}}</td>
+					{% else %}
+							<td>{{event.timeFrom}}</td>
+							<td>{{event.timeTo}}</td>
+					{% endif %}		
+				<!--The Edit & Delete functions here are for the confirmed events and announcements-->
+				<td><a href="#"> Edit </a></td>
+				<td><a href="{% url 'event-delete' %}"> Delete </a></td>
+				<!--End of Edit & Delete functions-->
+				{% endfor %}
+			{% endif %}
+				</tr>
+		</table>	
+	
 
 		
 
