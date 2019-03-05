@@ -5,6 +5,7 @@ from .models import *
 from .forms import *
 
 
+
 # Create your views here.
 
 #Returns the home page for display (left the calendar to display)
@@ -15,12 +16,12 @@ def home(request):
 	return render(request, 'index.html', {'active_page': 'home', 'announcements' : events })
 
 
-#This function is for the main page of scheduling, can be used by both teachers and parents
+#This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
 @login_required
 def schedule(request):
 	return render(request, 'schedule/schedule.html', {'active_page': 'schedule'})
 
-#This function is for the teachers to add new event that can be announcments/events (not completed)
+#This function is for the teachers to add new event that can be announcments/events (completed)
 @login_required
 def schedule_add(request, current='events'):
 	event_categories = ('events', 'announcements')
@@ -30,14 +31,24 @@ def schedule_add(request, current='events'):
 		#Redirects user to the add page to add new events if the parameters does not meet the tabs we have
 		return redirect ('schedule-add')
 	
-	elif current == event_categories[0]:
-		form = EventForm(request.POST)
+	else:
+		if current == event_categories[0]:
+			form = EventForm(request.POST)
+			if form.is_valid():
+				event = form.save(commit=False)
+				event.eventPlanner = EventPlanner.objects.get(user__exact = request.user.id)
+				form.save()
+				messages.success(request, f'Event has been created successfully!')
+				return redirect('schedule-add')
 
-		#Create objects to add into classes!
-
-	elif current == event_categories[1]:
-		form = AnnoucementForm()
-		#Create objects to add into classes!
+		elif current == event_categories[1]:
+			form = AnnouncementForm(request.POST)
+			if form.is_valid():
+				announcement = form.save(commit=False)
+				announcement.creator = request.user.username
+				form.save()
+				messages.success(request, f'Announcement has been created successfully!')
+				return redirect('schedule-add')
 	
 	return render(request, 'schedule/schedule_add.html', {'active_page': 'schedule', 'active_tab': current, 'form' : form})
 
@@ -50,12 +61,11 @@ def schedule_manage(request, current='confirmed'):
 		return redirect ('schedule-manage')
 
 	else:
-		parent = []
 		if current == event_types[0]:
 			#Look for a planner that belongs to the current user and searches for all the events within it
 			#get method will produce error if more than 1 planner is found.
 			planner = EventPlanner.objects.get(user__exact = request.user.id)
-			events = Event.objects.filter(eventPlanner__exact = planner).values()
+			events = Event.objects.filter(eventPlanner__exact = planner)
 
 		elif current == event_types[1]:
 			#Look for a planner that belongs to the current user and searches for all the events within it
@@ -68,12 +78,7 @@ def schedule_manage(request, current='confirmed'):
 	
 		elif current == event_types[2]:
 			events = Announcement.objects.filter(creator__exact = request.user.username)
-		
-		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
-				'events': events, 'parentDetails' : parent })
 
-#Not completed
-def event_delete(request, username, eventid):
-	#Pull the data and return + process the form
-	return render(request, 'events_delete.html', {'active_page': 'schedule'})
+		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
+				'events': events })
 

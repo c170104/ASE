@@ -56,14 +56,14 @@
 					{% if active_tab == 'announcements' %}
 							<td>{{event.eventTimeFrom}}</td>
 							<td>{{event.eventTimeTo}}</td>
+							<td><a href="#"> Edit </a></td>
+							<td><a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
 					{% else %}
 							<td>{{event.timeFrom}}</td>
 							<td>{{event.timeTo}}</td>
+							<td><a href="#"> Edit </a></td>
+							<td><a href="{% url 'event-delete' event.id %}"> Delete </a></td>
 					{% endif %}		
-				<!--The Edit & Delete functions here are for the confirmed events and announcements-->
-				<td><a href="#"> Edit </a></td>
-				<td><a href="{% url 'event-delete' %}"> Delete </a></td>
-				<!--End of Edit & Delete functions-->
 				{% endfor %}
 			{% endif %}
 				</tr>

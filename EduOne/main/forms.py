@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event, Announcement
+from .models import Event, Announcement, EventPlanner
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import DeleteView
 
 #This form is used by the views.schedule_add to add create new Event objects
 class EventForm(ModelForm):
@@ -22,7 +24,7 @@ class EventForm(ModelForm):
 
 
 #This form is used by the views.schedule_add to add create new Announcement objects
-class AnnoucementForm(ModelForm):
+class AnnouncementForm(ModelForm):
     class Meta:
         model = Announcement
         exclude = ['creator']
@@ -40,3 +42,26 @@ class AnnoucementForm(ModelForm):
             'eventTimeFrom': ('The time where the announcement\'s event(s) starts goes here.'),
             'eventTimeTo': ('The time where the announcement\'s event(s) ends goes here.'),
         }
+
+#This class form is used by announcement-delete to delete existing announcements
+class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Announcement
+    success_url = "/schedule/manage=announcements/"
+    
+    def test_func(self):
+        announcement = self.get_object()
+        if self.request.user.username == announcement.creator:
+            return True
+        return False    
+
+#This class form is used by event-delete to delete existing events
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Event
+    success_url = "/schedule/manage=confirmed/"
+    
+    def test_func(self):
+        event = self.get_object()
+        user_id = EventPlanner.objects.get(id__exact = event.eventPlanner_id).user_id
+        if self.request.user.id == user_id:
+            return True
+        return False         
