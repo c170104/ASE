@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
+import datetime
 
 
 
@@ -12,7 +13,7 @@ from .forms import *
 @login_required
 def home(request):
 	events = Announcement.objects.all()
-	events = events.extra(order_by = ['-eventDate'])
+	events = events.extra(order_by = ['-dateCreated'])
 	return render(request, 'index.html', {'active_page': 'home', 'announcements' : events })
 
 
@@ -45,7 +46,8 @@ def schedule_add(request, current='events'):
 			form = AnnouncementForm(request.POST)
 			if form.is_valid():
 				announcement = form.save(commit=False)
-				announcement.creator = request.user.username
+				announcement.user_id = request.user.id
+				announcement.dateCreated = datetime.datetime.now().date()
 				form.save()
 				messages.success(request, f'Announcement has been created successfully!')
 				return redirect('schedule-add')
@@ -77,7 +79,7 @@ def schedule_manage(request, current='confirmed'):
 				event['parent_id'] = ParentProfile.objects.get(id__exact = event['parent_id'])
 	
 		elif current == event_types[2]:
-			events = Announcement.objects.filter(creator__exact = request.user.username)
+			events = Announcement.objects.filter(user__exact = request.user.id)
 
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })

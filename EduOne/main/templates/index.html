@@ -6,9 +6,9 @@
 
 	<h2>Announcements</h2>
 		{% for event in announcements  %}
+			<p>{{event.title}}</p>
 			<p>{{event.description}}</p>
-			<p>Date Posted: {{event.eventDate}} </p>
-			<p>From: {{event.eventTimeFrom}} till {{event.eventTimeTo}} </p>
+			<p>Date Posted: {{event.dateCreated}} </p>
 		{% endfor %}
 
 {% endblock %}
