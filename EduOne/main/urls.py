@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views, forms
-from .forms import AnnouncementDeleteView, EventDeleteView
+from .forms import *
 
 
 urlpatterns = [
@@ -36,12 +36,16 @@ urlpatterns = [
     path('schedule/add=<str:current>/', views.schedule_add, name='schedule-add'),
     #End of paths for scheduling functions
 
-    #Start of django class form delete fucntions
+    #Start of django class form functions
+    path('announcement/<int:pk>/', AnnouncementDetailView.as_view(), name = 'announcement-detail'),
     path('announcement/<int:pk>/delete/', AnnouncementDeleteView.as_view(), name = 'announcement-delete'),
+    path('event/<int:pk>/', EventDetailView.as_view(), name = 'event-detail'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name = 'event-delete'),
-    #End of django class form delete fucntions
+    path('appointment/<int:pk>/', AppointmentDetailView.as_view(), name = 'appointment-detail'),
+    #End of django class form fucntions
     
     #Trials
-    
+    path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), #stype refers to {event,appointment,announcement}
+
     
 ]

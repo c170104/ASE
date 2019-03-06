@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event, Announcement, EventPlanner
+from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DeleteView
+from django.views.generic import DetailView, DeleteView
 
 #This form is used by the views.schedule_add to add create new Event objects
 class EventForm(ModelForm):
@@ -42,6 +42,18 @@ class AnnouncementForm(ModelForm):
             'title' : ('The announcement title goes here.'),
             'description': ('The announcement description goes here.'),
         }
+
+#This class form is used by event-detail to view event details
+class EventDetailView(DetailView):
+    model=Event
+
+#This class form is used by announcement-detail to view event details
+class AnnouncementDetailView(DetailView):
+    model=Announcement
+
+#This class form is used by appointment-detail to view event details
+class AppointmentDetailView(DetailView):
+    model=Appointment    
 
 #This class form is used by announcement-delete to delete existing announcements
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

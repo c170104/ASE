@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseNotFound
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import *
@@ -59,8 +61,8 @@ def schedule_add(request, current='events'):
 def schedule_manage(request, current='confirmed'):
 	event_types = ('confirmed', 'pending', 'announcements')
 	if current not in event_types:
-		#Redirects user to the manage page with the active tab being confirmed if the parameters does not meet the tabs we have
-		return redirect ('schedule-manage')
+		#Displays a 'Page not found' error
+		return HttpResponseNotFound('<h1>Page not found!</h1>')
 
 	else:
 		if current == event_types[0]:
@@ -84,3 +86,30 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
+#This function is used to edit scheduling information based on known forms (Incomplete)
+@login_required
+def schedule_edit(request, stype, pk):
+	schedule_types = ('event', 'appointment', 'announcement')
+	if stype not in schedule_types:
+		#Displays a 'Page not found' error
+		return HttpResponseNotFound('<h1>Page not found!</h1>')
+
+	else:
+		if stype == schedule_types[0]:
+			event = Event.objects.get(id__exact = pk)
+			user_id = EventPlanner.objects.get(id__exact = event.eventPlanner_id).user_id
+
+
+		elif stype == schedule_types[1]:
+			event = Appointment.objects.get(id__exact = pk)
+			user_id = EventPlanner.objects.get(id__exact = event.eventPlanner_id).user_id
+
+		elif stype == schedule_types[2]:	
+			event = Announcement.objects.get(id__exact = pk)
+			user_id = event.user_id
+
+		#Checks if the current user is the owner, if not error 403 is raised
+		if request.user.id != user_id:
+			raise PermissionDenied
+
+		return render(request, 'schedule/schedule_edit.html', {'edit_type' : stype, 'form' : form })

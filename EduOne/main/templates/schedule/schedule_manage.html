@@ -30,7 +30,7 @@
 				</tr>
 				<tr>
 				{% for event in events  %}	
-					<td>{{event.apptTitle}}</td>
+					<td><a href="{% url 'appointment-detail' pk=event.id %}"> {{event.apptTitle}} </a></td>
 					<td>{{event.parent_id}}</td>
 					<td>{{event.apptDate}}</td>
 					<td>{{event.apptTimeFrom}}</td>
@@ -55,7 +55,7 @@
 				</tr>
 				{% for event in events  %}
 				<tr>
-					<td>{{event.title}}</td>
+					<td><a href="{% url 'event-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.dateFrom}}</td>
 					<td>{{event.dateTo}}</td>
 					<td>{{event.timeFrom}}</td>
@@ -75,7 +75,7 @@
 				</tr>
 				{% for event in events  %}
 				<tr>
-					<td>{{event.title}}</td>
+					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.description}}</td>
 					<td>{{event.dateCreated}}</td>
 					<td><a href="#"> Edit </a></td>

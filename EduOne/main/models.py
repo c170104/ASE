@@ -31,7 +31,7 @@ class Class(models.Model):
 
 
 class SubjectClass(models.Model):
-    classOf = models.OneToOneField(
+    classOf = models.ForeignKey(
         'Class',
         on_delete=models.CASCADE,
     )
@@ -48,7 +48,7 @@ class SubjectClass(models.Model):
     subject = models.CharField(max_length=20)
 
     def __str__(self):
-        return "Class: {}, Subject: {}".format(self.classOf, self.subject)
+        return "Class: {}, Teacher: {}, Subject: {}".format(self.classOf, self.teacher, self.subject)
 
 
 class StaffProfile(models.Model):
