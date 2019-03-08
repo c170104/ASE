@@ -1,9 +1,14 @@
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 
 # Create your models here.
+class User(AbstractUser):
+    is_staff = models.BooleanField('Staff status', default=False)
+    is_parent = models.BooleanField('Parent status', default=False)
+
+
 class ParentProfile(models.Model):
     RELATION_CHOICES = (
         ('Father', 'Father'),

@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
+from .decorators import staff_required, parent_required
 from .models import *
 from .forms import *
 import datetime
-
-
 
 # Create your views here.
 
@@ -19,15 +18,12 @@ def home(request):
 
 #This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
 @login_required
-@permission_required('main.view_eventplanner')
-#@permission_required('main.view_event)
+@staff_required
 def schedule(request):
 	return render(request, 'schedule/schedule.html', {'active_page': 'schedule'})
 
 #This function is for the teachers to add new event that can be announcments/events (completed)
 @login_required
-@permission_required('main.add_event')
-@permission_required('main.add_announcement')
 def schedule_add(request, current='events'):
 	event_categories = ('events', 'announcements')
 	if current not in event_categories:
@@ -60,10 +56,6 @@ def schedule_add(request, current='events'):
 
 #This function is used for displaying and managing schedules for teachers (Completed)
 @login_required
-@permission_required('main.change_event')
-@permission_required('main.change_announcement')
-@permission_required('main.delete_event')
-@permission_required('main.delete_announcement')
 def schedule_manage(request, current='confirmed'):
 	event_types = ('confirmed', 'pending', 'announcements')
 	if current not in event_types:
