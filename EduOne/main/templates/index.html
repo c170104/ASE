@@ -1,5 +1,14 @@
 {% extends "common/header.html" %}
 
 {% block content %}
+	<!--Calendar goes here-->
+
+
+	<h2>Announcements</h2>
+		{% for event in announcements  %}
+			<p>{{event.title}}</p>
+			<p>{{event.description}}</p>
+			<p>Date Posted: {{event.dateCreated}} </p>
+		{% endfor %}
 
 {% endblock %}
