@@ -1,0 +1,31 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+	<h2>Class {{information.form_class.className}} Student Attendance</h2>
+	<p>Date: {{information.today}}</p>
+	<p>Attendance: {{information.attendanceCount}}/{{information.students.count}}</p>
+	<p>Taken by: {{user.last_name}} {{user.first_name}}</p>
+	<p><a href='#'>Select all</a></p>
+	<table>
+		<tr>
+			<th>S/N</th>
+			<th>Student Name</th>
+			<th>Present?</th>
+		</tr>
+		{% for student in information.students %}
+		<tr>
+			<td></td>
+			<td>{{student.last_name}}  {{student.first_name}}</td>
+			{% for present in information.present %}
+				{% if student == present %}
+					<td><a href='#'>Y</a></td>
+				{% else %}
+					<td><a href='#'>N</a></td>
+				{% endif %}
+			{% endfor %}	
+		</tr>
+		{% endfor %}
+	</table>
+		
+
+{% endblock %}

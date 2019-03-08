@@ -16,7 +16,8 @@
 			<form method="POST">
 				{% csrf_token %}
 				{{form.as_p}}
-				<button type ="submit"> Add {{edit_type}} </button>
+				<button type ="submit"> Confirm Changes </button>
+				<a href ="{% url 'schedule-manage' current=path %}"> Return </a>
 			</form>
 		</div>
 		<!--End of Form-->

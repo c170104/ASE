@@ -61,7 +61,7 @@
 					<td>{{event.timeFrom}}</td>
 					<td>{{event.timeTo}}</td>
 					<td>{{event.location}}</td>
-					<td><a href="#"> Edit </a></td>
+					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a></td>
 					<td><a href="{% url 'event-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for confirmed events-->
@@ -78,7 +78,7 @@
 					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.description}}</td>
 					<td>{{event.dateCreated}}</td>
-					<td><a href="#"> Edit </a></td>
+					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a></td>
 					<td><a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for announcements-->
