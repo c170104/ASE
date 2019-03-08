@@ -1,3 +1,4 @@
+from .decorators import staff_required, parent_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotFound
 from django.core.exceptions import PermissionDenied
@@ -6,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 import datetime
-
 
 
 # Create your views here.
@@ -21,6 +21,7 @@ def home(request):
 
 #This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
 @login_required
+@staff_required
 def schedule(request):
 	return render(request, 'schedule/schedule.html', {'active_page': 'schedule'})
 
@@ -70,7 +71,7 @@ def schedule_manage(request, current='confirmed'):
 			#get method will produce error if more than 1 planner is found.
 			planner = EventPlanner.objects.get(user__exact = request.user.id)
 			events = Event.objects.filter(eventPlanner__exact = planner)
-
+			
 		elif current == event_types[1]:
 			#Look for a planner that belongs to the current user and searches for all the events within it
 			#get method will produce error if more than 1 planner is found.

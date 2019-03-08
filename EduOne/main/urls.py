@@ -46,6 +46,5 @@ urlpatterns = [
     
     #Trials
     path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), #stype refers to {event,appointment,announcement}
-
     
 ]
