@@ -1,8 +1,10 @@
 from django.contrib import admin
+from .forms import UserAdmin
 from .models import *
 
 # Register your models here.
 # Example Below
+admin.site.register(User, UserAdmin)
 admin.site.register(ParentProfile)
 admin.site.register(Class)
 admin.site.register(SubjectClass)
