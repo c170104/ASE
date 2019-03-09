@@ -1,13 +1,9 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DeleteView
-from django.urls import reverse_lazy
-import decimal
-
 from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+import decimal
 from django.views.generic import DetailView, DeleteView
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -116,6 +112,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user_id = EventPlanner.objects.get(id__exact = event.eventPlanner_id).user_id
         if self.request.user.id == user_id:
             return True
+
         return False         
 
 #This form is used to create new appointments
