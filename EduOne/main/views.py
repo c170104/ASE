@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 import datetime
-
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -84,3 +85,72 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
+
+@login_required
+def appointment_add(request):
+	form = AppointmentForm(request.POST)
+	if form.is_valid():
+		appointment = form.save(commit=False)
+		staffname = form.cleaned_data['staffchosen'] # Pull the selected name form choicefield
+		for i in EventPlanner.objects.all():
+			if str(i) == staffname:
+				appointment.eventPlanner = i
+				appointment.eventPlanner.id = i.id
+				break
+		for i in ParentProfile.objects.all():
+			if i.user == request.user:
+				appointment.parent = i
+				break
+		appointment.apptStatus = 'pending'
+		form.save()
+		messages.success(request, f'Appointment has been created successfully!')
+		return redirect('appointment-add')
+	context = {
+		'form':form
+	}
+	
+	return render(request, 'appointment/appointment_add.html', context)
+
+@login_required
+def appointment_manage(request, current='pending'):
+	event_types = ('approved', 'rejected', 'pending')
+	current_user = request.user
+	obj = list()
+	sp = StaffProfile.objects.all()
+	#OG code
+	if current not in event_types:
+		return redirect('appointment-manage')
+	elif current == event_types[0]: #accepted
+		for i in Appointment.objects.all():
+			if i.parent.user == current_user and i.apptStatus == 'approved':
+				obj.append(i)
+	elif current == event_types[1]: #rejected
+		for i in Appointment.objects.all():
+			if i.parent.user == current_user and i.apptStatus == 'rejected':
+				obj.append(i)
+	elif current == event_types[2]: #pending
+		for i in Appointment.objects.all():
+			if i.parent.user == current_user and i.apptStatus == 'pending':
+				obj.append(i)
+	context = {
+		'user' : current_user,
+		'obj': obj,
+		'staffprofilelist': sp,
+		'active_page': current #approved rejected pending
+		## 'location'
+	}
+	return render(request, 'appointment/appointment_manage.html', context)
+
+
+class AppointmentUpdate(LoginRequiredMixin,UpdateView):
+    model = Appointment
+    success_url = reverse_lazy('appointment-manage')
+    fields = [
+		'apptTitle',
+		'apptDescription',
+		'apptDate',
+		'apptLocation',
+		'apptTimeFrom',
+		'apptTimeTo'
+	]
+    
