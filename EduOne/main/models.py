@@ -1,9 +1,14 @@
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 
 # Create your models here.
+class User(AbstractUser):
+    is_staff = models.BooleanField('Staff status', default=False)
+    is_parent = models.BooleanField('Parent status', default=False)
+
+
 class ParentProfile(models.Model):
     RELATION_CHOICES = (
         ('Father', 'Father'),
@@ -31,7 +36,7 @@ class Class(models.Model):
 
 
 class SubjectClass(models.Model):
-    classOf = models.OneToOneField(
+    classOf = models.ForeignKey(
         'Class',
         on_delete=models.CASCADE,
     )
@@ -48,7 +53,7 @@ class SubjectClass(models.Model):
     subject = models.CharField(max_length=20)
 
     def __str__(self):
-        return "Class: {}, Subject: {}".format(self.classOf, self.subject)
+        return "Class: {}, Teacher: {}, Subject: {}".format(self.classOf, self.teacher, self.subject)
 
 
 class StaffProfile(models.Model):

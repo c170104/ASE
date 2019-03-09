@@ -30,7 +30,7 @@
 				</tr>
 				<tr>
 				{% for event in events  %}	
-					<td>{{event.apptTitle}}</td>
+					<td><a href="{% url 'appointment-detail' pk=event.id %}"> {{event.apptTitle}} </a></td>
 					<td>{{event.parent_id}}</td>
 					<td>{{event.apptDate}}</td>
 					<td>{{event.apptTimeFrom}}</td>
@@ -55,13 +55,13 @@
 				</tr>
 				{% for event in events  %}
 				<tr>
-					<td>{{event.title}}</td>
+					<td><a href="{% url 'event-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.dateFrom}}</td>
 					<td>{{event.dateTo}}</td>
 					<td>{{event.timeFrom}}</td>
 					<td>{{event.timeTo}}</td>
 					<td>{{event.location}}</td>
-					<td><a href="#"> Edit </a></td>
+					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a></td>
 					<td><a href="{% url 'event-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for confirmed events-->
@@ -75,10 +75,10 @@
 				</tr>
 				{% for event in events  %}
 				<tr>
-					<td>{{event.title}}</td>
+					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.description}}</td>
 					<td>{{event.dateCreated}}</td>
-					<td><a href="#"> Edit </a></td>
+					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a></td>
 					<td><a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for announcements-->
@@ -86,6 +86,4 @@
 				</tr>
 		</table>	
 	
-
-
 {% endblock %}

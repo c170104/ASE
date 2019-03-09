@@ -1,0 +1,25 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+		<h2>Edit {{edit_type}}</h2>
+		<!--Start of Display Errors-->
+		{% if messages %}
+			{% for message in messages %}
+				<!--<div class = "alert alert-{{message}}"></div>-->
+				{{message}}
+			{% endfor %}
+		{% endif %}		
+		<!--End of Display Errors-->
+
+		<!--Start of Form-->
+		<div class = "content-section">
+			<form method="POST">
+				{% csrf_token %}
+				{{form.as_p}}
+				<button type ="submit"> Confirm Changes </button>
+				<a href ="{% url 'schedule-manage' current=path %}"> Return </a>
+			</form>
+		</div>
+		<!--End of Form-->
+
+{% endblock %}
