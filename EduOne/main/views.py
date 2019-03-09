@@ -93,7 +93,7 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
-
+####============================================Lawrann===========================================================
 @login_required
 def appointment_add(request):
 	form = AppointmentForm(request.POST)
@@ -161,6 +161,8 @@ class AppointmentUpdate(LoginRequiredMixin,UpdateView):
 		'apptTimeFrom',
 		'apptTimeTo'
 	]
+
+####============================================Lawrann===========================================================	
     
 #This function is used to edit scheduling information based on known forms (Left Appointments)
 @login_required
@@ -228,5 +230,5 @@ def grades(request):
 	information = {}
 	information['form_class'] = StaffProfile.objects.get(user__exact = request.user.id).form_class
 	information['students'] = Student.objects.filter(form_class__exact = information['form_class'])
-
 	return render(request, 'student_settings/grades.html', {'active_page': 'student', 'information': information})
+
