@@ -1,0 +1,15 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+		<!--Start of Form-->
+		<div class = "content-section">
+			<form method="POST">
+				{% csrf_token %}
+				<h2>Are you sure you want to delete {{object.description}}</h2>
+				<button type ="submit"> Yes </button>
+				<a href ="{% url 'appointment-manage' current='approved' %}"> No </a>
+			</form>
+		</div>
+		<!--End of Form-->
+
+{% endblock %}
