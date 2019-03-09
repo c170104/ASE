@@ -4,6 +4,7 @@ from django.http import HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .decorators import staff_required, parent_required
 from .models import *
 from .forms import *
 from .functions import *
