@@ -1,0 +1,13 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+
+		<h2>{{object.title}}</h2>
+		<p>{{object.description}}</p>
+		<p>{{object.location}}</p>
+		<p>{{object.dateFrom}} to {{object.dateTo}}</p>
+		<p>{{object.timeFrom}} to {{object.timeTo}}</p>
+		<a href="#">Edit</a>
+		<a href ="{% url 'schedule-manage' %}"> Return </a>
+
+{% endblock %}

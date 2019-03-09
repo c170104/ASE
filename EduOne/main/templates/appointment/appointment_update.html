@@ -1,0 +1,11 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+<h2>Edit Appointment</h2> 
+<form method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' value = 'Save' />
+</form>
+    
+{% endblock %}
