@@ -1,0 +1,14 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+
+		<h2>{{object.apptTitle}}</h2>
+		<p>{{object.apptDescription}}</p>
+		<p>{{object.apptDate}}</p>
+		<p>{{object.apptTimeFrom}} to {{object.apptTimeTo}}</p>
+		<p>Status: {{object.apptStatus}}</p>
+		<a href="#">Approve</a>
+		<a href="#">Reject</a>
+		<a href ="{% url 'schedule-manage' current='pending' %}"> Return </a>
+
+{% endblock %}

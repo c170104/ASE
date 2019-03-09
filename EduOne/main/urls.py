@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views, forms
-from .forms import AnnouncementDeleteView, EventDeleteView
+from .forms import *
 
 
 urlpatterns = [
@@ -30,18 +30,27 @@ urlpatterns = [
 
     #Start of paths for scheduling functions
     path('schedule/', views.schedule, name='schedule-home' ),
+    path('schedule/<int:month>/<int:year>', views.schedule, name='schedule-home' ),
     path('schedule/manage/', views.schedule_manage, name='schedule-manage'),
     path('schedule/manage=<str:current>/', views.schedule_manage, name='schedule-manage'),
     path('schedule/add/', views.schedule_add , name='schedule-add'),
     path('schedule/add=<str:current>/', views.schedule_add, name='schedule-add'),
+    path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), 
     #End of paths for scheduling functions
 
-    #Start of django class form delete fucntions
+    #Start of paths for student settings functions
+    path('attendance/', views.attendance, name='attendance-home' ),
+    path('grades/', views.grades, name='grades-home' ),
+    #End of paths for student settings functions
+
+    #Start of django class form for scheduling functions
+    path('announcement/<int:pk>/', AnnouncementDetailView.as_view(), name = 'announcement-detail'),
     path('announcement/<int:pk>/delete/', AnnouncementDeleteView.as_view(), name = 'announcement-delete'),
+    path('event/<int:pk>/', EventDetailView.as_view(), name = 'event-detail'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name = 'event-delete'),
-    #End of django class form delete fucntions
+    path('appointment/<int:pk>/', AppointmentDetailView.as_view(), name = 'appointment-detail'),
+    #End of django class form for scheduling functions
     
     #Trials
-    
     
 ]

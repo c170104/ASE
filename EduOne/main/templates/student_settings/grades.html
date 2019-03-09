@@ -1,0 +1,23 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+	<h2>Class {{information.form_class.className}} Student List</h2>
+	<p>Taken by: {{user.last_name}} {{user.first_name}}</p>
+	<table>
+		<tr>
+			<th>S/N</th>
+			<th>Student Name</th>
+			<th>Tools</th>
+		</tr>
+		{% for student in information.students %}
+		<tr>
+			<td></td>
+			<td>{{student.last_name}}  {{student.first_name}}</td>
+			<td><a href='#'>Add Grades</a></td>
+			<td><a href='#'>Manage Grades</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+		
+
+{% endblock %}
