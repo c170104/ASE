@@ -223,9 +223,11 @@ class Appointment(models.Model):
     apptTitle = models.CharField(max_length=30)
     apptDescription = models.CharField(max_length=200)
     apptDate = models.DateField()
+    apptLocation = models.CharField(max_length=50)
     apptTimeFrom = models.TimeField()
     apptTimeTo = models.TimeField()
-    apptStatus = models.CharField(max_length=8, choices= APPOINTMENT_STATUS)
+    apptStatus = models.CharField(max_length=8, choices=APPOINTMENT_STATUS, default = 'pending')
+    apptRejectionReason = models.CharField(max_length=200, default = '-')
 
     def __str__(self):
         return "Appt by: {} | Status: {}".format(self.parent, self.apptStatus)
