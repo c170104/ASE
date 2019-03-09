@@ -1,0 +1,103 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+    <h2>Manage Appointment for {{ user }}</h2>
+
+
+    <p><a href="{% url 'appointment-manage' current='approved'%}"> Approved </a><p>
+    <p><a href="{% url 'appointment-manage' current='rejected'%}"> Rejected </a><p>	
+    <p><a href="{% url 'appointment-manage' current='pending' %}"> Pending </a><p>
+
+    {% if active_page == 'pending' %}
+        <table>
+        <tr>
+            <th>Title</th>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Tools</th>
+        </tr>
+        {% for appointment in obj %}
+            {% if user == appointment.parent.user %}
+                <tr>
+                    <td>{{ appointment.apptTitle }}</td>
+                    {% for staff in staffprofilelist %}
+                        {% if appointment.eventPlanner.user == staff.user %}
+                            <td>{{ staff }}  </td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>{{ appointment.apptDate }}</td>
+                    <td>{{ appointment.apptTimeFrom }}</td>
+                    <td>{{ appointment.apptTimeTo }}</td>
+                    <td>{{ appointment.apptLocation }}</td>
+                    <td>{{ appointment.apptStatus }}</td>
+                    <td><a href="{% url 'appointment-update' appointment.id %}"> Edit </a> <a href="{% url 'appointment-pending-delete' appointment.id %}"> Delete </a>  </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    {% elif active_page == 'rejected' %}
+        <table>
+        <tr>
+            <th>Title</th>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Location</th>
+            <th>Reason For Rejection</th>
+        </tr>
+        {% for appointment in obj %}
+            {% if user == appointment.parent.user %}
+                <tr>
+                    <td>{{ appointment.apptTitle }}</td>
+                    {% for staff in staffprofilelist %}
+                        {% if appointment.eventPlanner.user == staff.user %}
+                            <td>{{ staff }}  </td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>{{ appointment.apptDate }}</td>
+                    <td>{{ appointment.apptTimeFrom }}</td>
+                    <td>{{ appointment.apptTimeTo }}</td>
+                    <td>{{ appointment.apptLocation }}</td>
+                    <td> - </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+    {% elif active_page == 'approved' %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Teacher</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Tools</th>
+            </tr>
+            {% for appointment in obj %}
+                {% if user == appointment.parent.user %}
+                    <tr>
+                        <td>{{ appointment.apptTitle }}</td>
+                        {% for staff in staffprofilelist %}
+                            {% if appointment.eventPlanner.user == staff.user %}
+                                <td>{{ staff }}  </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{ appointment.apptDate }}</td>
+                        <td>{{ appointment.apptTimeFrom }}</td>
+                        <td>{{ appointment.apptTimeTo }}</td>
+                        <td>{{ appointment.apptLocation }}</td>
+                        <td>{{ appointment.apptStatus }}</td>
+                        <td> <a href="{% url 'appointment-approved-delete' appointment.id %}"> Delete </a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+    {% endif %}
+{% endblock %}

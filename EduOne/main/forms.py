@@ -2,6 +2,8 @@ from django import forms
 from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+import decimal
 from django.views.generic import DetailView, DeleteView
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -110,4 +112,57 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user_id = EventPlanner.objects.get(id__exact = event.eventPlanner_id).user_id
         if self.request.user.id == user_id:
             return True
+
+        return False         
+
+#This form is used to create new appointments
+class AppointmentForm(ModelForm):
+    STAFFCHOICES = []
+    sp = StaffProfile.objects.all()
+    for i in EventPlanner.objects.all():
+        for staff in sp:
+            if staff.user == i.user:
+                staffn = staff.firstname + ' ' + staff.lastname 
+                STAFFCHOICES.append((i,staffn))
+                break
+    staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
+    class Meta:
+        model = Appointment
+        exclude = ['apptStatus', 'parent', 'apptRejectionReason', 'eventPlanner']
+
+        labels = {
+            'staffchosen': ('Staff Name'),
+            'apptTitle': ('Appointment Title'),
+            'apptDescription': ('Appointment Description'),
+            'apptLocation': ('Location of Appointment'),
+            'apptDate': ('Date of Appointment'),
+            'apptTimeFrom': ('Start Time of Appointment'),
+            'apptTimeTo': ('End Time of Appointment'),
+        }
+        help_texts = {
+            'apptTitle':('The title of the appointment goes here.'),
+            'apptDescription' : ('The details of the appointment goes here.'),
+            'apptLocation': ('The location details of appointment goes here.'),
+            'apptDate': ('The date of the appointment goes here.'),
+            'apptTimeFrom': ('The start time of the appointment goes here.'),
+            'apptTimeTo' : ('The end time of the appointment goes here.'),
+        }
+
+# This class form is used by appointment-approved/pending-delete to delete existing appointment
+class AppointmentPendingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Appointment
+    success_url = reverse_lazy('appointment-manage')
+    
+    def test_func(self): #might remove
+        appointment = self.get_object()
+        return True
+
+class AppointmentApprovedDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Appointment
+    success_url = reverse_lazy('appointment-manage=approved')
+    
+    def test_func(self): #might remove
+        appointment = self.get_object()
+        return True
+
         return False  
