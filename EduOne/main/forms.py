@@ -5,9 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy
 import decimal
-
-from .models import *
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DetailView, DeleteView
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
