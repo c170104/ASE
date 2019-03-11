@@ -48,12 +48,30 @@ urlpatterns = [
     path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), 
     #End of paths for scheduling functions
 
+    #Start of paths for parent's scheduling functions
+    path('schedule/appointment-add/', views.appointment_add, name='appointment-add'), 
+    path('schedule/appointment-manage/', views.appointment_manage, name='appointment-manage'),
+    path('schedule/appointment-manage=<str:current>/', views.appointment_manage, name='appointment-manage'),
+    #End of paths for parent's scheduling functions
+
+    #Start of paths for django class form edit functions
+    path('appointment-edit/<int:pk>/delete/', views.AppointmentUpdate.as_view(template_name = "appointment/appointment_update.html"), name = 'appointment-update'),
+    #End of django class form edit functions
+
+    #Start of django class form delete functions
+
+
+    #Start of django class form for scheduling functions
     #(Teachers) Start of django class form for scheduling functions
     path('announcement/<int:pk>/', AnnouncementDetailView.as_view(), name = 'announcement-detail'),
     path('announcement/<int:pk>/delete/', AnnouncementDeleteView.as_view(), name = 'announcement-delete'),
     path('event/<int:pk>/', EventDetailView.as_view(), name = 'event-detail'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name = 'event-delete'),
+    path('appointment-pending/<int:pk>/delete/', AppointmentPendingDeleteView.as_view(template_name = "appointment/appointment_pending_delete.html"), name = 'appointment-pending-delete'),
+    path('appointment-approved/<int:pk>/delete/', AppointmentApprovedDeleteView.as_view(template_name = "appointment/appointment_approved_delete.html"), name = 'appointment-approved-delete'),
+    #End of django class form delete fucntions
     path('appointment/<int:pk>/', AppointmentDetailView.as_view(), name = 'appointment-detail'),
+    
     #End of django class form for scheduling functions
 
     #(Teachers) Start of paths for student settings functions
