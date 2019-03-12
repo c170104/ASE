@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy
