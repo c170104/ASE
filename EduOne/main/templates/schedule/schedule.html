@@ -3,20 +3,28 @@
 {% block content %}
 		
 		<!--Display calendar, need to pull all events related to user and pass it here-->
+		<!--Calendar will be highlighted in red if there are any events, and upon clicking show information-->
+		Calendar!
 
-		<!--
-		Check if the user is a parent or teacher
-		If teacher use block 1, if parent use block 2
-		-->
-		<!--Start of Block 1-->
+		<!--These will return 2 sets of queries events and appointments, where details can be displayed upon
+			clicking on the boxes in red-->
+		{% for event in calendar.values %}
+			{{event}}
+		{% endfor %}
+		<!--End-->
+
+		<!--Start of block of actions for staff-->
+		{% if user.is_staff%}
 		<p><a href="{% url 'schedule-add' current='events' %}"> Add Events </a><p>
 		<p><a href="{% url 'schedule-manage' current='confirmed' %}"> Manage Events </a><p>
-		<!--End of Block 1-->
+		<!--End of block of actions for staff-->
 
-		<!--Start of Block 2-->
+		<!--Start of block of actions for parent-->
+		{% elif user.is_parent %}
 		<p><a href="#"> Add Appointments </a><p>
 		<p><a href="#"> Manage Appointments </a><p>
-		<!--End of Block 2-->
+		{% endif %}
+		<!--End of block of actions for parent-->
 
 
 {% endblock %}

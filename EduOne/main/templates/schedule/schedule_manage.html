@@ -15,23 +15,75 @@
 		<p><a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a><p>
 		<p><a href="{% url 'schedule-manage' current='announcements'%}"> Announcements </a><p>	
 		<!--Display the contents of the respective tab from active_tab-->
-		<p>Output goes here in a table form<p>
 		
-		{% if active_tab == 'pending' %}
-			<!--The Approve & Reject functions here are for the pending appointments-->
-			<p><a href="#"> Approve </a><p>
-			<p><a href="#"> Reject </a><p>
-			<!--End of Approve & Reject functions-->
+		<h2>Event List ({{active_tab}})</h2>
+		<table>
+			<!--Start of block for pending appointments-->
+			{% if active_tab == 'pending' %}
+				<tr>
+				<th>Appointment Title</th>
+				<th>Requested by</th>
+				<th>Date</th>
+				<th>Time from</th>
+				<th>Time to</th>
+				<th>Status</th>
+				</tr>
+				<tr>
+				{% for event in events  %}	
+					<td><a href="{% url 'appointment-detail' pk=event.id %}"> {{event.apptTitle}} </a></td>
+					<td>{{event.parent_id}}</td>
+					<td>{{event.apptDate}}</td>
+					<td>{{event.apptTimeFrom}}</td>
+					<td>{{event.apptTimeTo}}</td>
+					<td>{{event.apptStatus}}</td>
+					<!--The Approve & Reject functions here are for the pending appointments-->
+					<td><a href="#"> Approve </a></td>
+					<td><a href="#"> Reject </a></td>
+					<!--End of Approve & Reject functions-->
+				{% endfor %}	
+			<!--End of block for pending appointments-->
 
-		{% else %}	
-			<!--The Edit & Delete functions here are for the confirmed events and announcements-->
-			<p><a href="#"> Edit </a><p>
-			<p><a href="{% url 'event-delete' %}"> Delete </a><p>
-			<!--End of Edit & Delete functions-->
+			<!--Start of block for confirmed events-->
+			{% elif active_tab == 'confirmed' %}
+				<tr>
+					<th>Title</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Start Time</th>
+					<th>End Time</th>
+					<th>Location</th>
+				</tr>
+				{% for event in events  %}
+				<tr>
+					<td><a href="{% url 'event-detail' pk=event.id %}"> {{event.title}} </a></td>
+					<td>{{event.dateFrom}}</td>
+					<td>{{event.dateTo}}</td>
+					<td>{{event.timeFrom}}</td>
+					<td>{{event.timeTo}}</td>
+					<td>{{event.location}}</td>
+					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a></td>
+					<td><a href="{% url 'event-delete' event.id %}"> Delete </a></td>
+				{% endfor %}
+			<!--End of block for confirmed events-->
 
-		{% endif %}
-
-		
-
-
+			<!--Start of block for announcements-->
+			{% elif active_tab == 'announcements' %}
+				<tr>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Date Created</th>
+				</tr>
+				{% for event in events  %}
+				<tr>
+					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
+					<td>{{event.description}}</td>
+					<td>{{event.dateCreated}}</td>
+					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a></td>
+					<td><a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
+				{% endfor %}
+			<!--End of block for announcements-->
+			{% endif %}
+				</tr>
+		</table>	
+	
 {% endblock %}

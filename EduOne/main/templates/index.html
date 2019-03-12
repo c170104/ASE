@@ -1,5 +1,23 @@
 {% extends "common/header.html" %}
 
 {% block content %}
+	<!--Display calendar only for the current month and year, need to pull all events related to user and pass it here-->
+		<!--Calendar will be highlighted in red if there are any events, and upon clicking show information-->
+		Calendar!
+
+		<!--These will return 2 sets of queries events and appointments, where details can be displayed upon
+			clicking on the boxes in red-->
+		{% for event in calendar.values %}
+			{{event}}
+		{% endfor %}
+		<!--End-->
+
+
+	<h2>Announcements</h2>
+		{% for event in announcements  %}
+			<p>{{event.title}}</p>
+			<p>{{event.description}}</p>
+			<p>Date Posted: {{event.dateCreated}} </p>
+		{% endfor %}
 
 {% endblock %}

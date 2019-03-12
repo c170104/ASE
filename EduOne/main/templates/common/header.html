@@ -36,17 +36,31 @@
             <li class="nav-item {% if active_page == 'home' %} active {% endif %}">
                 <a class="nav-link" href="{% url 'main-home' %}">Home</a>
             </li>
-            <li class="nav-item {% if active_page == 'logout' %} active {% endif %}">
-                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
-            </li>
             <li class="nav-item {% if active_page == 'schedule' %} active {% endif %}">
                 <a class="nav-link" href="{%url 'schedule-home'%}">Schedule</a>
             </li>
+            {% if user.is_staff %}
+            <li>
+                <div class="dropdown">
+                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="studentSettings" data-toggle="dropdown">
+                    <a class="nav-link">Student's Settings</a>
+                    </button>
+                  <div class="dropdown-menu" aria-labelledby="studentSettings">
+                    <a class="dropdown-item" href="{% url 'grades-home' %}">Manage Grades</a>
+                    <a class="dropdown-item" href="#">Comment Performance</a>
+                    <a class="dropdown-item" href="{% url 'attendance-home' %}">Take Attendance</a>
+                  </div>
+                </div>  
+            </li>
+            {% endif %}
             <li class="nav-item {% if active_page == 'test2' %} active {% endif %}">
                 <a class="nav-link" href="/test2">Student's Settings</a>
             </li>
             <li class="nav-item {% if active_page == 'test3' %} active {% endif %}">
                     <a class="nav-link" href="/test3">Test3</a>
+            </li>
+            <li class="nav-item {% if active_page == 'logout' %} active {% endif %}">
+                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
             </li>
         </ul>
     </nav>

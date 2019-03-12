@@ -1,9 +1,14 @@
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 
 # Create your models here.
+class User(AbstractUser):
+    is_staff = models.BooleanField('Staff status', default=False)
+    is_parent = models.BooleanField('Parent status', default=False)
+
+
 class ParentProfile(models.Model):
     RELATION_CHOICES = (
         ('Father', 'Father'),
@@ -31,7 +36,7 @@ class Class(models.Model):
 
 
 class SubjectClass(models.Model):
-    classOf = models.OneToOneField(
+    classOf = models.ForeignKey(
         'Class',
         on_delete=models.CASCADE,
     )
@@ -48,7 +53,7 @@ class SubjectClass(models.Model):
     subject = models.CharField(max_length=20)
 
     def __str__(self):
-        return "Class: {}, Subject: {}".format(self.classOf, self.subject)
+        return "Class: {}, Teacher: {}, Subject: {}".format(self.classOf, self.teacher, self.subject)
 
 
 class StaffProfile(models.Model):
@@ -189,46 +194,21 @@ class Event(models.Model):
         'EventPlanner',
         on_delete=models.CASCADE,
     )
-    #Maybe can include an event title
-    #Events are a one day thing? Because there is no eventEndDate
+    title = models.CharField(max_length=30)
     description = models.CharField(max_length=200, blank=True, null=True)
-    eventDate = models.DateField()
+    location = models.CharField(max_length=50)
+    dateFrom = models.DateField()
+    dateTo = models.DateField()
     timeFrom = models.TimeField()
     timeTo = models.TimeField()
-    #Need a location field here that is similar to description
 
     def __str__(self):
-        return "{}, Date: {}, From: {}, To: {}".format(self.eventPlanner, self.eventDate, self.timeFrom, self.timeTo)
-
-#This form is used by the views.schedule_add to add create new Event objects
-class EventForm(ModelForm):
-    class Meta:
-        model = Event
-        exclude = ['eventPlanner']
-        labels = {
-            'description': ('Event Description'),
-            'eventDate': ('Date of Event'),
-            'timeFrom': ('Start Time of Event'),
-            'timeTo': ('End Time of Event'),
-        }
-        help_texts = {
-            'description' : ('The details of the event goes here.'),
-            'eventDate' : ('The date of the event goes here.'),
-            'timeFrom' : ('The start time of the event goes here.'),
-            'timeTo' : ('The end time of the event goes here.'),
-        }
-
+        return "{}, Date From: {}, Date To: {}, From: {}, To: {}".format(self.eventPlanner, self.dateFrom, self.dateTo, self.timeFrom, self.timeTo)
 
 APPOINTMENT_STATUS = (
-    ('pending'),
-    ('approved'),
-    ('rejected')
-    )
-
-APPOINTMENT_STATUS = (
-    ('pending'),
-    ('approved'),
-    ('rejected')
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected')
     )
 
 class Appointment(models.Model):
@@ -240,44 +220,28 @@ class Appointment(models.Model):
         'ParentProfile',
         on_delete=models.CASCADE,
     )
+    apptTitle = models.CharField(max_length=30)
+    apptDescription = models.CharField(max_length=200)
     apptDate = models.DateField()
+    apptLocation = models.CharField(max_length=50)
     apptTimeFrom = models.TimeField()
     apptTimeTo = models.TimeField()
-    apptDescription = models.CharField(max_length=200)
-    approved = models.BooleanField(default=False)
+    apptStatus = models.CharField(max_length=8, choices=APPOINTMENT_STATUS, default = 'pending')
+    apptRejectionReason = models.CharField(max_length=200, default = '-')
 
     def __str__(self):
-        return "Appt by: {} | Approved: {}".format(self.parent, self.approved)
+        return "Appt by: {} | Status: {}".format(self.parent, self.apptStatus)
 
 
 class Announcement(models.Model):
-    creator = models.CharField(max_length=50)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(max_length=30)
     description = models.CharField(max_length=500)
-    isEvent = models.BooleanField(default=False)
-    #Announcements can cover only a single day? Because there is no eventEndDate
-    eventDate = models.DateField()
-    eventTimeFrom = models.TimeField()
-    eventTimeTo = models.TimeField()
+    dateCreated = models.DateField()
 
     def __str__(self):
-        return "Creator: {}, isEvent: {}".format(self.creator, self.isEvent)
+        return "User: {}, title: {}".format(self.user, self.title)
 
-#This form is used by the views.schedule_add to add create new Announcement objects
-class AnnoucementForm(ModelForm):
-    class Meta:
-        model = Announcement
-        exclude = ['creator']
-        labels = {
-            'description': ('Announcement Description'),
-            'isEvent' : ('Is this announcement part of a event?'),
-            'eventDate': ('Date of Announcement'),
-            'eventTimeFrom': ('Start Time of Announcement'),
-            'eventTimeTo': ('End Time of Announcement'),
-        }
-        help_texts = {
-            'description': ('The announcement description goes here.'),
-            'isEvent' : ('Specifies whether a not the announcement is part of a event.'),
-            'eventDate': ('The date of the announcement goes here.'),
-            'eventTimeFrom': ('The time where the announcement\'s event(s) starts goes here.'),
-            'eventTimeTo': ('The time where the announcement\'s event(s) ends goes here.'),
-        }
