@@ -1,0 +1,427 @@
+[
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 1,
+        "fields": {
+            "app_label": "admin",
+            "model": "logentry"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 2,
+        "fields": {
+            "app_label": "auth",
+            "model": "permission"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 3,
+        "fields": {
+            "app_label": "auth",
+            "model": "group"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 4,
+        "fields": {
+            "app_label": "contenttypes",
+            "model": "contenttype"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 5,
+        "fields": {
+            "app_label": "sessions",
+            "model": "session"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 6,
+        "fields": {
+            "app_label": "main",
+            "model": "user"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 7,
+        "fields": {
+            "app_label": "main",
+            "model": "announcement"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 8,
+        "fields": {
+            "app_label": "main",
+            "model": "appointment"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 9,
+        "fields": {
+            "app_label": "main",
+            "model": "attendance"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 10,
+        "fields": {
+            "app_label": "main",
+            "model": "class"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 11,
+        "fields": {
+            "app_label": "main",
+            "model": "comment"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 12,
+        "fields": {
+            "app_label": "main",
+            "model": "event"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 13,
+        "fields": {
+            "app_label": "main",
+            "model": "eventplanner"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 14,
+        "fields": {
+            "app_label": "main",
+            "model": "parentprofile"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 15,
+        "fields": {
+            "app_label": "main",
+            "model": "reportcard"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 16,
+        "fields": {
+            "app_label": "main",
+            "model": "reportcardpage"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 17,
+        "fields": {
+            "app_label": "main",
+            "model": "staffprofile"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 18,
+        "fields": {
+            "app_label": "main",
+            "model": "student"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 19,
+        "fields": {
+            "app_label": "main",
+            "model": "studenttosubjectclass"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 20,
+        "fields": {
+            "app_label": "main",
+            "model": "subjectclass"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 21,
+        "fields": {
+            "app_label": "main",
+            "model": "subjectgrade"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "5wybknnw2swoxrp7evplws0lefahblkz",
+        "fields": {
+            "session_data": "NmZlMGVkMjg1NjBkYmJkYTM3YmM0MWNhM2JhMTk3YzNiMjg0YWUzMjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIzMjU1ZDgwZjlkMDg0OGU4NmVjOTk1YWM5NWRkNDZmZWY2ZWE4MWRiIn0=",
+            "expire_date": "2019-03-22T14:30:37.779Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "hky40pfpqlc9hu5k5aisjfz6av3k40o3",
+        "fields": {
+            "session_data": "Y2ZiYWU3MTExMzhhNTVlYzBlMTExYzEyYjZiMDVhMWZlMWU3NzZmMDp7Il9hdXRoX3VzZXJfaWQiOiI2IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJjNDFkZWExMzI3MTBkYTY3MzEwYTJmMTQyNDViZTZmNDNlZTRiZTcxIn0=",
+            "expire_date": "2019-03-22T17:34:02.182Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "hvahelk1gwbwixsel1eq749zchd7mvhc",
+        "fields": {
+            "session_data": "NmZlMGVkMjg1NjBkYmJkYTM3YmM0MWNhM2JhMTk3YzNiMjg0YWUzMjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIzMjU1ZDgwZjlkMDg0OGU4NmVjOTk1YWM5NWRkNDZmZWY2ZWE4MWRiIn0=",
+            "expire_date": "2019-03-23T19:06:49.863Z"
+        }
+    },
+    {
+        "model": "main.class",
+        "pk": 1,
+        "fields": {
+            "className": "A1"
+        }
+    },
+    {
+        "model": "main.class",
+        "pk": 2,
+        "fields": {
+            "className": "B1"
+        }
+    },
+    {
+        "model": "main.subjectclass",
+        "pk": 1,
+        "fields": {
+            "classOf": 1,
+            "teacher": 1,
+            "subject": "English"
+        }
+    },
+    {
+        "model": "main.subjectclass",
+        "pk": 2,
+        "fields": {
+            "classOf": 1,
+            "teacher": 2,
+            "subject": "Maths"
+        }
+    },
+    {
+        "model": "main.subjectclass",
+        "pk": 3,
+        "fields": {
+            "classOf": 2,
+            "teacher": 1,
+            "subject": "Chinese"
+        }
+    },
+    {
+        "model": "main.subjectclass",
+        "pk": 4,
+        "fields": {
+            "classOf": 2,
+            "teacher": 2,
+            "subject": "Science"
+        }
+    },
+    {
+        "model": "main.student",
+        "pk": "S1516416C",
+        "fields": {
+            "child_of": 1,
+            "form_class": 1,
+            "first_name": "Wen Jun",
+            "last_name": "Chan",
+            "home_address": "Singapore",
+            "emergency_contact": "98563212"
+        }
+    },
+    {
+        "model": "main.student",
+        "pk": "S9521215C",
+        "fields": {
+            "child_of": 2,
+            "form_class": 2,
+            "first_name": "Wei Hao",
+            "last_name": "Koh",
+            "home_address": "Singapore",
+            "emergency_contact": "956850012"
+        }
+    },
+    {
+        "model": "main.student",
+        "pk": "S9872151C",
+        "fields": {
+            "child_of": 1,
+            "form_class": 1,
+            "first_name": "Benjamin",
+            "last_name": "Lim",
+            "home_address": "Singapore",
+            "emergency_contact": "86625468"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 1,
+        "fields": {
+            "subjectClass": 1,
+            "student": "S9872151C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 2,
+        "fields": {
+            "subjectClass": 2,
+            "student": "S9872151C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 3,
+        "fields": {
+            "subjectClass": 3,
+            "student": "S9872151C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 4,
+        "fields": {
+            "subjectClass": 4,
+            "student": "S9872151C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 5,
+        "fields": {
+            "subjectClass": 2,
+            "student": "S9521215C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 6,
+        "fields": {
+            "subjectClass": 4,
+            "student": "S9521215C"
+        }
+    },
+    {
+        "model": "main.studenttosubjectclass",
+        "pk": 7,
+        "fields": {
+            "subjectClass": 1,
+            "student": "S1516416C"
+        }
+    },
+    {
+        "model": "main.reportcard",
+        "pk": 1,
+        "fields": {
+            "student": "S9872151C"
+        }
+    },
+    {
+        "model": "main.reportcard",
+        "pk": 2,
+        "fields": {
+            "student": "S9521215C"
+        }
+    },
+    {
+        "model": "main.reportcard",
+        "pk": 3,
+        "fields": {
+            "student": "S1516416C"
+        }
+    },
+    {
+        "model": "main.reportcardpage",
+        "pk": 1,
+        "fields": {
+            "reportCard": 1,
+            "examination_type": "Mid-Year Examination",
+            "exam_date": "2019-03-08",
+            "description": "hello there",
+            "acknowledgement": false
+        }
+    },
+    {
+        "model": "main.subjectgrade",
+        "pk": 1,
+        "fields": {
+            "reportCardPage": 1,
+            "subjectName": "Maths",
+            "marks": "90.0"
+        }
+    },
+    {
+        "model": "main.attendance",
+        "pk": 1,
+        "fields": {
+            "student": "S9872151C",
+            "date": "2019-03-09"
+        }
+    },
+    {
+        "model": "main.event",
+        "pk": 1,
+        "fields": {
+            "eventPlanner": 3,
+            "title": "Staff Meeting?",
+            "description": "UPDATES",
+            "location": "School",
+            "dateFrom": "2019-02-08",
+            "dateTo": "2019-03-08",
+            "timeFrom": "14:40:30",
+            "timeTo": "14:40:30"
+        }
+    },
+    {
+        "model": "main.event",
+        "pk": 2,
+        "fields": {
+            "eventPlanner": 3,
+            "title": "Staff Meeting 2",
+            "description": "Meeting with burdern",
+            "location": "School",
+            "dateFrom": "2019-03-09",
+            "dateTo": "2019-04-09",
+            "timeFrom": "14:40:30",
+            "timeTo": "14:40:30"
+        }
+    },
+    {
+        "model": "main.event",
+        "pk": 4,
+        "fields": {
+            "eventPlanner": 2,
+            "title": "Christmas Party",
+            "description": "Christmas Party at School YAY",
+            "location": "school",
+            "dateFrom": "2019-03-08",
+            "dateTo": "2019-03-08",
+            "timeFrom": "15:52:19",
+            "timeTo": "15:52:20"
+        }
+    }
+]
