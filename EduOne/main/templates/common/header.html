@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,9 +14,24 @@
 
 </head>
 
+<style>
+    .checked {
+        color: orange;
+    }
+
+    .footer {
+        position: fixed;
+        background-color: #CACACA;
+        color: black;
+        width: 100%;
+        bottom: 0px;
+        
+    }
+</style>
+
 <body class="body" style="background-color:#f6f6f6">
     <nav class="navbar navbar-expand-md navbar-dark static-top bg-dark">
-        <a class="navbar-brand" href="/"><img src="{% static 'logo/eduone.jpeg' %}" width="67" height="40" class="d-inline-block align-top" alt=""></a>
+        <a class="navbar-brand" href="/"><img src="{% static 'logo/eduonewhite.png' %}" width="67" height="50" class="d-inline-block align-top" alt=""></a>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if active_page == 'home' %} active {% endif %}">
                 <a class="nav-link" href="{% url 'main-home' %}">Home</a>
@@ -38,7 +54,7 @@
             </li>
             {% endif %}
             <li class="nav-item {% if active_page == 'test2' %} active {% endif %}">
-                <a class="nav-link" href="/test2">Test2</a>
+                <a class="nav-link" href="/test2">Student's Settings</a>
             </li>
             <li class="nav-item {% if active_page == 'test3' %} active {% endif %}">
                     <a class="nav-link" href="/test3">Test3</a>
@@ -53,24 +69,23 @@
         {% block content %} {% endblock %}
     </main>
 
-    <hr>
+    
 
-    <footer class="container">
-        <div class="row">
-            <div class="col">
-                <i>NTU CZ3005 2018/19 Semester 1<br>Advance Software Engineering Project<br><b>Team ReFormed</b></i>
+
+    <footer class="footer">
+            <div class="row">
+                <div class="col">
+                    <i>NTU CZ3005 2018/19 Semester 1<br>Advance Software Engineering Project<br><b>Team ReFormed</b></i>
+                </div>
+                <div class="fixed-bottom" style="text-align: right; font-weight: bold;" >
+                    <a href=""style="color: black;">Join us on telegram!</a>
+                </div>
             </div>
-            <div class="col text-right">
-                Join us on telegram!
-            </div>
-        </div>
-    </footer>
+        </footer>
+
+    
 </body>
 
-<style>
-    .checked {
-    color: orange;
-}
-</style>
+
 
 </html>
