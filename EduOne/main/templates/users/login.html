@@ -1,19 +1,58 @@
 {% extends "common/header_login.html" %}
 
 {% block content %}
+	<head>
+		<meta charset="utf-8" />
+		{% load staticfiles  %}
+		<link rel='stylesheet' href="{% static 'common/css/bootstrap.min.css' %}" type='text/css' />
 
+	
+	</head>
+	
+	<style>
+		.form-check-input {
+			width: 13px;
+			height: 13px;
+		}
+
+		.container {
+			margin-top: 50px;
+		}
+
+		.btn-outline-dark {
+			width: 50%;
+		}
+
+	</style>
+
+	<div class = "container">
 	<div class = "content-section">
 		<form method = "POST">
 			{% csrf_token %}
-				<fieldset class = "form-group">
-					Log in
-					{{ form.as_p}}
-				</fieldset>
-			<div class = "form-group">
-				<button type = "submit"> Login </button>
-			</div>
+				<div class = "col-md-6 offset-md-3">
+				<div class = "form-group">
+					<label for="id_username">Username:</label>
+					<input type="text" name="username" autofocus required id="id_username" class = "form-control">
+				</div>
+
+				<div class = "form-group">
+					<label for="id_password">Password:</label>
+					<input type="password" name="password" required id="id_password" class = "form-control">
+				</div>
+
+				<div class = "form-group">
+					<div class = "form-check">
+						<input type = "checkbox" class = "form-check-input">
+						<label class = "form-check-label">Remember me</label>
+					</div>
+				</div>
+
+				<div class = "form-group col md-4 offset-md-3">
+					<button type = "submit" class = "btn btn-outline-dark"> Login </button>
+				</div>
+				</div>
 		</form>	
 	</div>
-
+	</div>
 
 {% endblock %}	
