@@ -21,7 +21,7 @@
                 <a class="nav-link" href="{% url 'main-home' %}">Home</a>
             </li>
             <li class="nav-item {% if active_page == 'schedule' %} active {% endif %}">
-                <a class="nav-link" href="{%url 'schedule-home'%}">Schedule</a>
+                <a class="nav-link" href="{% url 'schedule-home' %}">Schedule</a>
             </li>
             {% if user.is_staff %}
             <li>
