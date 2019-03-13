@@ -12,9 +12,9 @@ import datetime
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 
-# Create your views here.
-#Returns the home page for display (left the calendar to display)
-@login_required
+# # Create your views here.
+# #Returns the home page for display (left the calendar to display)
+# @login_required
 def home(request, month=datetime.datetime.now().month, year=datetime.datetime.now().year):
 	events = Announcement.objects.all().extra(order_by = ['-dateCreated'])
 	planner = EventPlanner.objects.get(user__exact = request.user.id)
@@ -23,16 +23,16 @@ def home(request, month=datetime.datetime.now().month, year=datetime.datetime.no
 	return render(request, 'index.html', {'active_page': 'home', 'announcements' : events, 'calendar': calendar})
 
 
-#This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
-@login_required
+# #This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
+# @login_required
 def schedule(request, month=datetime.datetime.now().month, year=datetime.datetime.now().year):
 	planner = EventPlanner.objects.get(user__exact = request.user.id)
 	calendar = getCalendarInformation(planner, month, year)
 		
 	return render(request, 'schedule/schedule.html', {'active_page': 'schedule', 'calendar': calendar})
 
-#This function is for the teachers to add new event that can be announcments/events (completed)
-@login_required
+# #This function is for the teachers to add new event that can be announcments/events (completed)
+# @login_required
 def schedule_add(request, current='events'):
 	event_categories = ('events', 'announcements')
 	if current not in event_categories:
@@ -63,8 +63,8 @@ def schedule_add(request, current='events'):
 	
 	return render(request, 'schedule/schedule_add.html', {'active_page': 'schedule', 'active_tab': current, 'form' : form})
 
-#This function is used for displaying and managing schedules for teachers (Left Appointments Approve/Reject Portion)
-@login_required
+# #This function is used for displaying and managing schedules for teachers (Left Appointments Approve/Reject Portion)
+# @login_required
 def schedule_manage(request, current='confirmed'):
 	event_types = ('confirmed', 'pending', 'announcements')
 	if current not in event_types:
@@ -93,7 +93,7 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
-####============================================Lawrann===========================================================
+# ####============================================Lawrann===========================================================
 @login_required
 def appointment_add(request):
 	form = AppointmentForm(request.POST)
@@ -119,7 +119,7 @@ def appointment_add(request):
 	
 	return render(request, 'appointment/appointment_add.html', context)
 
-@login_required
+# @login_required
 def appointment_manage(request, current='pending'):
 	event_types = ('approved', 'rejected', 'pending')
 	current_user = request.user
@@ -162,10 +162,10 @@ class AppointmentUpdate(LoginRequiredMixin,UpdateView):
 		'apptTimeTo'
 	]
 
-####============================================Lawrann===========================================================	
+# ####============================================Lawrann===========================================================	
     
-#This function is used to edit scheduling information based on known forms (Left Appointments)
-@login_required
+# #This function is used to edit scheduling information based on known forms (Left Appointments)
+# @login_required
 def schedule_edit(request, stype=None, pk=None):
 	schedule_types = ('event', 'appointment', 'announcement')
 	if stype not in schedule_types:
@@ -205,8 +205,8 @@ def schedule_edit(request, stype=None, pk=None):
 
 		return render(request, 'schedule/schedule_edit.html', {'edit_type' : stype, 'form' : form, 'path':next_path })
 
-#This function is the main page for attendance taking (Uncompleted, left with updating attendance)
-@staff_required
+# #This function is the main page for attendance taking (Uncompleted, left with updating attendance)
+# @staff_required
 def attendance(request, date = datetime.datetime.now()):
 	information = {}
 	present = []
