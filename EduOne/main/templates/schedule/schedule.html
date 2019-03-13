@@ -21,8 +21,8 @@
 
 		<!--Start of block of actions for parent-->
 		{% elif user.is_parent %}
-		<p><a href="#"> Add Appointments </a><p>
-		<p><a href="#"> Manage Appointments </a><p>
+		<p><a href="{% url 'appointment-add' %}"> Add Appointments </a><p>
+		<p><a href="{% url 'appointment-manage' current='pending' %}"> Manage Appointments </a><p>
 		{% endif %}
 		<!--End of block of actions for parent-->
 
