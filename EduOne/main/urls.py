@@ -70,7 +70,7 @@ urlpatterns = [
     #End of paths for parent's scheduling functions
     
     #Start of paths for appointment's manage functions
-    path('appointment-edit/<int:pk>/', views.AppointmentUpdate.as_view(template_name = "appointment/appointment_update.html"), name = 'appointment-update'),
+    path('appointment-edit/<int:pk>/', AppointmentUpdate.as_view(template_name = "appointment/appointment_update.html"), name = 'appointment-update'),
     path('appointment-pending/<int:pk>/delete/', AppointmentPendingDeleteView.as_view(template_name = "appointment/appointment_pending_delete.html"), name = 'appointment-pending-delete'),
     path('appointment-approved/<int:pk>/delete/', AppointmentApprovedDeleteView.as_view(template_name = "appointment/appointment_approved_delete.html"), name = 'appointment-approved-delete'),
     #End of paths for appointment's manage functions

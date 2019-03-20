@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
 import decimal
 from django.views.generic import DetailView, DeleteView
@@ -151,7 +151,10 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False         
 
+######################### Lawrann #########################
 # #This form is used to create new appointments
+## - Staff planner, from parent, pull child and FormClass then associated teacher
+
 class AppointmentForm(ModelForm):
     STAFFCHOICES = []
     sp = StaffProfile.objects.all()
@@ -184,21 +187,43 @@ class AppointmentForm(ModelForm):
             'apptTimeTo' : ('The end time of the appointment goes here.'),
         }
 
+class AppointmentUpdate(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model = Appointment
+    success_url = reverse_lazy('appointment-manage')
+    fields = [
+    'apptTitle',
+    'apptDescription',
+    'apptDate',
+    'apptLocation',
+    'apptTimeFrom',
+    'apptTimeTo'
+    ]
+
+    def test_func(self):
+        appointment = self.get_object()
+        if self.request.user.is_staff == True:
+            return False
+        if appointment.parent.user != self.request.user or appointment.apptStatus != 'pending':
+            return False
+        return True
+
+
 # This class form is used by appointment-approved/pending-delete to delete existing appointment
 class AppointmentPendingDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Appointment
     success_url = reverse_lazy('appointment-manage')
-    
-    def test_func(self): #might remove
+    def test_func(self):
         appointment = self.get_object()
-        return True
+        if appointment.parent.user == self.request.user and appointment.apptStatus == 'pending':
+            return True
+        return False
 
 class AppointmentApprovedDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Appointment
     success_url = reverse_lazy('appointment-manage=approved')
-    
-    def test_func(self): #might remove
+    def test_func(self):
         appointment = self.get_object()
-        return True
-
+        if appointment.parent.user == self.request.user and appointment.apptStatus == 'approved':
+            return True
         return False  
+######################### Lawrann #########################
