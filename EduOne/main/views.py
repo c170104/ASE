@@ -190,9 +190,6 @@ def schedule_edit(request, stype=None, pk=None):
 			next_path = 'announcements'
 			form = AnnouncementForm(request.POST or None, instance=event)
 
-		else:
-			return HttpResponseForbidden()
-
 		#Checks if the user has permissions to modify the contents	
 		if request.user.id != user_id:
 			return HttpResponseForbidden()
@@ -212,8 +209,8 @@ def attendance(request, date = datetime.datetime.now()):
 	present = []
 	information['attendanceCount'] = 0
 	information['today'] = date
-	information['form_class'] = StaffProfile.objects.get(user__exact = request.user.id).form_class
-	information['students'] = Student.objects.filter(form_class__exact = information['form_class'])
+	information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
+	information['students'] = Student.objects.filter(form_class__exact = information['teacher_info'].form_class)
 	for student in information['students']:
 		try:
 			student = Attendance.objects.get(student__exact = student, date__exact = date).student
@@ -226,9 +223,55 @@ def attendance(request, date = datetime.datetime.now()):
 	information['present'] = present
 	return render(request, 'student_settings/attendance.html', {'active_page': 'student', 'information': information})
 
+#This function defines whether to add / remove students from the attendance list of that current day
+def attendance_edit(request, id=None, status=None):
+	status_types = ('Y', 'y', 'N', 'n', 'all', 'ALL')
+	if status not in status_types:
+		#Displays a forbidden error
+		return HttpResponseForbidden()
+
+	else:
+		#Depends on the whether the student is present
+		#If the student is present, this will delete the current record from the database in Attendance
+		if (status == status_types[0] or status == status_types[1]) and id:
+			student = Student.objects.get(nric__exact = id)
+			try:
+				student = Attendance.objects.get(student = student)
+				student.delete()
+			except Attendance.DoesNotExist:	
+				student = None
+
+		#If the student is not present, this will add the current record into the database in Attendance
+		elif (status == status_types[2] or status == status_types[3]) and id:
+			student = Student.objects.get(nric__exact = id)
+			try:
+				student = Attendance.objects.get(student = student)
+			except Attendance.DoesNotExist:	
+				Attendance.objects.create(student = student, date = datetime.datetime.now())
+		
+		#Adds the all students of the form class as present into the database in Attendance  
+		elif (status == status_types[4]) and id:
+			staff = StaffProfile.objects.get(user__exact = request.user.id)
+			students = Student.objects.filter(form_class__exact = staff.form_class)
+			for student in students:
+				try:
+					student = Attendance.objects.get(student = student)
+				except Attendance.DoesNotExist:	
+					Attendance.objects.create(student = student, date = datetime.datetime.now())
+
+		return redirect('attendance-home')
+
+	return render(request)
+
+
 def grades(request):
 	information = {}
-	information['form_class'] = StaffProfile.objects.get(user__exact = request.user.id).form_class
-	information['students'] = Student.objects.filter(form_class__exact = information['form_class'])
+	information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
+	information['students'] = Student.objects.filter(form_class__exact = information['teacher_info'].form_class)
 	return render(request, 'student_settings/grades.html', {'active_page': 'student', 'information': information})
+
+def performance(request):
+
+
+	return render(request, 'student_settings/performance.html')	
 

@@ -57,8 +57,10 @@ urlpatterns = [
     #End of paths for scheduling functions
 
     #(Teachers) Start of paths for student settings functions
-    path('attendance/', views.attendance, name='attendance-home' ),
+    path('attendance/', views.attendance, name='attendance-home'),
+    path('attendance/<str:status>/<str:id>', views.attendance_edit, name='attendance-edit' ),
     path('grades/', views.grades, name='grades-home' ),
+    path('performance/', views.performance, name='performance-home' ),
     #End of paths for student settings functions
 ###===========================End of Teachers Functions=========================================================== 
 
