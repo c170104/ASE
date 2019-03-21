@@ -96,12 +96,40 @@ def schedule_manage(request, current='confirmed'):
 ######################### Lawrann #########################
 @login_required
 def appointment_add(request):
-	form = AppointmentForm(request.POST)
 	if request.user.is_staff: 
 		return HttpResponseForbidden()
+	current_user = request.user
+	CHILDOFPARENTS = [] ## CHILDOFPARENTS stores the child object associated with the parent
+	FORMCLASS = [] ## FORMCLASS stores the formclass of the parent's child
+	STAFFCHOICES = [] ## STAFFCHOICES stores the (eventplanner, Staff firstname lastname)
+	## getting the parentid of request.user
+	childstudent = Student.objects.all()
+	for i in ParentProfile.objects.all():
+			if i.user.id == request.user.id:
+				parentid = i.user.id
+				break
+	## getting the children/s associated with the parentid && the formclass associated with the children
+	for i in childstudent:
+		if i.child_of.user.id == parentid:
+			CHILDOFPARENTS.append(i)
+			FORMCLASS.append(i.form_class)
+	## getting the Staff associated with each form class
+	for i in FORMCLASS:
+		# STAFFCHOICES.append(StaffProfile.objects.get(form_class = i.id))
+		staff = StaffProfile.objects.get(form_class = i.id)
+		staffn = staff.firstname + ' ' + staff.lastname 
+		staffuid = staff.user.id
+		eventP = EventPlanner.objects.get(user = staffuid)
+		print(eventP)
+		print(staffn)
+		STAFFCHOICES.append((eventP,staffn))
+	STAFFCHOICES.append(('none','none'))
+	form = AppointmentForm(request.POST, stafflist = STAFFCHOICES)
+
+
 	if form.is_valid():
 		appointment = form.save(commit=False)
-		staffname = form.cleaned_data['staffchosen'] # Pull the selected name form choicefield
+		staffname = form.cleaned_data['stafflist'] # Pull the selected name form choicefield
 		for i in EventPlanner.objects.all():
 			if str(i) == staffname:
 				appointment.eventPlanner = i

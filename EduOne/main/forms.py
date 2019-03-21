@@ -156,21 +156,34 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 ## - Staff planner, from parent, pull child and FormClass then associated teacher
 
 class AppointmentForm(ModelForm):
-    STAFFCHOICES = []
-    sp = StaffProfile.objects.all()
-    for i in EventPlanner.objects.all():
-        for staff in sp:
-            if staff.user == i.user:
-                staffn = staff.firstname + ' ' + staff.lastname 
-                STAFFCHOICES.append((i,staffn))
-                break
-    staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
+    # sp = StaffProfile.objects.all()
+    # for i in EventPlanner.objects.all():
+    #     for staff in sp:
+    #         if staff.user == i.user:
+    #             staffn = staff.firstname + ' ' + staff.lastname 
+    #             STAFFCHOICES.append((i,staffn))
+    #             break
+    
+    def __init__(self, *args, **kwargs):
+        if 'stafflist' in kwargs:
+            stafflist = kwargs.pop('stafflist',None)
+            super(AppointmentForm,self).__init__(*args, **kwargs)
+            self.fields['stafflist'] = forms.ChoiceField(choices = stafflist,label = 'Staff Name')
+            # self.fields['stafflist'] = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(
+            #                                         choices = stafflist),label = 'Staff Name')
+            # print(stafflist)
+        
+        # STAFFCHOICES = kwargs.popitem()
+        # super(AppointmentForm,self).__init__(*args,**kwargs)
+        # staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
+
     class Meta:
         model = Appointment
         exclude = ['apptStatus', 'parent', 'apptRejectionReason', 'eventPlanner']
 
         labels = {
-            'staffchosen': ('Staff Name'),
+            # 'stafflist':('Staff Name'),
+            # 'staffchosen': ('Staff Name'),
             'apptTitle': ('Appointment Title'),
             'apptDescription': ('Appointment Description'),
             'apptLocation': ('Location of Appointment'),
