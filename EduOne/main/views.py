@@ -93,10 +93,12 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
-# ####============================================Lawrann===========================================================
+######################### Lawrann #########################
 @login_required
 def appointment_add(request):
 	form = AppointmentForm(request.POST)
+	if request.user.is_staff: 
+		return HttpResponseForbidden()
 	if form.is_valid():
 		appointment = form.save(commit=False)
 		staffname = form.cleaned_data['staffchosen'] # Pull the selected name form choicefield
@@ -121,6 +123,8 @@ def appointment_add(request):
 
 # @login_required
 def appointment_manage(request, current='pending'):
+	if request.user.is_staff: 
+		return HttpResponseForbidden()
 	event_types = ('approved', 'rejected', 'pending')
 	current_user = request.user
 	obj = list()
@@ -150,19 +154,19 @@ def appointment_manage(request, current='pending'):
 	return render(request, 'appointment/appointment_manage.html', context)
 
 
-class AppointmentUpdate(LoginRequiredMixin,UpdateView):
-    model = Appointment
-    success_url = reverse_lazy('appointment-manage')
-    fields = [
-		'apptTitle',
-		'apptDescription',
-		'apptDate',
-		'apptLocation',
-		'apptTimeFrom',
-		'apptTimeTo'
-	]
+# class AppointmentUpdate(LoginRequiredMixin,UpdateView):
+#     model = Appointment
+#     success_url = reverse_lazy('appointment-manage')
+#     fields = [
+# 		'apptTitle',
+# 		'apptDescription',
+# 		'apptDate',
+# 		'apptLocation',
+# 		'apptTimeFrom',
+# 		'apptTimeTo'
+# 	]
 
-# ####============================================Lawrann===========================================================	
+######################### Lawrann #########################
     
 # #This function is used to edit scheduling information based on known forms (Left Appointments)
 # @login_required

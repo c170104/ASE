@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .forms import UserAdmin
 from .models import *
+from .forms import UserAdmin
 
 # Register your models here.
 # Example Below
