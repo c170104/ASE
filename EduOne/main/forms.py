@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -81,6 +81,14 @@ class AnnouncementForm(ModelForm):
         help_texts = {
             'title' : ('The announcement title goes here.'),
             'description': ('The announcement description goes here.'),
+        }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ['student', 'commentBy', 'commentDate', 'commentTime']
+        labels = {
+            'comment' : ('Comment:')
         }
 
 # # Do not use this form for user creation.

@@ -274,8 +274,78 @@ def grades(request):
 	information['students'] = Student.objects.filter(form_class__exact = information['teacher_info'].form_class)
 	return render(request, 'student_settings/grades.html', {'active_page': 'student', 'information': information})
 
-def performance(request):
+def performance(request, class_id=None):
+	information = {}
+	information['subjects'] = {}
+	information['view'] = 'subject'
+	information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
+	subject_objects = SubjectClass.objects.filter(teacher_id__exact = information['teacher_info'].id)
 
 
-	return render(request, 'student_settings/performance.html')	
+	#Filters any duplicates in the class from multiple subjects
+	subject_class_objects = []
+	for sclass in subject_objects:
+		if sclass.classOf not in subject_class_objects:
+			subject_class_objects.append(sclass.classOf)	
+	#Saves the information inside a list
+	information['subject_classes'] = subject_class_objects
+	
 
+	#If a class is specified, then display all the subjects taught within that class
+	if class_id:
+		subject_names = []
+		for subject in subject_objects:
+			if subject.classOf_id == class_id:
+				subject_names.append(subject.subject)
+		
+		information['subjects'] = subject_names		
+
+	try:
+		subject_types = ('English', 'Maths', 'Science', 'Chinese') #These subjects should pull from a database in the future
+		if (request.GET['subject_chosen']):
+			information['view'] = 'students'
+			subject_chosen = request.GET['subject_chosen']
+			if subject_chosen not in subject_types:
+				return HttpResponseForbidden()
+
+			else:
+				for subject_class in subject_objects:
+					if (subject_class.classOf_id == class_id):
+						information['class_name'] = Class.objects.get(id__exact = subject_class.classOf_id)
+						if (subject_class.subject == subject_chosen):
+							students_in_subject = StudentToSubjectClass.objects.filter(subjectClass_id__exact = subject_class.id).values()
+
+				student_list = []		
+				for stud in students_in_subject:
+					student_list.append(Student.objects.get(nric__exact = stud['student_id']))
+					
+
+				information['students'] = student_list
+				information['subject_chosen'] = subject_chosen
+				information['class_id'] = class_id
+				
+	except:
+		pass		
+	
+	return render(request, 'student_settings/performance.html',{'active_page': 'student', 'information': information})	
+
+def comment_add(request, class_id, subject, id):
+	if (not class_id or not subject or not id):
+		return HttpResponseForbidden()
+	
+	else:
+		information = {}
+		information['student'] = Student.objects.get(nric__exact = id)
+		form = CommentForm(request.POST)
+		if form.is_valid():
+			comment = form.save(commit=False)
+			comment.student = information['student'] 
+			comment.commentBy = request.user
+			comment.commentDate = datetime.datetime.now().date()
+			comment.commentTime = datetime.datetime.now().strftime("%H:%M:%S")				
+			form.save()
+			messages.success(request, f'Comment for student has been submitted successfully!')
+			return redirect('performance-home')
+
+	
+	return render(request, 'student_settings/performance_add.html',{'active_page': 'student', 'information': information, 'form' : form})	

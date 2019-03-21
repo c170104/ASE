@@ -60,7 +60,9 @@ urlpatterns = [
     path('attendance/', views.attendance, name='attendance-home'),
     path('attendance/<str:status>/<str:id>', views.attendance_edit, name='attendance-edit' ),
     path('grades/', views.grades, name='grades-home' ),
-    path('performance/', views.performance, name='performance-home' ),
+    path('performance/', views.performance, name='performance-home'),
+    path('performance/<int:class_id>', views.performance, name='performance-home'),
+    path('performance/<int:class_id>/<str:subject>/<str:id>', views.comment_add, name='performance-add'),
     #End of paths for student settings functions
 ###===========================End of Teachers Functions=========================================================== 
 

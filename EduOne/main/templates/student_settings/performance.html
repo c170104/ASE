@@ -1,23 +1,67 @@
 {% extends "common/header.html" %}
 
 {% block content %}
-	<h2>Class X Student List</h2>
-	<p>Subject: X</p>
-	<p>Taken by: {{information.teacher_info}}</p>
-	<table>
-		<tr>
-			<th>S/N</th>
-			<th>Student Name</th>
-			<th>Tools</th>
-		</tr>
-		{% for student in information.students %}
-		<tr>
-			<td>{{forloop.counter}})</td>
-			<td>{{student.last_name}}  {{student.first_name}}</td>
-			<td><a href='#'>Comment</a></td>
-		</tr>
+	{% if messages %}
+		{% for message in messages %}
+			<!--<div class = "alert alert-{{message}}"></div>-->
+			{{message}}
 		{% endfor %}
-	</table>
-		
+	{% endif %}		
+	{% if information.view == "subject" %}
+		<h2>Your classes</h2>
+		<table>
+			<tr>
+				<th>Class</th>
+			</tr>
+				{% if information.subject_classes|length == 0 %}
+					<tr><td>None Found!</td></tr>
+				{% else %}
+					{% for subject in information.subject_classes %}
+						<tr><td><a href ="{% url 'performance-home' class_id=subject.id %}">{{subject}}</a></td></tr>
+					{% endfor %}	
+				{% endif %}	
+		</table>
+		<table>
+			{% if information.subjects|length == 0 %}
+				<tr><th>None Found!</th></tr>
+			{% else %}
+				<tr>
+					<th>Subjects</th>
+				</tr>
+				<tr>
+					<td><form action =''>
+						<select name ='subject_chosen'>
+							{% for subject in information.subjects %}
+								<option value ="{{subject}}">{{subject}}</option>
+							{% endfor %}	
+						</select>
+						<input type="submit">
+					</form></td>	
+			{% endif %}	
+			</tr>
+		</table>	
+	{% elif information.view == "students" %}
+		{% if information.students|length == 0 %}
+				<tr><th>No Students Found!</th></tr>
+				<p><a href="{% url 'performance-home' %}"> Return </a></p>
+		{% else %}		
+			<h2>Class {{information.class_name.className}} {{information.subject_chosen}}</h2>
+			<p>Taken by: {{information.teacher_info}}</p>
+			<table>
+			<tr>
+				<th>S/N</th>
+				<th>Student Name</th>
+				<th>Tools</th>
+			</tr>
+			{% for student in information.students %}
+			<tr>
+				<td>{{forloop.counter}})</td>
+				<td>{{student.last_name}}  {{student.first_name}}</td>
+				<td><a href="{% url 'performance-add' class_id=information.class_id subject=information.subject_chosen id=student.nric %}">Comment</a></td>
+			</tr>
+			{% endfor %}
+		</table>
 
+		{% endif %}
+	{% endif %}	
 {% endblock %}
