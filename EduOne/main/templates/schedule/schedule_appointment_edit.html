@@ -1,0 +1,15 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+
+	<!--Start of Form-->
+		<div class = "content-section">
+			<form method="POST">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type ="submit"> Submit Reason </button>
+			</form>
+		</div>
+		<!--End of Form-->
+
+{% endblock %}

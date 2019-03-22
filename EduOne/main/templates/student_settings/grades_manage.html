@@ -1,0 +1,36 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+	{% if information.grades|length == 0 %}
+		<p>No records of grades found!</p>
+	{% else %}
+		<h2>Grades for {{information.report_card.examination_type}} {{information.report_card.exam_date.year}}</h2>
+		<p><a href="">Edit</a></p>
+		<p><a href="{% url 'grades-home' id=information.nric %}">Return to previous</a></p>
+		<table>
+			<tr>
+				<th>S/N</th>
+				<th>Subject</th>
+				<th>Grade Achieved</th>
+			</tr>
+			{% for grade in information.grades %}
+			<tr>
+				<td>{{forloop.counter}}.</td>
+				<td>{{grade.subjectName}}</td>
+				{% if grade.marks >= 75 %}
+					<td>A
+				{% elif grade.marks >= 65%}
+					<td>B
+				{% elif grade.marks >= 50 %}	
+					<td>C
+				{% else %}
+					<td>D
+				{% endif %}			
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+
+	{% endif %}	
+
+{% endblock %}
