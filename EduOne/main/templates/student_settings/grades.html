@@ -1,23 +1,41 @@
 {% extends "common/header.html" %}
 
 {% block content %}
-	<h2>Class {{information.teacher_info.form_class.className}} Student List</h2>
-	<p>Taken by: {{information.teacher_info}}</p>
-	<table>
+	{% if information.view == 'class'%}
+		<h2>Class {{information.teacher_info.form_class.className}} Student List</h2>
+		<p>Taken by: {{information.teacher_info}}</p>
+		<table>
+			<tr>
+				<th>S/N</th>
+				<th>Student Name</th>
+				<th>Tools</th>
+			</tr>
+			{% for student in information.students %}
+			<tr>
+				<td>{{forloop.counter}})</td>
+				<td>{{student.last_name}}  {{student.first_name}}</td>
+				<td><a href="{% url 'grades-add' id=student.nric%}">Add Grades</a></td>
+				<td><a href="{% url 'grades-home' id=student.nric%}">Manage Grades</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	{% elif information.view == 'student' %}
+		<h2>Manage Grades</h2>
+		<table>
 		<tr>
-			<th>S/N</th>
-			<th>Student Name</th>
+			<th>Title</th>
+			<th>Year</th>
 			<th>Tools</th>
 		</tr>
-		{% for student in information.students %}
-		<tr>
-			<td>{{forloop.counter}})</td>
-			<td>{{student.last_name}}  {{student.first_name}}</td>
-			<td><a href='#'>Add Grades</a></td>
-			<td><a href='#'>Manage Grades</a></td>
-		</tr>
+		{% for page in information.pages %}
+			<tr>
+				<td><a href="{% url 'grades-manage' id=information.nric report_card_page_id=page.id %}">{{page.examination_type}}</a></td>
+				<td>{{page.exam_date.year}}</td>
+				<td><a href='#'>Edit Grades</a></td>
+			</tr>
+			</table>
 		{% endfor %}
-	</table>
+	{% endif %}	
 		
 
 {% endblock %}

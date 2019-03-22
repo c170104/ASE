@@ -14,7 +14,7 @@
 				<th>Class</th>
 			</tr>
 				{% if information.subject_classes|length == 0 %}
-					<tr><td>None Found!</td></tr>
+					<tr><td>No Classes Found!</td></tr>
 				{% else %}
 					{% for subject in information.subject_classes %}
 						<tr><td><a href ="{% url 'performance-home' class_id=subject.id %}">{{subject}}</a></td></tr>
@@ -23,7 +23,7 @@
 		</table>
 		<table>
 			{% if information.subjects|length == 0 %}
-				<tr><th>None Found!</th></tr>
+				<tr><th>No Subjects Found!</th></tr>
 			{% else %}
 				<tr>
 					<th>Subjects</th>
@@ -35,7 +35,7 @@
 								<option value ="{{subject}}">{{subject}}</option>
 							{% endfor %}	
 						</select>
-						<input type="submit">
+						<input type="submit" value="Find Students">
 					</form></td>	
 			{% endif %}	
 			</tr>

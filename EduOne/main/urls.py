@@ -43,6 +43,7 @@ urlpatterns = [
     ##(Teachers) Start of scheduling functions for teachers
     path('schedule/manage/', views.schedule_manage, name='schedule-manage'),
     path('schedule/manage=<str:current>/', views.schedule_manage, name='schedule-manage'),
+    path('schedule/<str:status>/<int:pk>', views.schedule_pending_manage, name='schedule-pending-manage'),
     path('schedule/add/', views.schedule_add, name='schedule-add'),
     path('schedule/add=<str:current>/', views.schedule_add, name='schedule-add'),
     path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), 
@@ -60,6 +61,9 @@ urlpatterns = [
     path('attendance/', views.attendance, name='attendance-home'),
     path('attendance/<str:status>/<str:id>', views.attendance_edit, name='attendance-edit' ),
     path('grades/', views.grades, name='grades-home' ),
+    path('grades/<str:id>', views.grades, name='grades-home'),
+    path('grades/<str:id>/<int:report_card_page_id>', views.grades_manage, name='grades-manage'),
+    path('grades/add/<str:id>', views.grades_add, name='grades-add' ),
     path('performance/', views.performance, name='performance-home'),
     path('performance/<int:class_id>', views.performance, name='performance-home'),
     path('performance/<int:class_id>/<str:subject>/<str:id>', views.comment_add, name='performance-add'),
