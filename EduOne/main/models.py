@@ -32,7 +32,7 @@ class Class(models.Model):
     className = models.CharField(max_length=10)
 
     def __str__(self):
-        return "Class: {}".format(self.className)
+        return "{}".format(self.className)
 
 
 class SubjectClass(models.Model):
@@ -94,7 +94,7 @@ class Student(models.Model):
     emergency_contact = models.CharField(max_length=20)
 
     def __str__(self):
-        return "{} {}".format(self.last_name, self.first_name)
+        return "Student: {} {}".format(self.last_name, self.first_name)
 
 
 class StudentToSubjectClass(models.Model):
