@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -83,6 +83,7 @@ class AnnouncementForm(ModelForm):
             'description': ('The announcement description goes here.'),
         }
 
+
 # # Do not use this form for user creation.
 # class UserCreationForm(ModelForm):
 #     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -126,7 +127,7 @@ class AnnouncementDetailView(DetailView):
 
 # #This class form is used by appointment-detail to view event details
 class AppointmentDetailView(DetailView):
-    model=Appointment    
+    model=Appointment       
 
 # #This class form is used by announcement-delete to delete existing announcements
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
