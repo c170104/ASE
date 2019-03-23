@@ -9,6 +9,7 @@ from .models import *
 from .forms import *
 from .functions import *
 import datetime
+from datetime import timedelta
 from django.views.generic import UpdateView
 from django.urls import reverse_lazy
 
@@ -130,6 +131,131 @@ def schedule_pending_manage(request, pk=None, status=None):
 
 ######################### Lawrann #########################
 @login_required
+def childlist(request):
+	if request.user.is_staff: 
+		return HttpResponseForbidden()
+	current_user = request.user
+	parentid = current_user.id
+	childstudent = Student.objects.all()
+	CHILDLIST = []
+	for i in childstudent:
+		if i.child_of.user.id == parentid:
+			CHILDLIST.append(i)
+	context = {
+		'CHILDLIST' : CHILDLIST,
+		'active_page': 'childprofile'
+	}
+	return render(request, 'child/childlist.html', context)
+
+@login_required
+def childprofile(request, id=None):
+	if request.user.is_staff: 
+		return HttpResponseForbidden()
+	childStudent = Student.objects.get(nric = id)
+	if childStudent.child_of.user.id != request.user.id:
+		return HttpResponseForbidden()
+	reportCard = ReportCard.objects.get(student__exact = childStudent)
+	REPORTCARDLIST = []
+	rcp = ReportCardPage.objects.all()
+	# print(rcp)
+	for i in rcp:
+		if i.reportCard.id == reportCard.id:
+			REPORTCARDLIST.append(i)
+	REPORTCARDLIST.sort(key=lambda r: r.exam_date, reverse = True)
+
+	attendance = Attendance.objects.filter(student=childStudent)
+	ATTENDANCELIST = []
+	for i in attendance:
+		ATTENDANCELIST.append(i)
+	ATTENDANCELIST.sort(key=lambda r: r.date, reverse = True)
+	# ATTENDANCELISTSLICED = ATTENDANCELIST[0:7]
+	WEEKLIST = [] # stores the current week monday to sunday
+	now = datetime.datetime.now() # get todays date
+	print(now.weekday()) # monday : 0 sunday : 6
+	print(now.date())
+	WEEKLIST.append(now.date())
+	toSun = 6-int(now.weekday()) # how many extra days to sunday
+	forMon = int(now.weekday())
+	for i in range(forMon):
+		print(i)
+		WEEKLIST.append(now.date()-timedelta(days=i+1))
+	for i in range(toSun):
+		WEEKLIST.append(now.date()+timedelta(days=i+1))
+	WEEKLIST.sort()
+	DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+	# print(WEEKLIST)
+	# for i in range(toSun):
+	# 	WEEKLIST.append((now.weekday()+i+1,now.date()+timedelta(days=1))
+
+
+	# for i in range(forMon):
+	# 	WEEKLIST.append((forMon-i,now.date()-timedelta(days=i))
+    # 	print()
+
+	comment = Comment.objects.filter(student=childStudent).order_by("commentDate")
+	COMMENTLIST = []
+	for i in comment:
+		COMMENTLIST.append(i)
+	COMMENTLISTSLICED = COMMENTLIST[0:3]
+	
+	# print(COMMENTLISTSLICED)
+
+	context = {
+		'childStudent' : childStudent,
+		'reportCard' : reportCard,
+		'REPORTCARDLIST' : REPORTCARDLIST,
+		'ATTENDANCELIST' : ATTENDANCELIST,
+		'WEEKLIST' : WEEKLIST,
+		'DAYS':DAYS,
+		# 'ATTENDANCELISTSLICED' : ATTENDANCELISTSLICED,
+		'COMMENTLIST' : COMMENTLIST,
+		'COMMENTLISTSLICED' : COMMENTLISTSLICED,
+	}
+	return render(request, 'child/child-profile.html', context)
+
+@login_required
+def childreportcardpage(request, id=None, rcid=None):
+	student = Student.objects.get(nric__exact = id)
+	reportcard = ReportCard.objects.get(student__exact = student)
+	reportcardpage = ReportCardPage.objects.get(reportCard__exact = reportcard, id__exact = rcid)
+	SUBJECTGRADELIST = []
+	subjectgrade = SubjectGrade.objects.filter(reportCardPage__exact = reportcardpage)
+	for i in subjectgrade:
+		SUBJECTGRADELIST.append(i)
+	# print(SUBJECTGRADELIST)
+	context = {
+		'student' : student,
+		'reportcardpage' : reportcardpage,
+		'SUBJECTGRADELIST' : SUBJECTGRADELIST,
+	}
+	return render(request, 'child/child-report-card-page.html', context)
+
+@login_required
+def childattendance(request, id=None):
+	student = Student.objects.get(nric__exact = id)
+	attendance = Attendance.objects.filter(student=student)
+	ATTENDANCELIST = []
+	for i in attendance:
+		ATTENDANCELIST.append(i)
+	ATTENDANCELIST.sort(key=lambda r: r.date, reverse = True)
+	context = {
+		'ATTENDANCELIST':ATTENDANCELIST
+	}
+	return render(request, 'child/child-attendance.html', context)
+
+@login_required
+def childcomments(request, id=None):
+	student = Student.objects.get(nric__exact = id)
+	comment = Comment.objects.filter(student=student).order_by("commentDate")
+	COMMENTLIST = []
+	for i in comment:
+		COMMENTLIST.append(i)
+	context = {
+		'COMMENTLIST':COMMENTLIST
+	}
+	return render(request, 'child/child-comments.html', context)
+
+@login_required
 def appointment_add(request):
 	if request.user.is_staff: 
 		return HttpResponseForbidden()
@@ -155,8 +281,8 @@ def appointment_add(request):
 		staffn = staff.firstname + ' ' + staff.lastname 
 		staffuid = staff.user.id
 		eventP = EventPlanner.objects.get(user = staffuid)
-		print(eventP)
-		print(staffn)
+		# print(eventP)
+		# print(staffn)
 		STAFFCHOICES.append((eventP,staffn))
 	STAFFCHOICES.append(('none','none'))
 	form = AppointmentForm(request.POST, stafflist = STAFFCHOICES)

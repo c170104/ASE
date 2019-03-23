@@ -1,0 +1,11 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+<table>
+    <tr><th>Teacher</th><th>Comment</th><th>Date</th><th>Time</th></tr>
+    {% for i in COMMENTLIST %}
+    <tr><td>{{i.commentBy}}</td><td>{{i.comment}}</td><td>{{i.commentDate}}</td><td>{{i.commentTime}}</td></tr>
+    {% endfor%}
+</table>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade, ReportCardPage
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -154,37 +154,19 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 ######################### Lawrann #########################
 # #This form is used to create new appointments
-## - Staff planner, from parent, pull child and FormClass then associated teacher
-
 class AppointmentForm(ModelForm):
-    # sp = StaffProfile.objects.all()
-    # for i in EventPlanner.objects.all():
-    #     for staff in sp:
-    #         if staff.user == i.user:
-    #             staffn = staff.firstname + ' ' + staff.lastname 
-    #             STAFFCHOICES.append((i,staffn))
-    #             break
-    
+
     def __init__(self, *args, **kwargs):
         if 'stafflist' in kwargs:
             stafflist = kwargs.pop('stafflist',None)
             super(AppointmentForm,self).__init__(*args, **kwargs)
             self.fields['stafflist'] = forms.ChoiceField(choices = stafflist,label = 'Staff Name')
-            # self.fields['stafflist'] = forms.ChoiceField(widget=forms.CheckboxSelectMultiple(
-            #                                         choices = stafflist),label = 'Staff Name')
-            # print(stafflist)
-        
-        # STAFFCHOICES = kwargs.popitem()
-        # super(AppointmentForm,self).__init__(*args,**kwargs)
-        # staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
 
     class Meta:
         model = Appointment
         exclude = ['apptStatus', 'parent', 'apptRejectionReason', 'eventPlanner']
 
         labels = {
-            # 'stafflist':('Staff Name'),
-            # 'staffchosen': ('Staff Name'),
             'apptTitle': ('Appointment Title'),
             'apptDescription': ('Appointment Description'),
             'apptLocation': ('Location of Appointment'),
@@ -240,4 +222,18 @@ class AppointmentApprovedDeleteView(LoginRequiredMixin, UserPassesTestMixin, Del
         if appointment.parent.user == self.request.user and appointment.apptStatus == 'approved':
             return True
         return False  
+
+class ReportCardPageAcknowledgementView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ReportCardPage
+    success_url = reverse_lazy('childs')
+    fields = [
+    'acknowledgement'
+    ]
+    def test_func(self):
+        reportcardpage = self.get_object()
+        if self.request.user.is_staff == True:
+            return False
+        # if appointment.parent.user != self.request.user or appointment.apptStatus != 'pending':
+        #     return False
+        return True
 ######################### Lawrann #########################
