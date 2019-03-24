@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade, ReportCardPage
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -83,6 +83,7 @@ class AnnouncementForm(ModelForm):
             'description': ('The announcement description goes here.'),
         }
 
+
 # # Do not use this form for user creation.
 # class UserCreationForm(ModelForm):
 #     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -126,7 +127,7 @@ class AnnouncementDetailView(DetailView):
 
 # #This class form is used by appointment-detail to view event details
 class AppointmentDetailView(DetailView):
-    model=Appointment    
+    model=Appointment       
 
 # #This class form is used by announcement-delete to delete existing announcements
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -153,24 +154,19 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 ######################### Lawrann #########################
 # #This form is used to create new appointments
-## - Staff planner, from parent, pull child and FormClass then associated teacher
-
 class AppointmentForm(ModelForm):
-    STAFFCHOICES = []
-    sp = StaffProfile.objects.all()
-    for i in EventPlanner.objects.all():
-        for staff in sp:
-            if staff.user == i.user:
-                staffn = staff.firstname + ' ' + staff.lastname 
-                STAFFCHOICES.append((i,staffn))
-                break
-    staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
+
+    def __init__(self, *args, **kwargs):
+        if 'stafflist' in kwargs:
+            stafflist = kwargs.pop('stafflist',None)
+            super(AppointmentForm,self).__init__(*args, **kwargs)
+            self.fields['stafflist'] = forms.ChoiceField(choices = stafflist,label = 'Staff Name')
+
     class Meta:
         model = Appointment
         exclude = ['apptStatus', 'parent', 'apptRejectionReason', 'eventPlanner']
 
         labels = {
-            'staffchosen': ('Staff Name'),
             'apptTitle': ('Appointment Title'),
             'apptDescription': ('Appointment Description'),
             'apptLocation': ('Location of Appointment'),
@@ -226,4 +222,18 @@ class AppointmentApprovedDeleteView(LoginRequiredMixin, UserPassesTestMixin, Del
         if appointment.parent.user == self.request.user and appointment.apptStatus == 'approved':
             return True
         return False  
+
+class ReportCardPageAcknowledgementView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ReportCardPage
+    success_url = reverse_lazy('childs')
+    fields = [
+    'acknowledgement'
+    ]
+    def test_func(self):
+        reportcardpage = self.get_object()
+        if self.request.user.is_staff == True:
+            return False
+        # if appointment.parent.user != self.request.user or appointment.apptStatus != 'pending':
+        #     return False
+        return True
 ######################### Lawrann #########################

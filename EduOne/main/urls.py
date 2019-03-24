@@ -43,6 +43,7 @@ urlpatterns = [
     ##(Teachers) Start of scheduling functions for teachers
     path('schedule/manage/', views.schedule_manage, name='schedule-manage'),
     path('schedule/manage=<str:current>/', views.schedule_manage, name='schedule-manage'),
+    path('schedule/<str:status>/<int:pk>', views.schedule_pending_manage, name='schedule-pending-manage'),
     path('schedule/add/', views.schedule_add, name='schedule-add'),
     path('schedule/add=<str:current>/', views.schedule_add, name='schedule-add'),
     path('schedule/edit=<str:stype>/<int:pk>/', views.schedule_edit, name='schedule-edit'), 
@@ -57,8 +58,15 @@ urlpatterns = [
     #End of paths for scheduling functions
 
     #(Teachers) Start of paths for student settings functions
-    path('attendance/', views.attendance, name='attendance-home' ),
+    path('attendance/', views.attendance, name='attendance-home'),
+    path('attendance/<str:status>/<str:id>', views.attendance_edit, name='attendance-edit' ),
     path('grades/', views.grades, name='grades-home' ),
+    path('grades/<str:id>', views.grades, name='grades-home'),
+    path('grades/<str:id>/<int:report_card_page_id>', views.grades_manage, name='grades-manage'),
+    path('grades/add/<str:id>', views.grades_add, name='grades-add' ),
+    path('performance/', views.performance, name='performance-home'),
+    path('performance/<int:class_id>', views.performance, name='performance-home'),
+    path('performance/<int:class_id>/<str:subject>/<str:id>', views.comment_add, name='performance-add'),
     #End of paths for student settings functions
 ###===========================End of Teachers Functions=========================================================== 
 
@@ -73,7 +81,16 @@ urlpatterns = [
     path('appointment-edit/<int:pk>/', AppointmentUpdate.as_view(template_name = "appointment/appointment_update.html"), name = 'appointment-update'),
     path('appointment-pending/<int:pk>/delete/', AppointmentPendingDeleteView.as_view(template_name = "appointment/appointment_pending_delete.html"), name = 'appointment-pending-delete'),
     path('appointment-approved/<int:pk>/delete/', AppointmentApprovedDeleteView.as_view(template_name = "appointment/appointment_approved_delete.html"), name = 'appointment-approved-delete'),
-    #End of paths for appointment's manage functions
+    #End of paths for appointment's manage functions\
+
+    #Start of paths for child's profile functions
+    path('childslist/', views.childlist, name='childs'),
+    path('childslist/<str:id>/profile/', views.childprofile, name='child-profile'),
+    path('childslist/<str:id>/profile/reportcard/<int:rcid>/', views.childreportcardpage, name='report-card-page'),
+    path('childslist/<str:id>/profile/reportcard/<int:pk>/acknowledge', ReportCardPageAcknowledgementView.as_view(template_name = "child/child-report-card-acknowledge.html"), name='report-card-page-acknowledge'),
+    path('childslist/<str:id>/profile/attendance/', views.childattendance, name='child-attendance'),
+    path('childslist/<str:id>/profile/comments/', views.childcomments, name='child-comments'),
+    #End of paths for child's profile functions
 ###===========================End of Parents Functions===========================================================     
 
 ###=========================== For Trials======================================================
