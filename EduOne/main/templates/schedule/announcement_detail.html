@@ -5,7 +5,7 @@
 		<h2>{{object.title}}</h2>
 		<p>{{object.description}}</p>
 		<p>Created on: {{object.dateCreated}}</p>
-		<a href="#">Edit</a>
+		<a href="{% url 'schedule-edit' stype='announcement' pk=object.id %}">Edit</a>
 		<a href ="{% url 'schedule-manage' current='announcements' %}"> Return </a>
 
 {% endblock %}
