@@ -83,6 +83,13 @@ class AnnouncementForm(ModelForm):
             'description': ('The announcement description goes here.'),
         }
 
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ['student','commentBy','commentDate','commentTime']
+        labels = {
+            'comment': ('Comment on Student:')
+        }
 
 # # Do not use this form for user creation.
 # class UserCreationForm(ModelForm):

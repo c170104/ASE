@@ -12,4 +12,5 @@
     {% if reportcardpage.acknowledgement == False %}
     <tr><td><a href = "{% url 'report-card-page-acknowledge' id=student.nric pk=reportcardpage.id %}"> Click here to acknowledge report card</a></td></tr>
     {% endif%}
+</table>    
 {% endblock %}
