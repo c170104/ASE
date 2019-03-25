@@ -55,6 +55,7 @@ urlpatterns = [
     path('event/<int:pk>/', EventDetailView.as_view(), name = 'event-detail'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name = 'event-delete'),
     path('appointment/<int:pk>/', AppointmentDetailView.as_view(), name = 'appointment-detail'),
+    path('appointment/rejected/<int:pk>', StaffAppointmentUpdateView.as_view(), name = 'appointment-update-staff'),
     #End of paths for scheduling functions
 
     #(Teachers) Start of paths for student settings functions

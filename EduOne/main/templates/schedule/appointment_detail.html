@@ -7,8 +7,8 @@
 		<p>{{object.apptDate}}</p>
 		<p>{{object.apptTimeFrom}} to {{object.apptTimeTo}}</p>
 		<p>Status: {{object.apptStatus}}</p>
-		<a href="#">Approve</a>
-		<a href="#">Reject</a>
+		<a href="{% url 'schedule-pending-manage' pk=object.id status='approved' %}">Approve</a>
+		<a href="{% url 'appointment-update-staff' pk=object.id  %}">Reject</a>
 		<a href ="{% url 'schedule-manage' current='pending' %}"> Return </a>
 
 {% endblock %}

@@ -120,18 +120,22 @@ class AnnouncementForm(ModelForm):
 # #This class form is used by event-detail to view event details
 class EventDetailView(DetailView):
     model=Event
+    template_name = "schedule/event_detail.html"
 
 # #This class form is used by announcement-detail to view event details
 class AnnouncementDetailView(DetailView):
     model=Announcement
+    template_name = "schedule/announcement_detail.html"
 
 # #This class form is used by appointment-detail to view event details
 class AppointmentDetailView(DetailView):
-    model=Appointment       
+    model=Appointment      
+    template_name = "schedule/appointment_detail.html" 
 
 # #This class form is used by announcement-delete to delete existing announcements
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Announcement
+    template_name = "schedule/announcement_confirm_delete.html"
     success_url = "/schedule/manage=announcements/"
     
     def test_func(self):
@@ -143,6 +147,7 @@ class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView
 # #This class form is used by event-delete to delete existing events
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
+    template_name = "schedule/event_confirm_delete.html"
     success_url = "/schedule/manage=confirmed/"
     
     def test_func(self):
@@ -152,6 +157,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False         
 
+<<<<<<< HEAD
 class grades_edit(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = SubjectGrade
     success_url = reverse_lazy('grades-home')
@@ -188,6 +194,25 @@ class Report_Card_Page_Add_Form(ModelForm):
             'exam_date' : ('Enter date of examination'),
             'description' : ('Enter a description'),
         }
+=======
+class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Appointment
+    fields = ['apptRejectionReason']
+    template_name = "schedule/appointment_reason_update.html"
+    success_url = "/schedule/manage=pending/"
+
+    def form_valid(self, form):
+        form.instance.apptStatus = self.request.GET.get('status', 'rejected')
+        return super().form_valid(form)
+
+    def test_func(self):
+        appointment = self.get_object()
+        planner = EventPlanner.objects.get(user__exact = self.request.user.id)
+        if appointment.eventPlanner_id == planner.id:
+            return True
+        return False    
+
+>>>>>>> master
 
 ######################### Lawrann #########################
 # #This form is used to create new appointments
