@@ -1,4 +1,4 @@
-from .models import Event, Appointment
+from .models import Event, Appointment, StaffProfile, Student, ParentProfile
 
 ##Function which returns the respective calendars of the users
 def getCalendarInformation(planner, month, year):

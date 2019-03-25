@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade
+from .models import Event, Announcement, EventPlanner, Appointment, StaffProfile, Comment, SubjectClass, SubjectGrade, ReportCardPage
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
 from django.urls import reverse_lazy
@@ -120,18 +120,22 @@ class AnnouncementForm(ModelForm):
 # #This class form is used by event-detail to view event details
 class EventDetailView(DetailView):
     model=Event
+    template_name = "schedule/event_detail.html"
 
 # #This class form is used by announcement-detail to view event details
 class AnnouncementDetailView(DetailView):
     model=Announcement
+    template_name = "schedule/announcement_detail.html"
 
 # #This class form is used by appointment-detail to view event details
 class AppointmentDetailView(DetailView):
-    model=Appointment       
+    model=Appointment      
+    template_name = "schedule/appointment_detail.html" 
 
 # #This class form is used by announcement-delete to delete existing announcements
 class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Announcement
+    template_name = "schedule/announcement_confirm_delete.html"
     success_url = "/schedule/manage=announcements/"
     
     def test_func(self):
@@ -143,6 +147,7 @@ class AnnouncementDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView
 # #This class form is used by event-delete to delete existing events
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
+    template_name = "schedule/event_confirm_delete.html"
     success_url = "/schedule/manage=confirmed/"
     
     def test_func(self):
@@ -152,26 +157,39 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False         
 
+class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Appointment
+    fields = ['apptRejectionReason']
+    template_name = "schedule/appointment_reason_update.html"
+    success_url = "/schedule/manage=pending/"
+
+    def form_valid(self, form):
+        form.instance.apptStatus = self.request.GET.get('status', 'rejected')
+        return super().form_valid(form)
+
+    def test_func(self):
+        appointment = self.get_object()
+        planner = EventPlanner.objects.get(user__exact = self.request.user.id)
+        if appointment.eventPlanner_id == planner.id:
+            return True
+        return False    
+
+
 ######################### Lawrann #########################
 # #This form is used to create new appointments
-## - Staff planner, from parent, pull child and FormClass then associated teacher
-
 class AppointmentForm(ModelForm):
-    STAFFCHOICES = []
-    sp = StaffProfile.objects.all()
-    for i in EventPlanner.objects.all():
-        for staff in sp:
-            if staff.user == i.user:
-                staffn = staff.firstname + ' ' + staff.lastname 
-                STAFFCHOICES.append((i,staffn))
-                break
-    staffchosen = forms.ChoiceField(choices = STAFFCHOICES, label='Staff Name')
+
+    def __init__(self, *args, **kwargs):
+        if 'stafflist' in kwargs:
+            stafflist = kwargs.pop('stafflist',None)
+            super(AppointmentForm,self).__init__(*args, **kwargs)
+            self.fields['stafflist'] = forms.ChoiceField(choices = stafflist,label = 'Staff Name')
+
     class Meta:
         model = Appointment
         exclude = ['apptStatus', 'parent', 'apptRejectionReason', 'eventPlanner']
 
         labels = {
-            'staffchosen': ('Staff Name'),
             'apptTitle': ('Appointment Title'),
             'apptDescription': ('Appointment Description'),
             'apptLocation': ('Location of Appointment'),
@@ -227,4 +245,18 @@ class AppointmentApprovedDeleteView(LoginRequiredMixin, UserPassesTestMixin, Del
         if appointment.parent.user == self.request.user and appointment.apptStatus == 'approved':
             return True
         return False  
+
+class ReportCardPageAcknowledgementView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ReportCardPage
+    success_url = reverse_lazy('childs')
+    fields = [
+    'acknowledgement'
+    ]
+    def test_func(self):
+        reportcardpage = self.get_object()
+        if self.request.user.is_staff == True:
+            return False
+        # if appointment.parent.user != self.request.user or appointment.apptStatus != 'pending':
+        #     return False
+        return True
 ######################### Lawrann #########################

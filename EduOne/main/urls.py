@@ -55,6 +55,7 @@ urlpatterns = [
     path('event/<int:pk>/', EventDetailView.as_view(), name = 'event-detail'),
     path('event/<int:pk>/delete/', EventDeleteView.as_view(), name = 'event-delete'),
     path('appointment/<int:pk>/', AppointmentDetailView.as_view(), name = 'appointment-detail'),
+    path('appointment/rejected/<int:pk>', StaffAppointmentUpdateView.as_view(), name = 'appointment-update-staff'),
     #End of paths for scheduling functions
 
     #(Teachers) Start of paths for student settings functions
@@ -81,7 +82,16 @@ urlpatterns = [
     path('appointment-edit/<int:pk>/', AppointmentUpdate.as_view(template_name = "appointment/appointment_update.html"), name = 'appointment-update'),
     path('appointment-pending/<int:pk>/delete/', AppointmentPendingDeleteView.as_view(template_name = "appointment/appointment_pending_delete.html"), name = 'appointment-pending-delete'),
     path('appointment-approved/<int:pk>/delete/', AppointmentApprovedDeleteView.as_view(template_name = "appointment/appointment_approved_delete.html"), name = 'appointment-approved-delete'),
-    #End of paths for appointment's manage functions
+    #End of paths for appointment's manage functions\
+
+    #Start of paths for child's profile functions
+    path('childslist/', views.childlist, name='childs'),
+    path('childslist/<str:id>/profile/', views.childprofile, name='child-profile'),
+    path('childslist/<str:id>/profile/reportcard/<int:rcid>/', views.childreportcardpage, name='report-card-page'),
+    path('childslist/<str:id>/profile/reportcard/<int:pk>/acknowledge', ReportCardPageAcknowledgementView.as_view(template_name = "child/child-report-card-acknowledge.html"), name='report-card-page-acknowledge'),
+    path('childslist/<str:id>/profile/attendance/', views.childattendance, name='child-attendance'),
+    path('childslist/<str:id>/profile/comments/', views.childcomments, name='child-comments'),
+    #End of paths for child's profile functions
 ###===========================End of Parents Functions===========================================================     
 
 ###=========================== For Trials======================================================

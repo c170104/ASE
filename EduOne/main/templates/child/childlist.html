@@ -1,0 +1,19 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+
+<table>
+    <th><td>My children</td></th>
+{% for child in CHILDLIST %}
+    <tr><td><img src="image/profilepicture.jpg"></td></tr>
+    <tr><td>Name: {{child.first_name}} {{child.last_name}}</td></tr>
+    <tr><td>Class: {{child.form_class}}</td></tr>
+    <tr><td>Date Of Birth: -</td></tr>
+    <tr><td>Address: {{child.home_address}}</td></tr>
+    <tr><td>Emergency Contact: {{child.emergency_contact}}</td></tr>
+    <tr><td><a href="{% url 'child-profile' id=child.nric %}"> Detailed View </a></td></tr>
+
+{% endfor %}
+</table>
+
+{% endblock %}

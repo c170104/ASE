@@ -36,7 +36,13 @@
                   </div>
                 </div>  
             </li>
-            {% endif %}
+            {% elif user.is_parent %}
+            <li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'childs' %}">Child's Profile</a>
+                </li>
+            </li>
+            {% endif  %}
             <li class="nav-item {% if active_page == 'test2' %} active {% endif %}">
                 <a class="nav-link" href="/test2">Test2</a>
             </li>

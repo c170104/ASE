@@ -1,0 +1,15 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+<table>
+    <tr><th>Report Card for {{reportcardpage.examination_type}}</th></tr>
+    <tr><th>Subject</th><th>Grade</th></tr>
+    {% for sg in SUBJECTGRADELIST %}
+    <tr><td>{{sg.subjectName}}</td><td>{{sg.marks}}</td></tr>
+    {% endfor %}
+    <!-- <tr><td>{{reportcardpage.description}}</td></tr> -->
+    <tr><td>Acknowledgement : {{reportcardpage.acknowledgement}}</td></tr>
+    {% if reportcardpage.acknowledgement == False %}
+    <tr><td><a href = "{% url 'report-card-page-acknowledge' id=student.nric pk=reportcardpage.id %}"> Click here to acknowledge report card</a></td></tr>
+    {% endif%}
+{% endblock %}
