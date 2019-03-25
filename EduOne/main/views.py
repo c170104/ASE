@@ -451,13 +451,7 @@ def attendance_edit(request, id=None, status=None):
 		if (status == status_types[0] or status == status_types[1]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
-<<<<<<< HEAD
-				# student = Attendance.objects.get(date__exact = datetime.datetime.now()).get(student = student)
-				student = Attendance.objects.get(student = student)
-				
-=======
 				student = Attendance.objects.filter(student = student , date = datetime.datetime.now().date())			
->>>>>>> master
 				student.delete()
 
 			except Attendance.DoesNotExist:	
@@ -467,14 +461,8 @@ def attendance_edit(request, id=None, status=None):
 		elif (status == status_types[2] or status == status_types[3]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
-<<<<<<< HEAD
-				student = Attendance.objects.get(date__exact = datetime.datetime.now())
-				# student = Attendance.objects.get(student = student)
-				print(student)
-=======
 				student = Attendance.objects.get(date__exact = datetime.datetime.now().date() ,student = student)
 
->>>>>>> master
 			except Attendance.DoesNotExist:	
 				Attendance.objects.create(student = student, date = datetime.datetime.now().date())
 		
