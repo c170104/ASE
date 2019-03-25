@@ -302,8 +302,9 @@ def appointment_add(request):
 		eventP = EventPlanner.objects.get(user = staffuid)
 		# print(eventP)
 		# print(staffn)
-		STAFFCHOICES.append((eventP,staffn))
-	STAFFCHOICES.append(('none','none'))
+		if (eventP,staffn) not in STAFFCHOICES:
+			STAFFCHOICES.append((eventP,staffn))
+
 	form = AppointmentForm(request.POST, stafflist = STAFFCHOICES)
 
 
@@ -445,7 +446,9 @@ def attendance_edit(request, id=None, status=None):
 		if (status == status_types[0] or status == status_types[1]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
+				# student = Attendance.objects.get(date__exact = datetime.datetime.now()).get(student = student)
 				student = Attendance.objects.get(student = student)
+				
 				student.delete()
 			except Attendance.DoesNotExist:	
 				student = None
@@ -454,7 +457,9 @@ def attendance_edit(request, id=None, status=None):
 		elif (status == status_types[2] or status == status_types[3]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
-				student = Attendance.objects.get(student = student)
+				student = Attendance.objects.get(date__exact = datetime.datetime.now())
+				# student = Attendance.objects.get(student = student)
+				print(student)
 			except Attendance.DoesNotExist:	
 				Attendance.objects.create(student = student, date = datetime.datetime.now())
 		
