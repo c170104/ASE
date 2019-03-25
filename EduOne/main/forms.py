@@ -152,6 +152,43 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False         
 
+class grades_edit(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+    model = SubjectGrade
+    success_url = reverse_lazy('grades-home')
+    fields = [
+        'marks',
+    ]
+    def test_func(self):
+        return True
+
+class Grades_Add_Form(ModelForm):
+    class Meta:
+        model = SubjectGrade
+        exclude = ['reportCardPage']
+        labels = {
+            'subjectName': ('Subject Name'),
+            'marks': ('Marks'),
+        }
+        help_texts = {
+            'subjectName':('Enter the subject name'),
+            'marks' : ('Enter the marks'),
+        }
+
+class Report_Card_Page_Add_Form(ModelForm):
+    class Meta:
+        model = ReportCardPage
+        exclude = ['reportCard','acknowledgement']
+        labels = {
+            'examination_type' : ('Examination Name'),
+            'exam_date' : ('Date of Exam'),
+            'description' : ('Description'),
+        }
+        help_texts = {
+            'examination_type' : ('Enter name of examination'),
+            'exam_date' : ('Enter date of examination'),
+            'description' : ('Enter a description'),
+        }
+
 ######################### Lawrann #########################
 # #This form is used to create new appointments
 class AppointmentForm(ModelForm):

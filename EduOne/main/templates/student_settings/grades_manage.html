@@ -5,13 +5,14 @@
 		<p>No records of grades found!</p>
 	{% else %}
 		<h2>Grades for {{information.report_card.examination_type}} {{information.report_card.exam_date.year}}</h2>
-		<p><a href="">Edit</a></p>
 		<p><a href="{% url 'grades-home' id=information.nric %}">Return to previous</a></p>
 		<table>
 			<tr>
 				<th>S/N</th>
 				<th>Subject</th>
 				<th>Grade Achieved</th>
+				<th>Marks</th>
+				<th>Edit Marks</th>
 			</tr>
 			{% for grade in information.grades %}
 			<tr>
@@ -27,9 +28,12 @@
 					<td>D
 				{% endif %}			
 				</td>
+				<td>{{grade.marks}}</td>
+				<td><a href="{% url 'grades-edit' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}">Edit</a></td>
 			</tr>
 			{% endfor %}
 		</table>
+		<p><a href="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</a></p>
 
 	{% endif %}	
 

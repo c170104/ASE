@@ -60,10 +60,16 @@ urlpatterns = [
     #(Teachers) Start of paths for student settings functions
     path('attendance/', views.attendance, name='attendance-home'),
     path('attendance/<str:status>/<str:id>', views.attendance_edit, name='attendance-edit' ),
-    path('grades/', views.grades, name='grades-home' ),
-    path('grades/<str:id>', views.grades, name='grades-home'),
-    path('grades/<str:id>/<int:report_card_page_id>', views.grades_manage, name='grades-manage'),
-    path('grades/add/<str:id>', views.grades_add, name='grades-add' ),
+
+    path('grades/', views.grades, name='grades-home' ), #Student Settings -> Manage Grades
+    path('grades/<str:id>', views.grades, name='grades-home'), #Student Settings -> Manage Grades -> Manage Grades
+    path('grades/<str:id>/<int:report_card_page_id>', views.grades_manage, name='grades-manage'), #Student Settings -> Manage Grades -> Manage Grades -> Click examination name
+    path('grades/<str:id>/<int:report_card_page_id>/add/', views.grades_add, name='grades-add' ), #not finished
+    path('grades/<str:id>/<int:report_card_page_id>/edit/<int:pk>', grades_edit.as_view(template_name = "student_settings/grades_edit.html"), name='grades-edit'), #Student Settings -> Manage Grades -> Manage Grades -> Click examination name -> Click edit
+
+    path('grades/<str:id>/add/<int:count>', views.report_card_page_add, name='report-card-page-add' ), #not finished
+
+
     path('performance/', views.performance, name='performance-home'),
     path('performance/<int:class_id>', views.performance, name='performance-home'),
     path('performance/<int:class_id>/<str:subject>/<str:id>', views.comment_add, name='performance-add'),
