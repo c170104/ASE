@@ -38,7 +38,7 @@
 					<td>{{event.apptStatus}}</td>
 					<!--The Approve & Reject functions here are for the pending appointments-->
 					<td><a href="{% url 'schedule-pending-manage' pk=event.id status='approved' %}"> Approve </a></td>
-					<td><a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td>
+					<td><a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td></tr>
 					<!--End of Approve & Reject functions-->
 				{% endfor %}	
 			<!--End of block for pending appointments-->

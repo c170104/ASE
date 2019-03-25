@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 
 # # Create your views here.
 # #Returns the home page for display (left the calendar to display)
-# @login_required
+@login_required
 def home(request, month=datetime.datetime.now().month, year=datetime.datetime.now().year):
 	events = Announcement.objects.all().extra(order_by = ['-dateCreated'])
 	planner = EventPlanner.objects.get(user__exact = request.user.id)
@@ -24,7 +24,7 @@ def home(request, month=datetime.datetime.now().month, year=datetime.datetime.no
 	return render(request, 'index.html', {'active_page': 'home', 'announcements' : events, 'calendar': calendar})
 
 # #This function is for the main page of scheduling, can be used by both teachers and parents (left the calendar to display)
-# @login_required
+@login_required
 def schedule(request, month=datetime.datetime.now().month, year=datetime.datetime.now().year):
 	planner = EventPlanner.objects.get(user__exact = request.user.id)
 	calendar = getCalendarInformation(planner, month, year)
@@ -32,7 +32,7 @@ def schedule(request, month=datetime.datetime.now().month, year=datetime.datetim
 	return render(request, 'schedule/schedule.html', {'active_page': 'schedule', 'calendar': calendar})
 
 # #This function is for the teachers to add new event that can be announcments/events (completed)
-# @login_required
+@login_required
 def schedule_add(request, current='events'):
 	event_categories = ('events', 'announcements')
 	if current not in event_categories:
@@ -63,8 +63,8 @@ def schedule_add(request, current='events'):
 	
 	return render(request, 'schedule/schedule_add.html', {'active_page': 'schedule', 'active_tab': current, 'form' : form})
 
-# #This function is used for displaying and managing schedules for teachers 
-# @login_required
+# #This function is used for displaying and managing schedules for teachers (completed)
+@login_required
 def schedule_manage(request, current='confirmed'):
 	event_types = ('confirmed', 'pending', 'announcements')
 	if current not in event_types:
@@ -94,8 +94,9 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
-#Function defines the approve and rejection tools for teachers
-#Rejection is performed by StaffAppointmentUpdateView to allow users to enter rejection reasons
+#Function defines the approve and rejection tools for teachers (completed)
+#Rejection is performed by StaffAppointmentUpdateView to allow users to enter rejection reasons (completed)
+@login_required
 def schedule_pending_manage(request, pk=None, status=None):
 	if(not pk or not status):
 		#Displays a forbidden error
@@ -105,7 +106,6 @@ def schedule_pending_manage(request, pk=None, status=None):
 		planner = EventPlanner.objects.get(user__exact = request.user.id)
 		current='pending'
 
-		print(status)
 		#If an appointment is approved, we update the status to approve
 		if status == status_list[0]:
 			events = Appointment.objects.filter(id__exact = pk)
@@ -116,6 +116,10 @@ def schedule_pending_manage(request, pk=None, status=None):
 				parent_name = ParentProfile.objects.get(id__exact = event.parent_id)	
 				appt_title = event.apptTitle + " by " + parent_name.lastname + parent_name.firstname
 				Event.objects.create(eventPlanner = planner, title = appt_title, description = event.apptDescription,
+					location = event.apptLocation, dateFrom = event.apptDate, dateTo = event.apptDate, timeFrom = event.apptTimeFrom, timeTo = event.apptTimeTo)
+				#Create an event for the parent with regards to the approved appointment
+				parent_planner = EventPlanner.objects.get(user__exact = parent_name.user_id)
+				Event.objects.create(eventPlanner = parent_planner, title = event.apptTitle, description = event.apptDescription,
 					location = event.apptLocation, dateFrom = event.apptDate, dateTo = event.apptDate, timeFrom = event.apptTimeFrom, timeTo = event.apptTimeTo)
 
 			messages.success(request, f'Appointment has been approved!')
@@ -330,7 +334,7 @@ def appointment_add(request):
 	
 	return render(request, 'appointment/appointment_add.html', context)
 
-# @login_required
+@login_required
 def appointment_manage(request, current='pending'):
 	if request.user.is_staff: 
 		return HttpResponseForbidden()
@@ -364,8 +368,8 @@ def appointment_manage(request, current='pending'):
 
 ######################### Lawrann #########################
     
-# #This function is used to edit scheduling information based on known forms (Left Appointments)
-# @login_required
+# #This function is used to edit scheduling information based on known forms (completed)
+@login_required
 def schedule_edit(request, stype=None, pk=None):
 	schedule_types = ('event', 'appointment', 'announcement')
 	if stype not in schedule_types:
@@ -411,24 +415,25 @@ def schedule_edit(request, stype=None, pk=None):
 
 		return render(request, 'schedule/schedule_edit.html', {'edit_type' : stype, 'form' : form, 'path':next_path })
 
-# #This function is the main page for attendance taking (Uncompleted, left with updating attendance)
-# @staff_required
+#This function is the main page for attendance taking (Completed)
+@login_required
 def attendance(request, date = datetime.datetime.now()):
-	try:
-		information = {}
-		present = []
-		information['attendanceCount'] = 0
-		information['today'] = date
-		information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
-		information['students'] = Student.objects.filter(form_class__exact = information['teacher_info'].form_class)
-		for student in information['students']:
-			
-				student = Attendance.objects.get(student__exact = student, date__exact = date).student
-				present.append(student)
-				information['attendanceCount'] = information['attendanceCount'] + 1
+	
+	information = {}
+	present = []
+	information['attendanceCount'] = 0
+	information['today'] = date
+	information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
+	information['students'] = Student.objects.filter(form_class__exact = information['teacher_info'].form_class)
+	
+	for stud in information['students']:
+		try:
+			accountability = Attendance.objects.get(student__exact = stud, date__exact = date.date())
+			present.append(accountability.student) 
+			information['attendanceCount'] = information['attendanceCount'] + 1
 
-	except ObjectDoesNotExist:
-				print("No entries found for attendance!")
+		except ObjectDoesNotExist:
+			print("No entries found for attendance!")	
 
 	information['present'] = present
 	return render(request, 'student_settings/attendance.html', {'active_page': 'student', 'information': information})
@@ -446,10 +451,9 @@ def attendance_edit(request, id=None, status=None):
 		if (status == status_types[0] or status == status_types[1]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
-				# student = Attendance.objects.get(date__exact = datetime.datetime.now()).get(student = student)
-				student = Attendance.objects.get(student = student)
-				
+				student = Attendance.objects.filter(student = student , date = datetime.datetime.now().date())			
 				student.delete()
+
 			except Attendance.DoesNotExist:	
 				student = None
 
@@ -457,11 +461,10 @@ def attendance_edit(request, id=None, status=None):
 		elif (status == status_types[2] or status == status_types[3]) and id:
 			student = Student.objects.get(nric__exact = id)
 			try:
-				student = Attendance.objects.get(date__exact = datetime.datetime.now())
-				# student = Attendance.objects.get(student = student)
-				print(student)
+				student = Attendance.objects.get(date__exact = datetime.datetime.now().date() ,student = student)
+
 			except Attendance.DoesNotExist:	
-				Attendance.objects.create(student = student, date = datetime.datetime.now())
+				Attendance.objects.create(student = student, date = datetime.datetime.now().date())
 		
 		#Adds the all students of the form class as present into the database in Attendance  
 		elif (status == status_types[4]) and id:
@@ -469,15 +472,18 @@ def attendance_edit(request, id=None, status=None):
 			students = Student.objects.filter(form_class__exact = staff.form_class)
 			for student in students:
 				try:
-					student = Attendance.objects.get(student = student)
+					student = Student.objects.get(nric__exact = student.nric)
+					attendance = Attendance.objects.get(date__exact = datetime.datetime.now().date() , student = student)
+
 				except Attendance.DoesNotExist:	
-					Attendance.objects.create(student = student, date = datetime.datetime.now())
+					Attendance.objects.create(student = student, date = datetime.datetime.now().date())
 
 		return redirect('attendance-home')
 
 	return render(request)
 
-#This function defines the subject classes that a teacher teach and is able to comment on the student
+#This function defines the subject classes that a teacher teach and is able to comment on the student (Completed)
+@login_required
 def performance(request, class_id=None):
 	information = {}
 	information['subjects'] = {}
@@ -533,7 +539,8 @@ def performance(request, class_id=None):
 	
 	return render(request, 'student_settings/performance.html',{'active_page': 'student', 'information': information})	
 
-#This function is used to add new comments for students under a class and subject
+#This function is used to add new comments for students under a class and subject (completed)
+@login_required
 def comment_add(request, class_id, subject, id):
 	if (not class_id or not subject or not id):
 		return HttpResponseForbidden()
@@ -562,6 +569,7 @@ def comment_add(request, class_id, subject, id):
 	return render(request, 'student_settings/performance_add.html',{'active_page': 'student', 'information': information, 'form' : form})	
 
 #This function displays the students from the teacher's form class
+@login_required
 def grades(request, id=None):
 
 	current_user = request.user
@@ -591,6 +599,7 @@ def grades(request, id=None):
 	return render(request, 'student_settings/grades.html', {'active_page': 'student', 'information': information})
 
 #This function displays the list of report card pages
+@login_required
 def grades_manage(request, report_card_page_id=None, id=None):
 	if (not id or not report_card_page_id):
 		return HttpResponseForbidden()
@@ -610,6 +619,7 @@ def grades_manage(request, report_card_page_id=None, id=None):
 
 	return render(request, 'student_settings/grades_manage.html', {'active_page': 'student', 'information': information})			
 
+@login_required
 def grades_add(request, report_card_page_id=None, id=None):
 	if (not id or not report_card_page_id):
 		return HttpResponseForbidden()
@@ -640,6 +650,7 @@ def grades_add(request, report_card_page_id=None, id=None):
 	}
 	return render(request, 'student_settings/grades_add.html', context)				
 
+@login_required
 def report_card_page_add(request, id=None, count=None):
 	current_user = request.user
 	staff = StaffProfile.objects.get(user__exact = current_user)

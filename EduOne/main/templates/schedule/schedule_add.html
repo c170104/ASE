@@ -22,6 +22,7 @@
 				{% csrf_token %}
 				{{form.as_p}}
 				<button type ="submit"> Add {{active_tab}} </button>
+				<p><a href="{% url 'schedule-home' %}"> Return </a></p>
 			</form>
 		</div>
 		<!--End of Form-->
