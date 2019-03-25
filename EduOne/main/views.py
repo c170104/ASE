@@ -211,7 +211,6 @@ def childprofile(request, id=None):
 
 @login_required
 def childreportcardpage(request, id=None, rcid=None):
-<<<<<<< HEAD
 	current_user = request.user
 	parent = ParentProfile.objects.get(user__exact=current_user)
 	studentcheck = Student.objects.filter(child_of__exact = parent)
@@ -221,8 +220,6 @@ def childreportcardpage(request, id=None, rcid=None):
 	if id not in SLIST: ## prevent access to other student report card
 		return HttpResponseForbidden()
 	
-=======
->>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	reportcard = ReportCard.objects.get(student__exact = student)
 	reportcardpage = ReportCardPage.objects.get(reportCard__exact = reportcard, id__exact = rcid)
@@ -240,15 +237,12 @@ def childreportcardpage(request, id=None, rcid=None):
 
 @login_required
 def childattendance(request, id=None):
-<<<<<<< HEAD
 	current_user = request.user
 	parent = ParentProfile.objects.get(user__exact=current_user)
 	studentcheck = Student.objects.filter(child_of__exact = parent)
 	SLIST = []
 	for i in studentcheck:
 		SLIST.append(i.nric)
-=======
->>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	attendance = Attendance.objects.filter(student=student)
 	ATTENDANCELIST = []
@@ -262,7 +256,6 @@ def childattendance(request, id=None):
 
 @login_required
 def childcomments(request, id=None):
-<<<<<<< HEAD
 	current_user = request.user
 	parent = ParentProfile.objects.get(user__exact=current_user)
 	studentcheck = Student.objects.filter(child_of__exact = parent)
@@ -270,8 +263,6 @@ def childcomments(request, id=None):
 	for i in studentcheck:
 		SLIST.append(i.nric)
 
-=======
->>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	comment = Comment.objects.filter(student=student).order_by("commentDate")
 	COMMENTLIST = []

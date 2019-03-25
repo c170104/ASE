@@ -157,7 +157,6 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False         
 
-<<<<<<< HEAD
 class grades_edit(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = SubjectGrade
     success_url = reverse_lazy('grades-home')
@@ -194,7 +193,6 @@ class Report_Card_Page_Add_Form(ModelForm):
             'exam_date' : ('Enter date of examination'),
             'description' : ('Enter a description'),
         }
-=======
 class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Appointment
     fields = ['apptRejectionReason']
@@ -212,7 +210,6 @@ class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
             return True
         return False    
 
->>>>>>> master
 
 ######################### Lawrann #########################
 # #This form is used to create new appointments
