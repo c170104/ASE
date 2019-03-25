@@ -94,8 +94,8 @@ def schedule_manage(request, current='confirmed'):
 		return render(request, 'schedule/schedule_manage.html', {'active_page': 'schedule', 'active_tab': current, 
 				'events': events })
 
-
-#function defines the approve and rejection tools for teachers (left rejection detials)
+#Function defines the approve and rejection tools for teachers
+#Rejection is performed by StaffAppointmentUpdateView to allow users to enter rejection reasons
 def schedule_pending_manage(request, pk=None, status=None):
 	if(not pk or not status):
 		#Displays a forbidden error
@@ -103,7 +103,9 @@ def schedule_pending_manage(request, pk=None, status=None):
 	else:
 		status_list = ('approved', 'rejected')
 		planner = EventPlanner.objects.get(user__exact = request.user.id)
+		current='pending'
 
+		print(status)
 		#If an appointment is approved, we update the status to approve
 		if status == status_list[0]:
 			events = Appointment.objects.filter(id__exact = pk)
@@ -111,22 +113,16 @@ def schedule_pending_manage(request, pk=None, status=None):
 
 		#Create an event for the teacher with regards to the appointment
 			for event in events:
-				Event.objects.create(eventPlanner = planner, title = event.apptTitle, description = event.apptDescription,
+				parent_name = ParentProfile.objects.get(id__exact = event.parent_id)	
+				appt_title = event.apptTitle + " by " + parent_name.lastname + parent_name.firstname
+				Event.objects.create(eventPlanner = planner, title = appt_title, description = event.apptDescription,
 					location = event.apptLocation, dateFrom = event.apptDate, dateTo = event.apptDate, timeFrom = event.apptTimeFrom, timeTo = event.apptTimeTo)
 
 			messages.success(request, f'Appointment has been approved!')
 			return redirect('schedule-manage')
-		
-		elif status == status_list[1]:
-			try:
-				'''
-				Rejection try to come up with form to enter rejection details using POST
-				'''
 
-			except ObjectDoesNotExist:
-				print("Appointment does not exist!")	
-
-		return render(request, 'schedule/schedule_appointment_edit.html', {'form':form})
+	messages.error(request, f'An error has occurred, appointment has not yet been approved!')		
+	return redirect('schedule-manage')
 		
 
 ######################### Lawrann #########################

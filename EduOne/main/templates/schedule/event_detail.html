@@ -7,7 +7,7 @@
 		<p>{{object.location}}</p>
 		<p>{{object.dateFrom}} to {{object.dateTo}}</p>
 		<p>{{object.timeFrom}} to {{object.timeTo}}</p>
-		<a href="#">Edit</a>
+		<a href="{% url 'schedule-edit' stype='event' pk=object.id %}">Edit</a>
 		<a href ="{% url 'schedule-manage' %}"> Return </a>
 
 {% endblock %}
