@@ -1,10 +1,11 @@
 {% extends "common/header.html" %}
 
 {% block content %}
-<h2>Add Subject Grade</h2> 
+<h2>Edit Marks</h2> 
 <form method="POST">
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit' value = 'Save' />
 </form>
+
 {% endblock %}
