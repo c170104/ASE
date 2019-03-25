@@ -211,6 +211,18 @@ def childprofile(request, id=None):
 
 @login_required
 def childreportcardpage(request, id=None, rcid=None):
+<<<<<<< HEAD
+	current_user = request.user
+	parent = ParentProfile.objects.get(user__exact=current_user)
+	studentcheck = Student.objects.filter(child_of__exact = parent)
+	SLIST = []
+	for i in studentcheck:
+		SLIST.append(i.nric)
+	if id not in SLIST: ## prevent access to other student report card
+		return HttpResponseForbidden()
+	
+=======
+>>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	reportcard = ReportCard.objects.get(student__exact = student)
 	reportcardpage = ReportCardPage.objects.get(reportCard__exact = reportcard, id__exact = rcid)
@@ -228,6 +240,15 @@ def childreportcardpage(request, id=None, rcid=None):
 
 @login_required
 def childattendance(request, id=None):
+<<<<<<< HEAD
+	current_user = request.user
+	parent = ParentProfile.objects.get(user__exact=current_user)
+	studentcheck = Student.objects.filter(child_of__exact = parent)
+	SLIST = []
+	for i in studentcheck:
+		SLIST.append(i.nric)
+=======
+>>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	attendance = Attendance.objects.filter(student=student)
 	ATTENDANCELIST = []
@@ -241,6 +262,16 @@ def childattendance(request, id=None):
 
 @login_required
 def childcomments(request, id=None):
+<<<<<<< HEAD
+	current_user = request.user
+	parent = ParentProfile.objects.get(user__exact=current_user)
+	studentcheck = Student.objects.filter(child_of__exact = parent)
+	SLIST = []
+	for i in studentcheck:
+		SLIST.append(i.nric)
+
+=======
+>>>>>>> master
 	student = Student.objects.get(nric__exact = id)
 	comment = Comment.objects.filter(student=student).order_by("commentDate")
 	COMMENTLIST = []
@@ -535,6 +566,15 @@ def comment_add(request, class_id, subject, id):
 
 #This function displays the students from the teacher's form class
 def grades(request, id=None):
+
+	current_user = request.user
+	staff = StaffProfile.objects.get(user__exact = current_user)
+	if id!=None:
+		student = Student.objects.get(nric__exact = id)
+		if staff.form_class != student.form_class:
+			return HttpResponseForbidden() ## prevent accessing other student reportcardpage id
+	
+
 	try:
 		information = {}
 		information['teacher_info'] = StaffProfile.objects.get(user__exact = request.user.id)
@@ -568,26 +608,78 @@ def grades_manage(request, report_card_page_id=None, id=None):
 			 information['nric'] = id
 		else:
 			 return HttpResponseForbidden()	 
-
-
 	except ObjectDoesNotExist:
 				print("No entries found for report card pages!")		
 
 	return render(request, 'student_settings/grades_manage.html', {'active_page': 'student', 'information': information})			
 
-#NOT FINSIHED!
-def grades_add(request, id=None):
-	if (not id):
+def grades_add(request, report_card_page_id=None, id=None):
+	if (not id or not report_card_page_id):
 		return HttpResponseForbidden()
 
-	try:
-		form = SubjectGradeForm(request.POST or None)
-		if form.is_valid():
-			print('YAY')
+	current_user = request.user
+	staff = StaffProfile.objects.get(user__exact = current_user)
+	student = Student.objects.get(nric__exact = id)
+	if staff.form_class != student.form_class:
+		return HttpResponseForbidden() ## prevent accessing other student reportcardpage id
+	
+	reportcard = ReportCard.objects.get(student__exact = student)
+	reportcardpages = ReportCardPage.objects.filter(reportCard__exact = reportcard)
+	IDLIST = []
+	for i in reportcardpages:
+		IDLIST.append(i.id)
+	if report_card_page_id not in IDLIST:
+		return HttpResponseForbidden() ## prevent accessing other reportcardpage id
 
-		return render(request, 'student_settings/grades_add.html', {'active_page': 'student', 'form':form})				
+	form = Grades_Add_Form(request.POST)
+	if form.is_valid():
+		subjectGrade = form.save(commit=False)
+		subjectGrade.reportCardPage = ReportCardPage.objects.get(id__exact = report_card_page_id)
+		form.save()
+		messages.success(request, f'Subjectgrade has been created successfully!')
+		return redirect('grades-home')
+	context ={
+		'form':form
+	}
+	return render(request, 'student_settings/grades_add.html', context)				
 
-	except ObjectDoesNotExist:
-				print("No entries found for report card pages!")		
-
-			
+def report_card_page_add(request, id=None, count=None):
+	current_user = request.user
+	staff = StaffProfile.objects.get(user__exact = current_user)
+	student = Student.objects.get(nric__exact = id)
+	if staff.form_class != student.form_class:
+		return HttpResponseForbidden() ## prevent accessing other student reportcardpage id
+		
+	rc = ReportCard.objects.get(student__exact = student)
+	
+	reportcardpageform = Report_Card_Page_Add_Form(request.POST)
+	c = count
+	ASGF = []
+	for i in range(c):
+		ASGF.append(Grades_Add_Form(request.POST,prefix=i))
+	
+	for i in range(c):
+		if ASGF[i].is_valid():
+			continue
+	if reportcardpageform.is_valid():
+		reportCardPage = reportcardpageform.save(commit=False)
+		reportCardPage.acknowledgement = False
+		reportCardPage.reportCard = rc
+		reportCardPage.reportCard.id = rc.id
+		reportcardpageform.save()
+		messages.success(request, f'Report card page has been created successfully!')
+		for i in range(c):
+			subjectGrade = ASGF[i].save(commit=False)
+			subjectGrade.reportCardPage = reportCardPage
+			subjectGrade.reportCardPage.id = reportCardPage.id	
+			ASGF[i].save()
+			messages.success(request, f'Subjectgrade has been created successfully!')
+		return redirect('grades-home')
+	c = c + 1
+	context ={
+		'reportcardpageform':reportcardpageform,
+		'ASGF':ASGF,
+		'c':c,
+		'id':id,
+	}
+	return render(request, 'student_settings/report_card_page_grade_add.html', context)		
