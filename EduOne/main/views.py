@@ -196,6 +196,7 @@ def childprofile(request, id=None):
 	COMMENTLIST = []
 	for i in comment:
 		COMMENTLIST.append(i)
+	COMMENTLIST.reverse()
 	COMMENTLISTSLICED = COMMENTLIST[0:3]
 	
 	# print(COMMENTLISTSLICED)
@@ -553,7 +554,9 @@ def comment_add(request, class_id, subject, id):
 			if form.is_valid():
 				comment = form.save(commit=False)
 				comment.student = information['student'] 
-				comment.commentBy = request.user
+				staff = StaffProfile.objects.get(user__exact = request.user)
+				staffname = staff.firstname + ' ' + staff.lastname
+				comment.commentBy = staffname
 				comment.commentDate = datetime.datetime.now().date()
 				comment.commentTime = datetime.datetime.now().strftime("%H:%M:%S")				
 				form.save()
