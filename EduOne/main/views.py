@@ -243,6 +243,7 @@ def childattendance(request, id=None):
 	SLIST = []
 	for i in studentcheck:
 		SLIST.append(i.nric)
+
 	student = Student.objects.get(nric__exact = id)
 	attendance = Attendance.objects.filter(student=student)
 	ATTENDANCELIST = []

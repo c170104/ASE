@@ -193,6 +193,7 @@ class Report_Card_Page_Add_Form(ModelForm):
             'exam_date' : ('Enter date of examination'),
             'description' : ('Enter a description'),
         }
+
 class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Appointment
     fields = ['apptRejectionReason']
@@ -209,7 +210,6 @@ class StaffAppointmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
         if appointment.eventPlanner_id == planner.id:
             return True
         return False    
-
 
 ######################### Lawrann #########################
 # #This form is used to create new appointments
