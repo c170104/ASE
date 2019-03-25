@@ -1,11 +1,21 @@
 {% extends "common/header.html" %}
 
 {% block content %}
-<h2>Add Appointment</h2> 
-<form method="POST">
-{% csrf_token %}
-{{ form.as_p }}
-<input type='submit' value = 'Save' />
-</form>
+	<h2>Add Appointment</h2> 
+	<!--Start of Display Errors-->
+		{% if messages %}
+			{% for message in messages %}
+				<!--<div class = "alert alert-{{message}}"></div>-->
+				{{message}}
+			{% endfor %}
+		{% endif %}		
+		<!--End of Display Errors-->
+	
+		<form method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+		<input type='submit' value = 'Save' />
+		<a href="{% url 'schedule-home' %}"> Return </a>
+	</form>
     
 {% endblock %}

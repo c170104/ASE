@@ -17,15 +17,11 @@
 			<td>{{forloop.counter}})</td>
 			<td>{{student.last_name}}  {{student.first_name}}</td>
 			<td>
-			{% if information.present|length == 0 %}
-				<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>
-			{% else %}	
-				{% if student in information.present %}
-					<a href="{% url 'attendance-edit' id=student.nric status='Y' %}">Y</a></td>
-				{% else %}
-					<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>		
-				{% endif %}
-			{% endif %}		
+			{% if student in information.present %}
+				<a href="{% url 'attendance-edit' id=student.nric status='Y' %}">Y</a></td>
+			{% else %}
+				<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>		
+			{% endif %}	
 		</tr>
 		{% endfor %}
 	</table>

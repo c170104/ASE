@@ -3,11 +3,18 @@
 {% block content %}
 
 <table>
+	<h2>Yearly Attendance</h2>
     <tr>
-        <th>Attendance</th>
+        <th>Days Attended</th> 
     </tr>
-    {% for i in ATTENDANCELIST %}
-    <tr><td>{{i.date}}</td></tr>
-    {% endfor%}
+    {% if ATTENDANCELIST|length == 0 %}
+    	<tr>No Records Found!</tr>
+	{% else %}
+	    {% for i in ATTENDANCELIST %}
+	   	 	<tr><td>{{i.date}}</td></tr>
+	    {% endfor%}
+	{% endif %}    
+
 </table>
+
 {% endblock %}
