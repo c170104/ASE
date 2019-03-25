@@ -1,0 +1,17 @@
+{% extends "common/header.html" %}
+
+{% block content %}
+<h2>Add Subject Grade</h2> 
+<form method="POST">
+{% csrf_token %}
+{{ reportcardpageform.as_p }}
+
+{% for i in ASGF %}
+{{i.as_p}}
+{% endfor %}
+
+<input type='submit' value = 'Save' />
+</form>
+<a href="{% url 'report-card-page-add' id=id count=c %}">Add subject grade</a>
+
+{% endblock %}
