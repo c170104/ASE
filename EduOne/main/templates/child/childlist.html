@@ -1,19 +1,45 @@
 {% extends "common/header.html" %}
+{% load widget_tweaks %}
+{% load static from staticfiles %}
 
-{% block content %}
+<!DOCTYPE html>
+<html>
 
-<table>
-    <th><td>My children</td></th>
-{% for child in CHILDLIST %}
-    <tr><td><img src="/static/logo/profilepic.jpeg"></td></tr>
-    <tr><td>Name: {{child.first_name}} {{child.last_name}}</td></tr>
-    <tr><td>Class: {{child.form_class}}</td></tr>
-    <tr><td>Date Of Birth: -</td></tr>
-    <tr><td>Address: {{child.home_address}}</td></tr>
-    <tr><td>Emergency Contact: {{child.emergency_contact}}</td></tr>
-    <tr><td><a href="{% url 'child-profile' id=child.nric %}"> Detailed View </a></td></tr>
+<head>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
 
-{% endfor %}
-</table>
+<style>
+    h2 {
+            color: white;
+        }
+</style>
 
-{% endblock %}
+<body>
+    {% block content %}
+    <div class= "container-fluid">
+        <div class="row" style="position: relative; margin-top: 1%;">
+                <div class="col-sm-12">
+                        <h2 style="text-align: center;">My Child's Profile</h2>
+                </div>
+        </div>
+
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+                <table align="center">
+                        {% for child in CHILDLIST %}
+                        <tr><td><img src="/static/logo/profilepic.jpeg" width="150" height="150"></td></tr>
+                        <tr><td>Name: {{child.first_name}} {{child.last_name}}</td></tr>
+                        <tr><td>Class: {{child.form_class}}</td></tr>
+                        <tr><td>Date Of Birth: 14/02/1995</td></tr>
+                        <tr><td>Address: {{child.home_address}}</td></tr>
+                        <tr><td>Emergency Contact: {{child.emergency_contact}}</td></tr>
+                        <tr><td><a href="{% url 'child-profile' id=child.nric %}"> Detailed View </a></td></tr>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

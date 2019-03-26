@@ -1,68 +1,108 @@
 {% extends "common/header.html" %}
+{% load widget_tweaks %}
+{% load static from staticfiles %}
 
-{% block content %}
+<!DOCTYPE html>
+<html>
 
-<table>
-    <tr><td><img src="/static/logo/profilepic.jpeg"></td></tr>
-    <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
-    <tr><td>Class: {{childStudent.form_class}}</td></tr>
-    <!-- <tr><td>Date Of Birth: -</td></tr> -->
-    <tr><td>Address: {{childStudent.home_address}}</td></tr>
-    <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
-</table>
+<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
 
-<h4>Report Book</h4>
-    {% if REPORTCARDLIST|length == 0 %}
+<style>
+        h2 {
+            color: white;
+        }
+</style>
 
-    <p>No report card pages found!</p>
+<body>
+    {% block content %}
+    <div class="container-fluid">
+            <div class="row" style="position: relative; margin-top: 1%;">
+                    <div class="col-sm-12">
+                            <h2 style="text-align: center;">My Child's Profile</h2>
+                            
+                    </div>
+            </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <table align="center">
+                    <tr><td><img src="/static/logo/profilepic.jpeg" width="150" height="150"></td></tr>
+                    <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
+                    <tr><td>Class: {{childStudent.form_class}}</td></tr>
+                    <tr><td>Date Of Birth: -</td></tr>
+                    <tr><td>Address: {{childStudent.home_address}}</td></tr>
+                    <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
+                </table>
+        </div>
+    </br></br>
 
-    {% else %}
+        <div class="row">
+                <div class="col-sm-1" ></div>
+                <div class="col-sm-10">
+                        <h2 style ="text-align: center;">Report Book</h2>
+                        <table align="center">
+                                <tr><th>Examinations: </th><th>Date: </th></tr>
+                                {% for rcl in REPORTCARDLIST %}
+                                <tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
+                                {% endfor %}
+                            </table>
+                </div>
+        </div>
+    </br></br> </br></br>
 
-    <table>
-        <tr>
-        <th>Examination</th>
-        <th>Date</th>
-        </tr>
-        {% for rcl in REPORTCARDLIST %}
-        <tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
-        {% endfor %}
-    </table>
+        <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                        <h3 style ="text-align: center;">Student's Attendance</h3>
+                        <table align="center">
+                                <tr><th>Date</th><th>Present</th></tr>
+                                {% for i in WEEKLIST %}
+                                <tr>
+                                 <td>{{i}}</td>
+                                 {% for j in ATTENDANCELIST %}
+                                  {% if i == j.date %}
+                                 <td>Yes</td>
+                                 {% endif %}
+                                 {% endfor %}
+                                 </tr>
+                                 {% endfor %}
+                <tr><td><a href="{% url 'child-attendance' id=childStudent.nric %}" >View full attendance records</a></td></tr>
+                      </table>
+                </div>
+                </div>
 
-    {% endif %}
-    
-<h4>Attendance</h4>
-<table>
-    <tr>
-    <th>Date</th>
-    <th>Present</th>
-    </tr>
-    {% for i in WEEKLIST %}
-    <tr>
-        <td>{{i}}</td>
-        {% for j in ATTENDANCELIST %}
-            {% if i == j.date %}
-            <td>Yes</td>
-            {% endif %}
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>   
-<p><a href="{% url 'child-attendance' id=childStudent.nric %}" >View full attendance records</a></p>
+        </div>
+        
+    </br></br> </br></br>
+        
+        <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                        <h3 style ="text-align: center;">Teacher's Comments</h3>
+                        <table align="center">
+                                <tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
+                                {% for c in COMMENTLISTSLICED %}
+                                <tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
+                                {% endfor%}
+                                <tr><td><a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a></td></tr>
+                            </table>
+                    </div>
+        </div>
+            
 
-
-<h4>Comments</h4>
-{% if COMMENTLISTSLICED|length == 0 %}
-    <p>No comment on child found!</p>
-{% else %}    
-<table>
-    <tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
-    {% for c in COMMENTLISTSLICED %}
-    <tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
-    {% endfor%}
-    <tr><td><a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a></td></tr>
-</table>
-{% endif %}
+    </div>        
+    {% endblock %}
+</body>
+</html>
 
 
 
-{% endblock %}
+
+
+
+
+
+
+
