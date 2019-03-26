@@ -1,40 +1,79 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<style>
+	h2 {
+		text-align: center;
+		font-size: 45px;
+	}
+
+	#class {
+		justify-content: center;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	#studentlist {
+		justify-content: center;
+	}
+
+	p {
+		position: static;
+		padding-left: 1%;
+		padding-bottom: 2%;
+		margin-bottom: -1%;
+	}
+
+	table a {
+		color: #000000;
+	}
+	
+</style>
+
+<body>
 {% block content %}
-	{% if information.view == 'class'%}
-		<h2>Class {{information.teacher_info.form_class.className}} Student List</h2>
-		<p>Taken by: {{information.teacher_info}}</p>
-		<table>
-			<tr>
-				<th>S/N</th>
-				<th>Student Name</th>
+	<div class="maincontainer" style="padding: 1%;">
+	<div class="container">
+		<div class="row" id="class">
+				<h2>Class {{information.form_class.className}}</h2>
+		</div>
+
+		<div class="row" id="studentlist" style="padding: 1%;">
+			<h5 style="font-size: 15px;">Student List</h5>
+		</div>
+	
+		<div class="row" id="teacher">
+			<p >Taken by: {{user.last_name}}</p>
+		</div>
+
+		<table class="table table-bordered">
+			<tr class="table-info">
+				<th style="width: 10%;">S/N</th>
+				<th style="width: 45%;">Student Name</th>
 				<th>Tools</th>
 			</tr>
 			{% for student in information.students %}
 			<tr>
-				<td>{{forloop.counter}})</td>
-				<td>{{student.last_name}}  {{student.first_name}}</td>
-				<td><a href="{% url 'report-card-page-add' id=student.nric count=1 %}">Add Grades</a></td>
-				<td><a href="{% url 'grades-home' id=student.nric%}">Manage Grades</a></td>
+				<td class="align-middle"></td>
+				<td class="align-middle">{{student.last_name}}  {{student.first_name}}</td>
+				<td>
+					<a href='#'>Add Grades</a>
+					<br>
+					<a href='#'>Manage Grades</a>
+				</td>
 			</tr>
 			{% endfor %}
 		</table>
-	{% elif information.view == 'student' %}
-		<h2>Manage Grades</h2>
-		<table>
-		<tr>
-			<th>Title</th>
-			<th>Year</th>
-		</tr>
-		{% for page in information.pages %}
-			<tr>
-				<td><a href="{% url 'grades-manage' id=information.nric report_card_page_id=page.id %}">{{page.examination_type}}</a></td>
-				<td>{{page.exam_date.year}}</td>
-			</tr>
 		
-		{% endfor %}
-		</table>
-	{% endif %}	
-		
-
+	</div>
+	</div>
 {% endblock %}
+</body>
+</html>

@@ -1,34 +1,88 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 
+<html>
+<style>
+	h2 {
+		text-align: center;
+		margin-bottom: 3%;
+	}
+
+	table th {
+		width: 25%;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	.col-md-12 a {
+		color: #000;
+	}
+
+	.col-md-12 a:hover {
+		text-decoration: none;
+		color:#EF233C;
+	}
+
+</style>
+<body>
 {% block content %}
-	<h2>Class {{information.teacher_info.className}} Student Attendance</h2>
-	<p>Date: {{information.today}}</p>
-	<p>Attendance: {{information.attendanceCount}}/{{information.students.count}}</p>
-	<p>Taken by: {{information.teacher_info}}</p>
-	<p><a href="{% url 'attendance-edit' id=user.id status='all' %}">Select all</a></p>
-	<table>
-		<tr>
-			<th>S/N</th>
-			<th>Student Name</th>
-			<th>Present?</th>
-		</tr>
-		{% for student in information.students %}
-		<tr>
-			<td>{{forloop.counter}})</td>
-			<td>{{student.last_name}}  {{student.first_name}}</td>
-			<td>
-			{% if information.present|length == 0 %}
-				<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>
-			{% else %}	
-				{% if student in information.present %}
-					<a href="{% url 'attendance-edit' id=student.nric status='Y' %}">Y</a></td>
-				{% else %}
-					<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>		
-				{% endif %}
-			{% endif %}		
-		</tr>
-		{% endfor %}
-	</table>
+	<div class="container"> 
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Class {{information.teacher_info.className}} Student Attendance</h2>
+			</div>
+		</div>
+
+		<div class="row">	
+			<div class="col-md-12" style="text-align: right;">
+			Attendance: {{information.attendanceCount}}/{{information.students.count}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12" style="text-align: right;">
+				Taken by: {{information.teacher_info}}</p>
+			</div>
+		</div>
+
+		<div class="row"></div>
+
+		<div class="row">
+			<div class="col-md-4">
+					Date: {{information.today}}
+			</div>
+
+			<div class="col-md-8" style="text-align: right;">
+				<a href="{% url 'attendance-edit' id=user.id status='all' %}">Select all</a>
+			</div>
+		</div>
+
+		<table class="table table-bordered table-hover">
+			<tr class="table-info">
+				<th>S/N</th>
+				<th>Student Name</th>
+				<th>Present?</th>
+			</tr>
+			{% for student in information.students %}
+			<tr>
+				<td>{{forloop.counter}}</td>
+				<td>{{student.last_name}}  {{student.first_name}}</td>
+				<td>
+				{% if information.present|length == 0 %}
+					<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>
+				{% else %}	
+					{% if student in information.present %}
+						<a href="{% url 'attendance-edit' id=student.nric status='Y' %}">Y</a></td>
+					{% else %}
+						<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>		
+					{% endif %}
+				{% endif %}		
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
 	
 {% endblock %}
-		
+</body>
+</html>

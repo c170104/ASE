@@ -1,29 +1,107 @@
 {% extends "common/header.html" %}
+{% load widget_tweaks %}
 
+<!DOCTYPE html>
+
+<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		
+</head>
+
+<style>
+	h2 {
+		color: white;
+	}
+
+</style>
+
+<body>
 {% block content %}
-		<h2>Add New Events</h2>
-		<!--Start of Display Errors-->
-		{% if messages %}
-			{% for message in messages %}
-				<!--<div class = "alert alert-{{message}}"></div>-->
-				{{message}}
-			{% endfor %}
-		{% endif %}		
-		<!--End of Display Errors-->
-
-		<!--Start of selection between events & announcements -->
-		<p><a href="{% url 'schedule-add' current='events' %}"> Events </a><p>
-		<p><a href="{% url 'schedule-add' current='announcements' %}"> Announcements </a><p>
-		<!--End of selection between events & announcements -->
-
-		<!--Start of Form-->
-		<div class = "content-section">
-			<form method="POST">
-				{% csrf_token %}
-				{{form.as_p}}
-				<button type ="submit"> Add {{active_tab}} </button>
-			</form>
+	<div class="container-fluid">
+		<div class="row" style="position: relative; margin-top: 1%;">
+			<div class="col-sm-12">
+				<h2 style="text-align: center;">Add Event</h2>
+			</div>
 		</div>
-		<!--End of Form-->
 
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+		{% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="list-style-type: none;">{{ message }}</li>
+	  {% endfor %}
+	  </div>
+
+
+		<form method="post">
+			<div class="row">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-10">
+	
+				{% csrf_token %}
+
+				{{ form.non_field_errors }}
+				{{ form.source.errors }}
+				{{ form.source }}
+					
+
+				<div class="form group">
+					<div class="row" style="padding:15px;">
+						{{ form.title.label_tag }}
+						{{ form.title|add_class:'form-control' }}
+					</div>
+				</div>
+
+				<div class="form group">
+					<div class="row" style="padding:15px;">
+						{{ form.description.label_tag }}
+						{{ form.description|add_class:'form-control' }}
+					</div>
+				</div>
+
+				<div class="form group">
+					<div class="row" style="padding:15px;">
+						{{ form.location.label_tag }}
+						{{ form.location|add_class:'form-control' }}
+					</div>
+				</div>
+
+				<div class="form group row">
+					<div class="col-sm-6">
+						{{ form.dateFrom.label_tag }}
+						{{ form.dateFrom|add_class:'form-control' }}
+					</div>
+
+					<div class="col-sm-6">
+						{{ form.dateTo.label_tag }}
+						{{ form.dateTo|add_class:'form-control' }}
+					</div>
+				</div>
+
+				<div class="form group row">
+					<div class="col-sm-6">
+						{{ form.timeFrom.label_tag }}
+						{{ form.timeFrom|add_class:'form-control' }}
+					</div>
+
+					<div class="col-sm-6">
+						{{ form.timeTo.label_tag }}
+						{{ form.timeTo|add_class:'form-control' }}
+					</div>
+				</div>
+
+
+			</div>
+			</div>
+
+			<div class="form group row">
+				<button type="submit" class="btn btn-outline-dark" style="position: relative;
+				margin-top: 3%; margin-left: auto; margin-right: auto; width: 20%; margin-bottom: 3%;">Submit</button>
+			</div>
+	</form>
 {% endblock %}
+</body>
+
+
+</html>
