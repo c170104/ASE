@@ -3,26 +3,39 @@
 {% block content %}
 
 <table>
-    <tr><td><img src="image/profilepicture.jpg"></td></tr>
+    <tr><td><img src="/static/logo/profilepic.jpeg"></td></tr>
     <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
     <tr><td>Class: {{childStudent.form_class}}</td></tr>
-    <tr><td>Date Of Birth: -</td></tr>
+    <!-- <tr><td>Date Of Birth: -</td></tr> -->
     <tr><td>Address: {{childStudent.home_address}}</td></tr>
     <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
 </table>
 
-<table>
-    <tr><th>Report Book</th></tr>
-    <tr><th>Examination</th><th>Date</th></tr>
-    {% for rcl in REPORTCARDLIST %}
-    <tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
-    {% endfor %}
+<h4>Report Book</h4>
+    {% if REPORTCARDLIST|length == 0 %}
 
-</table>
+    <p>No report card pages found!</p>
 
+    {% else %}
+
+    <table>
+        <tr>
+        <th>Examination</th>
+        <th>Date</th>
+        </tr>
+        {% for rcl in REPORTCARDLIST %}
+        <tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
+    
+<h4>Attendance</h4>
 <table>
-    <tr><th>Attendance</th></tr>
-    <tr><th>Date</th><th>Present</th></tr>
+    <tr>
+    <th>Date</th>
+    <th>Present</th>
+    </tr>
     {% for i in WEEKLIST %}
     <tr>
         <td>{{i}}</td>
@@ -33,17 +46,22 @@
         {% endfor %}
     </tr>
     {% endfor %}
-    <tr><td><a href="{% url 'child-attendance' id=childStudent.nric %}" >View full attendance records</a></td></tr>
-</table>
+</table>   
+<p><a href="{% url 'child-attendance' id=childStudent.nric %}" >View full attendance records</a></p>
 
+
+<h4>Comments</h4>
+{% if COMMENTLISTSLICED|length == 0 %}
+    <p>No comment on child found!</p>
+{% else %}    
 <table>
-    <tr><th>Comments</th></tr>
     <tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
     {% for c in COMMENTLISTSLICED %}
     <tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
     {% endfor%}
     <tr><td><a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a></td></tr>
 </table>
+{% endif %}
 
 
 

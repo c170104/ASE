@@ -19,11 +19,29 @@
 
 <body>
 {% block content %}
-	<div class="container-fluid">
-		<div class="row" style="position: relative; margin-top: 1%;">
-			<div class="col-sm-12">
-				<h2 style="text-align: center;">Add Event</h2>
-			</div>
+		<h2>Add New Events</h2>
+		<!--Start of Display Errors-->
+		{% if messages %}
+			{% for message in messages %}
+				<!--<div class = "alert alert-{{message}}"></div>-->
+				{{message}}
+			{% endfor %}
+		{% endif %}		
+		<!--End of Display Errors-->
+
+		<!--Start of selection between events & announcements -->
+		<p><a href="{% url 'schedule-add' current='events' %}"> Events </a><p>
+		<p><a href="{% url 'schedule-add' current='announcements' %}"> Announcements </a><p>
+		<!--End of selection between events & announcements -->
+
+		<!--Start of Form-->
+		<div class = "content-section">
+			<form method="POST">
+				{% csrf_token %}
+				{{form.as_p}}
+				<button type ="submit"> Add {{active_tab}} </button>
+				<p><a href="{% url 'schedule-home' %}"> Return </a></p>
+			</form>
 		</div>
 
 		<div class="col-sm-1"></div>

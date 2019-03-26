@@ -83,6 +83,13 @@ class AnnouncementForm(ModelForm):
             'description': ('The announcement description goes here.'),
         }
 
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ['student','commentBy','commentDate','commentTime']
+        labels = {
+            'comment': ('Comment on Student:')
+        }
 
 # # Do not use this form for user creation.
 # class UserCreationForm(ModelForm):
@@ -178,6 +185,24 @@ class Grades_Add_Form(ModelForm):
             'subjectName':('Enter the subject name'),
             'marks' : ('Enter the marks'),
         }
+
+class Grades_Delete_Form(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = SubjectGrade
+    success_url = reverse_lazy('grades-home')
+    def test_func(self):
+        subjectgrade = self.get_object()
+        current_user = self.request.user 
+        staff = StaffProfile.objects.get(user__exact = current_user)
+        if subjectgrade.reportCardPage.reportCard.student.form_class != staff.form_class:
+            return False
+        return True
+        # subjectgrade = self.get_object()
+        # self.request.user
+        # if subjectgrade.reportCardPage.reportCard.student
+        # appointment = self.get_object()
+        # if appointment.parent.user == self.request.user and appointment.apptStatus == 'pending':
+        #     return True
+        # return False
 
 class Report_Card_Page_Add_Form(ModelForm):
     class Meta:

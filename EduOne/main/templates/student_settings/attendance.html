@@ -82,6 +82,30 @@
 			{% endfor %}
 		</table>
 	</div>
+	<h2>Class {{information.teacher_info.className}} Student Attendance</h2>
+	<p>Date: {{information.today}}</p>
+	<p>Attendance: {{information.attendanceCount}}/{{information.students.count}}</p>
+	<p>Taken by: {{information.teacher_info}}</p>
+	<p><a href="{% url 'attendance-edit' id=user.id status='all' %}">Select all</a></p>
+	<table>
+		<tr>
+			<th>S/N</th>
+			<th>Student Name</th>
+			<th>Present?</th>
+		</tr>
+		{% for student in information.students %}
+		<tr>
+			<td>{{forloop.counter}})</td>
+			<td>{{student.last_name}}  {{student.first_name}}</td>
+			<td>
+			{% if student in information.present %}
+				<a href="{% url 'attendance-edit' id=student.nric status='Y' %}">Y</a></td>
+			{% else %}
+				<a href="{% url 'attendance-edit' id=student.nric status='N' %}">N</a></td>		
+			{% endif %}	
+		</tr>
+		{% endfor %}
+	</table>
 	
 {% endblock %}
 </body>
