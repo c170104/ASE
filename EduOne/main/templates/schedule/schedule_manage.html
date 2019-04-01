@@ -108,8 +108,9 @@
 					<td>{{event.apptTimeTo}}</td>
 					<td>{{event.apptStatus}}</td>
 					<!--The Approve & Reject functions here are for the pending appointments-->
-					<td><a href="#"> Approve </a></td>
-					<td><a href="#"> Reject </a></td>
+					<td><a href="{% url 'schedule-pending-manage' pk=event.id status='approved' %}"> Approve </a></td>
+					<td><a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td>
+				</tr>
 					<!--End of Approve & Reject functions-->
 				{% endfor %}	
 			<!--End of block for pending appointments-->
@@ -145,14 +146,15 @@
 					<th>Title</th>
 					<th>Description</th>
 					<th>Date Created</th>
+					<th>Tools</th>
 				</tr>
 				{% for event in events  %}
 				<tr>
 					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
 					<td>{{event.description}}</td>
 					<td>{{event.dateCreated}}</td>
-					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a></td>
-					<td><a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
+					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a>
+					<a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for announcements-->
 			{% endif %}
