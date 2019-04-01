@@ -1,43 +1,78 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
+<!DOCTYPE html>
 
+<head>
+
+</head>
+
+<style>
+	h2 {
+		text-align: center;
+		font-size: 45px;
+	}
+
+	#class {
+		justify-content: center;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	#studentlist {
+		justify-content: center;
+	}
+
+	p {
+		position: static;
+		padding-left: 1%;
+		padding-bottom: 2%;
+		margin-bottom: -1%;
+	}
+
+	table a {
+		color: #000000;
+	}
+	
+</style>
+
+<body>
 {% block content %}
-	{% if information.grades|length == 0 %}
-		<p>No records of grades found!</p>
-		<p><a href="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</a></p>
-	{% else %}
-		<h2>Grades for {{information.report_card.examination_type}} {{information.report_card.exam_date.year}}</h2>
-		<p><a href="{% url 'grades-home' id=information.nric %}">Return to previous</a></p>
-		<table>
-			<tr>
-				<th>S/N</th>
-				<th>Subject</th>
-				<th>Grade Achieved</th>
-				<th>Marks</th>
-				<th>Edit Marks</th>
-				<th>Delete</th>
+	<div class="maincontainer" style="padding: 1%;">
+	<div class="container">
+		<div class="row" id="class">
+				<h2>Class {{information.form_class.className}}</h2>
+		</div>
+
+		<div class="row" id="studentlist" style="padding: 1%;">
+			<h5 style="font-size: 15px;">Student List</h5>
+		</div>
+	
+		<div class="row" id="teacher">
+			<p >Taken by: {{user.last_name}}</p>
+		</div>
+
+		<table class="table table-bordered">
+			<tr class="table-info">
+				<th style="width: 10%;">S/N</th>
+				<th style="width: 45%;">Student Name</th>
+				<th>Tools</th>
 			</tr>
-			{% for grade in information.grades %}
+			{% for student in information.students %}
 			<tr>
-				<td>{{forloop.counter}}.</td>
-				<td>{{grade.subjectName}}</td>
-				{% if grade.marks >= 75 %}
-					<td>A
-				{% elif grade.marks >= 65%}
-					<td>B
-				{% elif grade.marks >= 50 %}	
-					<td>C
-				{% else %}
-					<td>D
-				{% endif %}			
+				<td class="align-middle"></td>
+				<td class="align-middle">{{student.last_name}}  {{student.first_name}}</td>
+				<td>
+					<a href='#'>Add Grades</a>
+					<br>
+					<a href='#'>Manage Grades</a>
 				</td>
-				<td>{{grade.marks}}</td>
-				<td><a href="{% url 'grades-edit' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}">Edit</a></td>
-				<td><a href="{% url 'grades-delete' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}">Delete</a></td>
 			</tr>
 			{% endfor %}
 		</table>
-		<p><a href="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</a></p>
-
-	{% endif %}	
-
+		
+	</div>
+	</div>
 {% endblock %}
+</body>
+</html>

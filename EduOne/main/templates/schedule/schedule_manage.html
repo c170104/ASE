@@ -1,8 +1,61 @@
-{% extends "common/header.html" %}
+{% include 'common/header.html' %}
 
 {% block content %}
 
-		<h2>Manage Schedule</h2>
+<!DOCTYPE html>
+
+<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+
+	.main-container {
+		padding: 1%;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	#menu {
+		border:1px solid;
+		border-color: #BAE3E9;
+		background-color: #BAE3E9;
+
+		border-bottom: none;
+		text-align: center;
+		border-radius: 2px;
+
+	}
+
+	#menu a {
+		color: #FFFFFF;
+		font-weight:bold;
+	}
+
+	#menu a:hover {
+		color:#8D8D95;
+		text-decoration: none;
+	}
+
+	.table-hover {
+
+		border:1px solid;
+		border-color: #BAE3E9;
+		border-left: none;
+		border-right: none;
+		text-align: center;
+	}
+
+	.container-fluid {
+		margin-top: 4%;
+	}
+</style>
+
+<body>
+	<div class="main-container">
+			<h2>Manage Schedule</h2>
+	<div class="container-fluid">
 		<!--Start of Display Errors-->
 		{% if messages %}
 			{% for message in messages %}
@@ -11,16 +64,34 @@
 			{% endfor %}
 		{% endif %}		
 		<!--End of Display Errors-->
-		<p><a href="{% url 'schedule-manage' current='pending' %}"> Pending </a><p>
-		<p><a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a><p>
-		<p><a href="{% url 'schedule-manage' current='announcements'%}"> Announcements </a><p>	
+
+		<div class="row" id="border">
+			<div class="col-md-4" id="menu">
+				<div class="row">
+					<div class="col-md-4" style="border-right:1px solid black">
+							<a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a>
+					</div>
+
+					<div class="col-md-4" style="border-right:1px solid black">
+						<a href="{% url 'schedule-manage' current='pending' %}" class="link"> Pending </a>
+					</div>
+
+					<div class="col-md-4">
+						<a href="{% url 'schedule-manage' current='announcements'%}"> Announcements </a>	
+					</div>
+					
+				</div>	
+			</div>
 		<!--Display the contents of the respective tab from active_tab-->
+		</div>
+
 		
-		<h2>Event List ({{active_tab}})</h2>
-		<table>
+		<!--<h2>Event List ({{active_tab}})</h2>-->
+		<div class="row">
+		<table class="table table-hover">
 			<!--Start of block for pending appointments-->
 			{% if active_tab == 'pending' %}
-				<tr>
+				<tr class="table-info">
 				<th>Appointment Title</th>
 				<th>Requested by</th>
 				<th>Date</th>
@@ -37,22 +108,24 @@
 					<td>{{event.apptTimeTo}}</td>
 					<td>{{event.apptStatus}}</td>
 					<!--The Approve & Reject functions here are for the pending appointments-->
-					<td><a href="{% url 'schedule-pending-manage' pk=event.id status='approved' %}"> Approve </a></td>
-					<td><a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td></tr>
+					<td><a href="#"> Approve </a></td>
+					<td><a href="#"> Reject </a></td>
 					<!--End of Approve & Reject functions-->
 				{% endfor %}	
 			<!--End of block for pending appointments-->
 
 			<!--Start of block for confirmed events-->
 			{% elif active_tab == 'confirmed' %}
-				<tr>
+				<tr class = "table-info">
 					<th>Title</th>
 					<th>Start Date</th>
 					<th>End Date</th>
 					<th>Start Time</th>
 					<th>End Time</th>
 					<th>Location</th>
+					<th>Tools</th>
 				</tr>
+				</thead>
 				{% for event in events  %}
 				<tr>
 					<td><a href="{% url 'event-detail' pk=event.id %}"> {{event.title}} </a></td>
@@ -61,14 +134,14 @@
 					<td>{{event.timeFrom}}</td>
 					<td>{{event.timeTo}}</td>
 					<td>{{event.location}}</td>
-					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a></td>
-					<td><a href="{% url 'event-delete' event.id %}"> Delete </a></td>
+					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a>
+					<a href="{% url 'event-delete' event.id %}"> Delete </a></td>
 				{% endfor %}
 			<!--End of block for confirmed events-->
 
 			<!--Start of block for announcements-->
 			{% elif active_tab == 'announcements' %}
-				<tr>
+				<tr class="table-info">
 					<th>Title</th>
 					<th>Description</th>
 					<th>Date Created</th>
@@ -84,6 +157,23 @@
 			<!--End of block for announcements-->
 			{% endif %}
 				</tr>
-		</table>	
+		</table>
+		</div>
 	
+	</div>
+	</div>
 {% endblock %}
+</body>
+
+<script>
+
+$(function() {
+	$("#menu a").each(function() {
+		if (this.href == window.location) {
+			$(this).css("color", "black");
+		};
+	});
+});
+
+</script>
+</html>
