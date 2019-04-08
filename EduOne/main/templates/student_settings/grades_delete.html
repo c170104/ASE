@@ -1,15 +1,64 @@
-{% extends "common/header.html" %}
-
 {% block content %}
-		<!--Start of Form-->
-		<div class = "content-section">
-			<form method="POST">
-				{% csrf_token %}
-				<h2>Are you sure you want to delete grades</h2>
-				<button type ="submit"> Yes </button>
-				<a href ="{% url 'grades-home' %}"> No </a>
-			</form>
-		</div>
-		<!--End of Form-->
+<!DOCTYPE html>
+<style>
+	.modal-header {
+		border-bottom: none;
+	}
 
+	#cross {
+		position: absolute;
+        left: 96%;
+        top: 1%;
+	}
+
+	#icon {
+		font-size: 68px;
+		color: #E63946;
+		margin-bottom: 2%;
+	}
+
+	.btn-outline-dark, .btn-outline-success {
+		width: 60%;
+	}
+</style>
+
+<body>
+	<div class="container-fluid">
+		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true" id="cross">&times;</span>
+				</button>
+		</div>
+
+		<div class="row">
+				<div class="col-md-12 text-center">
+					<i class="fas fa-exclamation" id="icon"></i>
+				</div>
+		</div>
+
+
+	<!--Start of Form-->
+		<form method="POST">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h4>Are you sure you want to delete grades</h4>
+				</div>
+			</div>
+
+			<div class="row" style="margin-bottom: 3%;">
+					<div class="col-md-6 text-center">
+						<a href ="{% url 'grades-home' %}" class="btn btn-outline-dark" role="button"> No </a></button>
+					</div>
+
+					<div class="col-md-6 text-center">
+						<button type ="submit" class="btn btn-outline-success"> Yes </button>
+					</div>
+			</div>
+		</form>
+	</div>
+	<!--End of Form-->
+	</div>
+</body>
+</html>	
 {% endblock %}

@@ -1,67 +1,225 @@
-{% extends "common/header.html" %}
-
+{% include "common/header.html" %}
+{% load static %}
 {% block content %}
-	{% if messages %}
-		{% for message in messages %}
-			<!--<div class = "alert alert-{{message}}"></div>-->
-			{{message}}
-		{% endfor %}
-	{% endif %}		
-	{% if information.view == "subject" %}
-		<h2>Your classes</h2>
-		<table>
-			<tr>
-				<th>Class</th>
-			</tr>
-				{% if information.subject_classes|length == 0 %}
-					<tr><td>No Classes Found!</td></tr>
-				{% else %}
-					{% for subject in information.subject_classes %}
-						<tr><td><a href ="{% url 'performance-home' class_id=subject.id %}">{{subject}}</a></td></tr>
-					{% endfor %}	
-				{% endif %}	
-		</table>
-		<table>
-			{% if information.subjects|length == 0 %}
-				<tr><th>No Subjects Found!</th></tr>
-			{% else %}
-				<tr>
-					<th>Subjects</th>
-				</tr>
-				<tr>
-					<td><form action =''>
-						<select name ='subject_chosen'>
-							{% for subject in information.subjects %}
-								<option value ="{{subject}}">{{subject}}</option>
-							{% endfor %}	
-						</select>
-						<input type="submit" value="Find Students">
-					</form></td>	
-			{% endif %}	
-			</tr>
-		</table>	
-	{% elif information.view == "students" %}
-		{% if information.students|length == 0 %}
-				<tr><th>No Students Found!</th></tr>
-				<p><a href="{% url 'performance-home' %}"> Return </a></p>
-		{% else %}		
-			<h2>Class {{information.class_name.className}} {{information.subject_chosen}}</h2>
-			<p>Taken by: {{information.teacher_info}}</p>
-			<table>
-			<tr>
-				<th>S/N</th>
-				<th>Student Name</th>
-				<th>Tools</th>
-			</tr>
-			{% for student in information.students %}
-			<tr>
-				<td>{{forloop.counter}})</td>
-				<td>{{student.last_name}}  {{student.first_name}}</td>
-				<td><a href="{% url 'performance-add' class_id=information.class_id subject=information.subject_chosen id=student.nric %}">Comment</a></td>
-			</tr>
-			{% endfor %}
-		</table>
+<!DOCTYPE html>
+<head>
+		<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+</head>
 
-		{% endif %}
-	{% endif %}	
+<style>
+	.tab {
+		float: left;
+		border: 1px solid #000000;
+		background-color: #FA9483;
+		width: 30%;
+		height: 300px;
+		border-radius: 5px 0 0 5px;
+		margin-left: -4%;
+
+	}
+
+	.tab ul li {
+		list-style-type: none;
+		border-bottom:1px solid black;
+		text-align: center;
+		padding: 5%;
+		font-size: 26px;
+	}
+
+	.tab ul li a {
+		color: #000000;
+	}
+
+	.tab ul li a:hover {
+		text-decoration: none;
+		background-color: #E5E6E4;
+	}
+
+	.tab ul li:hover {
+		background-color: #E5E6E4;
+	}
+
+	.tab ul {
+		padding: 0;
+	}
+
+	.tabcontent {
+		float: right;
+		padding: 0px 12px;
+		border: 1px solid #000;
+		border-radius: 0 5px 5px 0;
+		border-collapse: separate;
+		width: 70%;
+		border-left: none;
+		height: 300px;
+		margin-top: -22.7%;
+	}
+
+	#find {
+		position: relative;
+		margin-top: 120%;	
+		margin-left: 220%;
+		width: 200%;
+	}
+
+	th {
+		background-color: #FA9483;
+		text-align: center;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	table button {
+		background: none;
+		border: none;
+		font-weight: bold;
+	}
+
+	table button:hover {
+		color: #6893C3;
+	}
+	
+</style>
+
+<body>
+	<div class="container-fluid">
+			<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<!--Start of Display Errors-->
+						{% if messages %}
+							{% for message in messages %}
+								<!--<div class = "alert alert-{{message}}"></div>-->
+								{{message}}
+							{% endfor %}
+						{% endif %}		
+					<!--End of Display Errors-->
+					</div>
+				</div>		
+
+
+		{% if information.view == "subject" %}
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h2 style="padding: 1%; margin-bottom: 2%;">Your classes</h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-10">
+					{% if information.subject_classes|length == 0 %}
+						No Classes Found!
+					{% else %}
+					<div class="tab">
+						<ul class="links">
+							{% for subject in information.subject_classes %}
+								<li><a href ="{% url 'performance-home' class_id=subject.id %}">{{subject}}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}	
+				</div>
+			</div>
+		
+					<div class="tabcontent">
+						{% if information.subjects|length == 0 %}
+							<div class="row">
+								<div class="col-md-12">
+									<h4>No subjects found!</h4>
+								</div>
+							</div>
+
+						{% else %}
+							<div class="row">
+								<div class="col-md-12 text-left" style="padding: 1%; margin-left: 1.5%;">
+									<h4>Subjects</h4>
+								</div>
+							</div>
+							
+							
+							<form action =''>
+								<div class="row">
+									<div class="col-md-12">
+										<select name ='subject_chosen' class="form-control">
+											{% for subject in information.subjects %}
+												<option value ="{{subject}}">{{subject}}</option>
+											{% endfor %}	
+										</select>
+									</div>
+							
+								<div class="row">
+									<div class="col-md-12">
+										<input type="submit" value="Find Students" class="btn btn-outline-success" id="find">
+									</div>
+								</div>
+										
+							</form>
+
+					</div>
+
+						{% endif %}	
+						
+						<!--choose subject-->
+						{% elif information.view == "students" %}
+							{% if information.students|length == 0 %}
+									<tr><th>No Students Found!</th></tr>
+									<p><a href="{% url 'performance-home' %}"> Return </a></p>
+							{% else %}		
+							<div class="row">
+								<div class="col-md-1"></div>
+								<div class="col-md-10">
+									<div class="row">
+										<div class="col-md-12 text-center">
+											<h2 style="padding:1%;">Class {{information.class_name.className}} {{information.subject_chosen}}</h2>
+										</div>
+									</div>
+
+									<div class="row" style="margin-bottom: 1%;">
+										<div class="col-md-12 text-left">
+											Taken by: {{information.teacher_info}}
+										</div>
+									</div>
+
+									<table class="table table-hover table-bordered">
+									<tr>
+										<th>S/N</th>
+										<th>Student Name</th>
+										<th>Tools</th>
+									</tr>
+									{% for student in information.students %}
+									<tr>
+										<td>{{forloop.counter}}</td>
+										<td>{{student.last_name}}  {{student.first_name}}</td>
+										<td><button class= "deleteEvent" btn data-id="{% url 'performance-add' class_id=information.class_id subject=information.subject_chosen id=student.nric %}" >Comment</button></td>
+									</tr>
+									{% endfor %}
+								</div>
+							</div>
+
+			{% endif %}
+		{% endif %}	
+		</div>
+	</div>
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content"></div>
+				</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	function displayContent() {
+		document.getElementById("mytable").style.display="block";
+	}
+
+	$(".deleteEvent").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+</script>
+</html>
 {% endblock %}

@@ -1,29 +1,99 @@
-{% extends "common/header.html" %}
-
+{% include "common/header.html" %}
 {% block content %}
-	{% if information.view == 'class'%}
-		<h2>Class {{information.teacher_info.form_class.className}} Student List</h2>
-		<p>Taken by: {{information.teacher_info}}</p>
-		<table>
+<!DOCTYPE html>
+<head>
+
+</head>
+
+<style>
+	h2 {
+		text-align: center;
+		/*top right bottom left*/
+		padding: 1% 0 0 0;
+	}
+
+	#class {
+		justify-content: center;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	#studentlist {
+		justify-content: center;
+	}
+
+	p {
+		position: static;
+		padding-left: 1.5%;
+		padding-bottom: 2%;
+		margin-bottom: -1%;
+		margin-top: 3%;
+	}
+
+	table a {
+		color: #000000;
+	}
+
+	table a:hover {
+		text-decoration: none;
+		color: #6893C3;
+		font-weight: bold;
+
+	}
+
+	#manageGradesTable {
+		position: relative;
+		margin-top: 2%;
+	}
+
+	th {
+		background-color: #FA9483;
+	}
+
+
+</style>
+
+<body>
+	<div class="maincontainer">
+	<div class="container-fluid">
+		{% if information.view == 'class'%}
+		<div class="row" id="class">
+			<h2>Class {{information.teacher_info.form_class.className}}</h2>
+		</div>
+
+		<div class="row" id="studentlist" style="margin-top: 0.5%;">
+			<h5 style="font-size: 15px;">Student List</h5>
+		</div>
+		
+		<div class="row" id="teacher">
+			<p>Taken by: {{information.teacher_info}}</p>
+		</div>
+
+		<table class="table table-hover table-bordered">
 			<tr>
-				<th>S/N</th>
-				<th>Student Name</th>
+				<th style="width: 10%;">S/N</th>
+				<th style="width: 45%;">Student Name</th>
 				<th>Tools</th>
 			</tr>
+
 			{% for student in information.students %}
 			<tr>
-				<td>{{forloop.counter}})</td>
-				<td>{{student.last_name}}  {{student.first_name}}</td>
-				<td><a href="{% url 'report-card-page-add' id=student.nric count=1 %}">Add Grades</a></td>
-				<td><a href="{% url 'grades-home' id=student.nric%}">Manage Grades</a></td>
+				<td class="align-middle">{{forloop.counter}}</td>
+				<td class="align-middle">{{student.last_name}}  {{student.first_name}}</td>
+				<td><a href="{% url 'report-card-page-add' id=student.nric count=1 %}">Add Grades</a><br>
+				<a href="{% url 'grades-home' id=student.nric%}">Manage Grades</a></td>
 			</tr>
 			{% endfor %}
 		</table>
+
+	<!--this table will show up after clicking on manage grades-->
 	{% elif information.view == 'student' %}
 		<h2>Manage Grades</h2>
-		<table>
+		<table class="table table-bordered table-hover" id="manageGradesTable">
 		<tr>
-			<th>Title</th>
+			<th style="width: 70%;">Title</th>
 			<th>Year</th>
 		</tr>
 		{% for page in information.pages %}
@@ -36,5 +106,6 @@
 		</table>
 	{% endif %}	
 		
-
+</body>
+</html>
 {% endblock %}

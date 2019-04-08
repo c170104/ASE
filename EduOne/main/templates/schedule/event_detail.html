@@ -1,13 +1,74 @@
-{% extends "common/header.html" %}
-
 {% block content %}
+<!DOCTYPE html>
 
-		<h2>{{object.title}}</h2>
-		<p>{{object.description}}</p>
-		<p>{{object.location}}</p>
-		<p>{{object.dateFrom}} to {{object.dateTo}}</p>
-		<p>{{object.timeFrom}} to {{object.timeTo}}</p>
-		<a href="{% url 'schedule-edit' stype='event' pk=object.id %}">Edit</a>
-		<a href ="{% url 'schedule-manage' %}"> Return </a>
+<style>
+	span {
+		position: absolute;
+		left: 96%;
+		top: 1%;
+	}
 
+	.btn-outline-dark, .btn-primary {
+		width: 60%;
+	}
+
+</style>
+
+<body>
+	<div class="container-fluid">
+
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+	
+
+			<div class="row">
+					<div class="col-md-12 text-center">
+						<h4>Event Details</h4>
+					</div>
+				</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Title: {{ object.title }}
+			</div>
+		</div>
+
+		<div class="row">
+				<div class="col-md-12 text-center">
+					Descripton: {{ object.description }}
+				</div>
+			</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Location: {{ object.location }}
+			</div>
+		</div>
+
+		<div class="row">
+				<div class="col-md-12 text-center">
+					Date: {{object.dateFrom}} to {{object.dateTo}}
+				</div>
+			</div>
+
+			<div class="row">
+					<div class="col-md-12 text-center">
+						Time: {{object.timeFrom}} to {{object.timeTo}}
+					</div>
+			</div>
+
+			<div class="row" style="margin-bottom: 3%; margin-top: 3%;">
+					<div class="col-md-6 text-center">
+						<a href ="{% url 'schedule-manage' %}" class="btn btn-outline-dark" role="button">Return</a></button>
+					</div>
+
+					<div class="col-md-6 text-center">
+						<a href="{% url 'schedule-edit' stype='event' pk=object.id %}" role="button" class="btn btn-primary">Edit</a>
+					</div>
+				</div>
+		
+	</div>
+</body>
+</html>
 {% endblock %}

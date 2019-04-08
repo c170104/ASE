@@ -1,43 +1,194 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
+{% load static %}
 
 {% block content %}
+<!DOCTYPE html>
+
+<head>
+		<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+		<script src="{% static 'common/js/bootstrap.bundle.min.js' %}"></script>
+		
+		
+</head>
+
+<style>
+	h2 {
+		text-align: center;
+		padding: 1%;
+	}
+
+	table {
+		text-align: center;
+	}
+
+	#backButton {
+		border: 1px solid #C5C3C6;
+		border-width: 1px 1px 1px 0;
+		border-radius: 0 5px 5px 0;
+		display: inline-block;
+		height: 75%;
+		margin-left: 5%;
+		margin-bottom: 4%;
+		padding: 0 2% 0 1%;
+		position: relative;
+		text-decoration: none;
+		background-color: #B4B2B4;
+		color: #ffffff;
+		font-weight: bold;
+	}
+
+	#backButton::before {
+		border: solid #B4B2B4;
+		background: linear-gradient(-45deg, #B4B2B4 0%, #B4B2B4 100%);
+		border-width: 0 0 1px 1px;
+		border-radius: 2px 0 2px 2px;
+		content: '';
+		display: block;
+		height: 24px;
+		left: -7%;
+		position: absolute;
+		top: 3px;
+		-moz-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		width: 21px;
+	}
+
+	#backButton span {
+		color: #fff;
+		font-weight: bold;
+		position: relative;
+	}
+
+	#backButton span:hover {
+		color: #000000;
+	}
+
+
+	table a {
+		color: #000000;
+		padding: 10%;
+	}
+	table a:hover {
+		text-decoration: none; 
+	}
+
+	th {
+		background-color: #FA9483;
+	}
+
+	#addGradeButton {
+		border: 1px solid #B4B2B4;
+		float: right;
+		border-radius: 2px;
+		background-color: #B4B2B4;
+		color: #ffffff;
+		font-weight: bold;	
+		padding: 1%;
+		margin-bottom: 3%;
+	}
+
+	#addGradeButton:hover{
+		text-decoration: none;
+		color: #000000;
+	}
+
+	.fa-pen:hover {
+		color: #6893C3;
+	}
+	
+	.editGrades, .deleteGrades {
+		border: none;
+		background: none;
+	}
+
+	
+</style>
+
+<body>
+	<div class="container-fluid">
 	{% if information.grades|length == 0 %}
 		<p>No records of grades found!</p>
 		<p><a href="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</a></p>
 	{% else %}
-		<h2>Grades for {{information.report_card.examination_type}} {{information.report_card.exam_date.year}}</h2>
-		<p><a href="{% url 'grades-home' id=information.nric %}">Return to previous</a></p>
-		<table>
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Grades for {{information.report_card.examination_type}}</h2>
+			</div>
+		</div>
+		
+		<div class="row" style="margin-top: 3%;"> 
+			<div class="col-md-3">
+				<a href="{% url 'grades-home' id=information.nric %}" id ="backButton"><span>Return to previous</span></a>
+			</div>
+
+			<div class="col-md-6"></div>
+			<div class="col-md-3">
+				<button id="addGradeButton" btn data-id="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</button>
+			</div>
+		</div>
+
+
+		<table class="table table-hover table-bordered">
 			<tr>
-				<th>S/N</th>
+				<th width="10%;">S/N</th>
 				<th>Subject</th>
-				<th>Grade Achieved</th>
+				<th style="width: 20%;">Grade Achieved</th>
 				<th>Marks</th>
-				<th>Edit Marks</th>
-				<th>Delete</th>
+				<th style="width: 10%;">Tools</th>
 			</tr>
 			{% for grade in information.grades %}
 			<tr>
-				<td>{{forloop.counter}}.</td>
-				<td>{{grade.subjectName}}</td>
+				<td class="align-middle">{{forloop.counter}}</td>
+				<td class="align-middle">{{grade.subjectName}}</td>
 				{% if grade.marks >= 75 %}
-					<td>A
+					<td class="align-middle">A
 				{% elif grade.marks >= 65%}
-					<td>B
+					<td class="align-middle">B
 				{% elif grade.marks >= 50 %}	
-					<td>C
+					<td class="align-middle">C
 				{% else %}
-					<td>D
+					<td class="align-middle">D
 				{% endif %}			
 				</td>
-				<td>{{grade.marks}}</td>
-				<td><a href="{% url 'grades-edit' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}">Edit</a></td>
-				<td><a href="{% url 'grades-delete' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}">Delete</a></td>
+				<td class="align-middle">{{grade.marks}}</td>
+				<td><button class= "editGrades" btn data-id="{% url 'grades-edit' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}" data-toggle="tooltip" title="Edit marks" data-placement="bottom"><i class="fas fa-pen"></i></button>
+				<button class="deleteGrades" btn data-id="{% url 'grades-delete' id=information.nric report_card_page_id=information.report_card.id pk=grade.id %}" data-toggle="tooltip" title="Delete grades" data-placement="bottom"><i class="fas fa-trash-alt"></i></button></td>
 			</tr>
 			{% endfor %}
 		</table>
-		<p><a href="{% url 'grades-add' id=information.nric report_card_page_id=information.report_card.id %}">Add subject grade</a></p>
+		
+		<!--popup form for edit marks-->
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content"></div>
+				</div>
+		</div>
 
 	{% endif %}	
+	</div>
+</body>
+<script>
+	$(function () {
+ 		 $('[data-toggle="tooltip"]').tooltip()
+	})
 
+	$(".editGrades").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+	$(".deleteGrades").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+	$("#addGradeButton").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+
+
+
+</script>
+</html>
 {% endblock %}

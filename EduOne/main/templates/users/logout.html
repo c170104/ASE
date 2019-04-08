@@ -1,9 +1,25 @@
-{% extends "common/header_login.html" %}
+{% include "common/header_login.html" %}
 
 {% block content %}
+<!DOCTYPE html>
+<style>
+	a:hover {
+		text-decoration: none;
+		font-weight: bold;
+	}
+</style>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-center">
+					<h3>You have successfully logout</h3>
+					<a href="{% url 'login' %}" style="color: #000000;"> Click here to login again! </a>
+					</div>
+		</div>
+	</div>
+</body>
 
-	<h2>You have successfully logout!</h2>
-	<p><a href="{% url 'login' %}"> Click here to login again! </a><p>
 
 
+</html>
 {% endblock %}	

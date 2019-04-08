@@ -1,15 +1,126 @@
-{% extends "common/header.html" %}
-
+{% include "common/header.html" %}
+{% load static %}
 {% block content %}
-    <h2>Manage Appointment for {{ user }}</h2>
 
+<!DOCTYPE html>
+<head>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+		<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+</head>
 
-    <p><a href="{% url 'appointment-manage' current='approved'%}"> Approved </a><p>
-    <p><a href="{% url 'appointment-manage' current='rejected'%}"> Rejected </a><p>	
-    <p><a href="{% url 'appointment-manage' current='pending' %}"> Pending </a><p>
+<style>
 
+.main-container {
+		padding: 1%;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	#menu {
+		border:1px solid;
+		border-color: #FA9483;
+		background-color: #FA9483;
+		text-align: center;
+		border-radius: 2px;
+		position: absolute;
+		bottom: 61%;
+
+	}
+
+	#menu a {
+		color: #FFFFFF;
+		font-weight:bold;
+	}
+
+	#menu a:hover {
+		color:#E5E6E4;
+		text-decoration: none;
+	}
+
+	.table-hover {
+
+		border:1px solid;
+		border-left: none;
+		border-right: none;
+		border-bottom: none;
+		text-align: center;
+	}
+
+	th {
+		background-color: #FA9483;
+		text-align: center;
+	}
+
+	table a {
+		color: #000000;
+		font-weight: bold;
+		padding: 5%;
+	}
+
+	table a:hover {
+		text-decoration:none;
+		color:#6893C3;
+	}
+
+	.container-fluid {
+		margin-top: 9%;
+	}
+
+	p {
+		position: absolute;
+		top: 30%;
+		left: 1%;
+	}
+
+	#modal {
+		position: flex;
+		margin-top: 10%;
+	}
+
+	.deleteApproved, .deletePending, .eventDetails{
+		background: none;
+		border: none;
+	}
+
+	.deleteApproved:hover, .deletePending:hover, .eventDetails:hover {
+		color:#6893C3;
+	}
+</style>
+
+<body>
+    <div class="main-container">
+            <h2>Manage Appointment for {{ user }}</h2>
+    <div class="container-fluid">
+        
+
+    <div class="row" id="border">
+        <div class="col-md-4" id="menu">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="{% url 'appointment-manage' current='approved'%}"> Approved </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="{% url 'appointment-manage' current='rejected'%}"> Rejected </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="{% url 'appointment-manage' current='pending' %}"> Pending </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+    
+
+    <div class="row">
+    <table class="table table-hover">
     {% if active_page == 'pending' %}
-        <table>
         <tr>
             <th>Title</th>
             <th>Teacher</th>
@@ -26,7 +137,7 @@
                     <td>{{ appointment.apptTitle }}</td>
                     {% for staff in staffprofilelist %}
                         {% if appointment.eventPlanner.user == staff.user %}
-                            <td>{{ staff }}  </td>
+                            <td>{{ staff }}</td>
                         {% endif %}
                     {% endfor %}
                     <td>{{ appointment.apptDate }}</td>
@@ -34,13 +145,17 @@
                     <td>{{ appointment.apptTimeTo }}</td>
                     <td>{{ appointment.apptLocation }}</td>
                     <td>{{ appointment.apptStatus }}</td>
-                    <td><a href="{% url 'appointment-update' appointment.id %}"> Edit </a> <a href="{% url 'appointment-pending-delete' appointment.id %}"> Delete </a>  </td>
+                    <td>
+                        <a href="{% url 'appointment-update' appointment.id %}"><i class="fas fa-pen"></i></a>
+                        <button class= "deletePending" btn data-id="{% url 'appointment-pending-delete' appointment.id %}"><i class="fas fa-trash-alt"></i></button>
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
         </table>
+
+
     {% elif active_page == 'rejected' %}
-        <table>
         <tr>
             <th>Title</th>
             <th>Teacher</th>
@@ -64,13 +179,12 @@
                     <td>{{ appointment.apptTimeTo }}</td>
                     <td>{{ appointment.apptLocation }}</td>
                     <td>{{ appointment.apptRejectionReason}}</td>
-                    <td> - </td>
+
                 </tr>
             {% endif %}
         {% endfor %}
-        </table>
+
     {% elif active_page == 'approved' %}
-        <table>
             <tr>
                 <th>Title</th>
                 <th>Teacher</th>
@@ -95,10 +209,38 @@
                         <td>{{ appointment.apptTimeTo }}</td>
                         <td>{{ appointment.apptLocation }}</td>
                         <td>{{ appointment.apptStatus }}</td>
-                        <td> <a href="{% url 'appointment-approved-delete' appointment.id %}"> Delete </a></td>
+                        <td> <button class= "deleteApproved" btn data-id="{% url 'appointment-approved-delete' appointment.id %}"><i class="fas fa-trash-alt"></i></button></td>
                     </tr>
                 {% endif %}
             {% endfor %}
-            </table>
     {% endif %}
+    </table>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+</div>
+</div>
+</div>
+</body>
+<script>
+    $(function() {
+		$("#menu a").each(function() {
+			if (this.href == window.location) {
+				$(this).css("color", "black");
+			};
+		});
+	});
+
+    $(".deleteApproved").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+    $(".deletePending").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+</script>
+</html>
 {% endblock %}

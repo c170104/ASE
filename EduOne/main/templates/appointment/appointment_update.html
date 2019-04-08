@@ -1,21 +1,124 @@
-{% extends "common/header.html" %}
-
+{% include "common/header.html" %}
+{% load static %}
+{% load widget_tweaks %}
 {% block content %}
-	<h2>Edit Appointment</h2> 
-	<!--Start of Display Errors-->
-		{% if messages %}
-			{% for message in messages %}
-				<!--<div class = "alert alert-{{message}}"></div>-->
-				{{message}}
-			{% endfor %}
-		{% endif %}		
-		<!--End of Display Errors-->
+<!DOCTYPE html>
+<head>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+		<script type="text/javascript" src="{% static 'common/js/jquery.timepicker.js' %}"></script>
+		<link rel='stylesheet' href="{% static 'common/css/jquery.timepicker.css' %}" type='text/css' />
+</head>
+<style>
+	.form-control {
+		border:1px solid black;
+	}
 
-		<form method="POST">
-			{% csrf_token %}
-			{{ form.as_p }}
-		<input type='submit' value = 'Save' />
-		<a href ="{% url 'appointment-manage' %}"> Return </a>
-	</form>
-    
+	.btn-outline-dark, .btn-outline-success {
+		width: 55%;
+	}
+</style>
+
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h2>Edit Appointment</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-11">
+				<!--Start of Display Errors-->
+				{% if messages %}
+					{% for message in messages %}
+						<!--<div class = "alert alert-{{message}}"></div>-->
+						{{message}}
+					{% endfor %}
+				{% endif %}		
+			<!--End of Display Errors-->
+			</div>
+		</div>
+
+		<form method="post" autocomplete="off">
+			<div class="row">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-10">
+					{% csrf_token %}
+	
+					{{ form.non_field_errors }}
+					{{ form.source.errors }}
+					{{ form.source }}
+						
+	
+					<div class="form group">
+						<div class="row" style="padding:15px;">
+							{{ form.apptTitle.label_tag }}
+							{{ form.apptTitle|add_class:'form-control' }}
+						</div>
+					</div>
+	
+					<div class="form group">
+						<div class="row" style="padding:15px;">
+							{{ form.apptDescription.label_tag }}
+							{{ form.apptDescription|add_class:'form-control' }}
+						</div>
+					</div>
+	
+					<div class="form group">
+						<div class="row" style="padding:15px;">
+							{{ form.apptLocation.label_tag }}
+							{{ form.apptLocation|add_class:'form-control' }}
+						</div>
+					</div>
+	
+					<div class="form group">
+						<div class="row" style="padding: 15px;">
+							{{ form.apptDate.label_tag }}
+							{{ form.apptDate|add_class:'datepicker form-control' }}
+						</div>
+
+					</div>
+	
+					<div class="form group row">
+						<div class="col-sm-6">
+							{{ form.apptTimeFrom.label_tag }}
+							{{ form.apptTimeFrom|add_class:'timepicker form-control' }}
+						</div>
+	
+						<div class="col-sm-6">
+							{{ form.apptTimeTo.label_tag }}
+							{{ form.apptTimeTo|add_class:'timepicker form-control' }}
+						</div>
+
+					</div>
+
+					<div class="form group row" style="margin-top: 3%; margin-bottom: 3%;">
+						<div class="col-sm-6 text-center">
+							<a href="{% url 'appointment-manage' %}" role="button" class="btn btn-outline-dark"> Return </a>
+						</div>
+	
+						<div class="col-sm-6 text-center">
+								<button type="submit" class="btn btn-outline-success">Submit</button>
+						</div>
+					</div>
+		
+		
+					</div>
+					</div>
+		</form>
+</body>
+<script>
+	$(document).ready(function() {
+    	$('.datepicker').datepicker(
+		);
+	});
+
+	$(function() {
+    $('.timepicker').timepicker({ 'timeFormat': 'H:i:s' });
+  });
+</script>
+</html>
 {% endblock %}
