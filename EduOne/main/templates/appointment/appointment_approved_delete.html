@@ -1,15 +1,91 @@
-{% extends "common/header.html" %}
-
 {% block content %}
+<!DOCTYPE html>
+<head>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+<style>
+	.modal-header {
+		border-bottom: none;
+	}
+
+	#icon {
+		font-size: 68px;
+		color: #E63946;
+		margin-bottom: 2%;
+	}
+
+	h4 {
+		text-align: center;
+	}
+
+	.btn-outline-dark, .btn-outline-success {
+		width: 60%;
+	}
+
+	span {
+		position: absolute;
+		left: 96%;
+		top: 1%;
+	}
+</style>
+	<body>
+		<div class="container-fluid">
+			<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+			</div>
+
+			<div class="row">
+						<div class="col-md-12 text-center">
+							<i class="fas fa-exclamation" id="icon"></i>
+						</div>
+			</div>
+
+			<form method="POST">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<h4>Are you sure you want to delete the following appointment from your appointment list?</h4>
+						</div>
+					</div>
+	
+					<div class="row" style="font-size: 12px; padding: 2%; margin-bottom: 5%;">
+						<div class="col-md-12 text-center">
+							 {{object.description}}
+						</div>
+					</div>
+					
+					<div class="row" style="margin-bottom: 3%;">
+						<div class="col-md-6 text-center">
+							<a href ="{% url 'appointment-manage' %}" class="btn btn-outline-dark" role="button"> No </a></button>
+						</div>
+	
+						<div class="col-md-6 text-center">
+							<button type ="submit" class="btn btn-outline-success"> Yes </button>
+						</div>
+					</div>
+				</form>
+
+		</div>
+	</body>
 		<!--Start of Form-->
 		<div class = "content-section">
-			<form method="POST">
+			<!--<form method="POST">
 				{% csrf_token %}
 				<h2>Are you sure you want to delete {{object.description}}</h2>
 				<button type ="submit"> Yes </button>
 				<a href ="{% url 'appointment-manage' current='approved' %}"> No </a>
-			</form>
+			</form>-->
 		</div>
 		<!--End of Form-->
 
+</html>
 {% endblock %}
+
+
+<body>
+
+	
+</body>
+</html>

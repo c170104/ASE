@@ -1,20 +1,43 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 
 {% block content %}
+<!DOCTYPE html>
+<style>
+	h2 {
+		padding:1%;
+	}
 
-<table>
-	<h2>Yearly Attendance</h2>
-    <tr>
-        <th>Days Attended</th> 
-    </tr>
-    {% if ATTENDANCELIST|length == 0 %}
-    	<tr>No Records Found!</tr>
-	{% else %}
-	    {% for i in ATTENDANCELIST %}
-	   	 	<tr><td>{{i.date}}</td></tr>
-	    {% endfor%}
-	{% endif %}    
+	td {
+		text-align: center;
+	}
+</style>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h2>Yearly Attendance</h2>
+				<h5>Days Attended</h5>
+			</div>
+		</div>
 
-</table>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<table class="table table-bordered">
+						{% if ATTENDANCELIST|length == 0 %}
+							<tr>No Records Found!</tr>
+						{% else %}
+								{% for i in ATTENDANCELIST %}
+									<tr><td>{{i.date}}</td></tr>
+							{% endfor%}
+						{% endif %}  
+				</table>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+		
+	</div>
+</body>
 
+</html>
 {% endblock %}

@@ -1,26 +1,79 @@
-{% extends "common/header.html" %}
-
 {% block content %}
-		<h2>Comment Performance</h2>
-		<!--Start of Display Errors-->
-		{% if messages %}
-			{% for message in messages %}
-				<!--<div class = "alert alert-{{message}}"></div>-->
-				{{message}}
-			{% endfor %}
-		{% endif %}		
-		<!--End of Display Errors-->
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<head>
+
+</head>
+
+<style>
+	span {
+		position: absolute;
+		left: 96%;
+		top: 1%;
+	}
+
+
+</style>
+
+<body>
+	<div class="container-fluid">
+		<div class="modal-header" style="border-bottom: none;">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h2>Comment Performance</h2>
+			</div>
+		</div>
+
+		<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-11">
+					<!--Start of Display Errors-->
+					{% if messages %}
+						{% for message in messages %}
+							<!--<div class = "alert alert-{{message}}"></div>-->
+							{{message}}
+						{% endfor %}
+					{% endif %}		
+				<!--End of Display Errors-->
+				</div>
+			</div>
+	
+
 
 		<!--Start of Form-->
-		<div class = "content-section">
 			<form method="POST">
 				{% csrf_token %}
-				<p>Commenting for {{information.student.last_name}} {{information.student.first_name}}</p>
-				{{form.as_p}}
-				<button type ="submit"> Save Comment </button>
-				<p><a href="{% url 'performance-home' %}"> Cancel </a></p>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<p>Commenting for {{information.student.last_name}} {{information.student.first_name}}</p>
+					</div>
+				</div>
+
+				<div class="form group">
+						<div class="row" style="padding:15px;">
+							{{ form.comment.label_tag }}
+							{{ form.comment|add_class:'form-control' }}
+						</div>
+					</div>
+
+				<div class="row" style="padding: 1%;">
+					<div class="col-md-6 text-center">
+						<a href ="{% url 'performance-home' %}" class="btn btn-outline-dark" role="button"> Return </a>
+					</div>
+
+					<div class="col-md-6 text-center">
+							<button type ="submit" class="btn btn-outline-success">Save Comment</button>
+					</div>
+				</div>
 			</form>
 		</div>
 		<!--End of Form-->
-
+	</div>
+</body>
+</html>
 {% endblock %}

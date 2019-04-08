@@ -1,16 +1,79 @@
-{% extends "common/header.html" %}
-
+{% include "common/header.html" %}
+{% load static %}
 {% block content %}
+<!DOCTYPE html>
+<head>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+		<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+</head>
+<style>
+    th {
+		background-color: #FA9483;
+		text-align: center;
+	}
+
+     td {
+        text-align: center;
+     }
+
+     table {
+        margin-top: 4%;
+     }
+
+     .btn-outline-success {
+        margin-top: 3%;
+     }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2 style="padding: 1%;">Report Card for {{reportcardpage.examination_type}}</h2>
+            </div>
+        </div>
+
+        <table class="table table-hover table-bordered">
+            <tr>
+                <th style="width: 33%;">Subject</th>
+                <th style="width: 33%;">Grade</th>
+                <th style="width: 33%;">Acknowledgement status</th>
+            </tr>
+
+            {% for sg in SUBJECTGRADELIST %}
+            <tr>
+                <td>{{sg.subjectName}}</td>
+                <td>{{sg.marks}}</td>
+                <td>{{reportcardpage.acknowledgement}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% if reportcardpage.acknowledgement == False %}
+                <button id= "acknowledgeReport" btn data-id="{% url 'report-card-page-acknowledge' id=student.nric pk=reportcardpage.id %}" role="button" class="btn btn-outline-success">Click here to acknowledge report card</button></td>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content"></div>
+				</div>
+		</div>
+    </div>
+</body>
 <table>
-    <tr><th>Report Card for {{reportcardpage.examination_type}}</th></tr>
-    <tr><th>Subject</th><th>Grade</th></tr>
-    {% for sg in SUBJECTGRADELIST %}
-    <tr><td>{{sg.subjectName}}</td><td>{{sg.marks}}</td></tr>
-    {% endfor %}
+
+
     <!-- <tr><td>{{reportcardpage.description}}</td></tr> -->
-    <tr><td>Acknowledgement : {{reportcardpage.acknowledgement}}</td></tr>
-    {% if reportcardpage.acknowledgement == False %}
-    <tr><td><a href = "{% url 'report-card-page-acknowledge' id=student.nric pk=reportcardpage.id %}"> Click here to acknowledge report card</a></td></tr>
-    {% endif%}
-</table>    
+<script>
+    $("#acknowledgeReport").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+</script>
+ 
+</html>
 {% endblock %}
