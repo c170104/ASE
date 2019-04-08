@@ -1,11 +1,14 @@
 {% include 'common/header.html' %}
-
+{% load tz %}
+{% load static %}
 {% block content %}
 
 <!DOCTYPE html>
 
 <head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+		<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
 </head>
 <style>
 
@@ -19,12 +22,12 @@
 
 	#menu {
 		border:1px solid;
-		border-color: #BAE3E9;
-		background-color: #BAE3E9;
-
-		border-bottom: none;
+		border-color: #FA9483;
+		background-color: #FA9483;
 		text-align: center;
 		border-radius: 2px;
+		position: absolute;
+		bottom: 61%;
 
 	}
 
@@ -34,45 +37,106 @@
 	}
 
 	#menu a:hover {
-		color:#8D8D95;
+		color:#E5E6E4;
 		text-decoration: none;
 	}
 
 	.table-hover {
 
 		border:1px solid;
-		border-color: #BAE3E9;
 		border-left: none;
 		border-right: none;
+		border-bottom: none;
 		text-align: center;
 	}
 
 	.container-fluid {
 		margin-top: 4%;
 	}
+
+	th {
+		background-color: #FA9483;
+		text-align: center;
+	}
+
+	table a {
+		color: #000000;
+		font-weight: bold;
+		padding: 5%;
+	}
+
+	table a:hover {
+		text-decoration:none;
+		color:#6893C3;
+	}
+
+	.container-fluid {
+		margin-top: 7%;
+	}
+
+	p {
+		position: absolute;
+		top: 30%;
+		left: 1%;
+	}
+
+	#modal {
+		position: flex;
+		margin-top: 10%;
+	}
+
+	.deleteEvent, .deleteAnnouncement, .announcementDetail, .eventDetails{
+		background: none;
+		border: none;
+	}
+
+	.deleteEvent:hover, .deleteAnnouncement:hover, .announcementDetail:hover, .eventDetails:hover {
+		color:#6893C3;
+	}
+
+	.announcementDetail, .eventDetails {
+		font-weight: bold;
+	}
+
+	table {
+		margin-bottom: 5%;
+	}
+	
 </style>
 
 <body>
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content"></div>
+				</div>
+			</div>
+
 	<div class="main-container">
 			<h2>Manage Schedule</h2>
 	<div class="container-fluid">
-		<!--Start of Display Errors-->
-		{% if messages %}
-			{% for message in messages %}
-				<!--<div class = "alert alert-{{message}}"></div>-->
-				{{message}}
-			{% endfor %}
-		{% endif %}		
-		<!--End of Display Errors-->
+			<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-11">
+						<!--Start of Display Errors-->
+						{% if messages %}
+							{% for message in messages %}
+								<!--<div class = "alert alert-{{message}}"></div>-->
+								{{message}}
+							{% endfor %}
+						{% endif %}		
+					<!--End of Display Errors-->
+					</div>
+				</div>
+
 
 		<div class="row" id="border">
 			<div class="col-md-4" id="menu">
 				<div class="row">
-					<div class="col-md-4" style="border-right:1px solid black">
+					<div class="col-md-4">
 							<a href="{% url 'schedule-manage' current='confirmed'%}"> Confirmed </a>
 					</div>
 
-					<div class="col-md-4" style="border-right:1px solid black">
+					<div class="col-md-4">
 						<a href="{% url 'schedule-manage' current='pending' %}" class="link"> Pending </a>
 					</div>
 
@@ -91,25 +155,26 @@
 		<table class="table table-hover">
 			<!--Start of block for pending appointments-->
 			{% if active_tab == 'pending' %}
-				<tr class="table-info">
+				<tr>
 				<th>Appointment Title</th>
 				<th>Requested by</th>
 				<th>Date</th>
 				<th>Time from</th>
 				<th>Time to</th>
 				<th>Status</th>
+				<th>Tools</th>
 				</tr>
 				<tr>
 				{% for event in events  %}	
-					<td><a href="{% url 'appointment-detail' pk=event.id %}"> {{event.apptTitle}} </a></td>
+					<td><button class="eventDetails" btn data-id="{% url 'appointment-detail' pk=event.id %}" style="font-weight: bold;"> {{event.apptTitle}} </button></td>
 					<td>{{event.parent_id}}</td>
 					<td>{{event.apptDate}}</td>
 					<td>{{event.apptTimeFrom}}</td>
 					<td>{{event.apptTimeTo}}</td>
 					<td>{{event.apptStatus}}</td>
 					<!--The Approve & Reject functions here are for the pending appointments-->
-					<td><a href="{% url 'schedule-pending-manage' pk=event.id status='approved' %}"> Approve </a></td>
-					<td><a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td>
+					<td><a href="{% url 'schedule-pending-manage' pk=event.id status='approved' %}"> Approve </a>
+					<a href="{% url 'appointment-update-staff' pk=event.id %}"> Reject </a></td>
 				</tr>
 					<!--End of Approve & Reject functions-->
 				{% endfor %}	
@@ -117,7 +182,7 @@
 
 			<!--Start of block for confirmed events-->
 			{% elif active_tab == 'confirmed' %}
-				<tr class = "table-info">
+				<tr>
 					<th>Title</th>
 					<th>Start Date</th>
 					<th>End Date</th>
@@ -129,39 +194,38 @@
 				</thead>
 				{% for event in events  %}
 				<tr>
-					<td><a href="{% url 'event-detail' pk=event.id %}"> {{event.title}} </a></td>
+					<td><button class="eventDetails" btn data-id="{% url 'event-detail' pk=event.id %}"> {{event.title}} </button></td>
 					<td>{{event.dateFrom}}</td>
 					<td>{{event.dateTo}}</td>
 					<td>{{event.timeFrom}}</td>
 					<td>{{event.timeTo}}</td>
 					<td>{{event.location}}</td>
-					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"> Edit </a>
-					<a href="{% url 'event-delete' event.id %}"> Delete </a></td>
+					<td><a href="{% url 'schedule-edit' stype='event' pk=event.id %}"><i class="fas fa-pen"></i></a>
+					<button class= "deleteEvent" btn data-id="{% url 'event-delete' event.id %}" ><i class="fas fa-trash-alt"></i></button></td>
 				{% endfor %}
 			<!--End of block for confirmed events-->
 
 			<!--Start of block for announcements-->
 			{% elif active_tab == 'announcements' %}
-				<tr class="table-info">
-					<th>Title</th>
+				<tr>
+					<th style="width: 10%;">Title</th>
 					<th>Description</th>
-					<th>Date Created</th>
-					<th>Tools</th>
+					<th style="width: 10%;">Date Created</th>
+					<th style="width: 10%;">Tools</th>
 				</tr>
 				{% for event in events  %}
 				<tr>
-					<td><a href="{% url 'announcement-detail' pk=event.id %}"> {{event.title}} </a></td>
+					<td><button class= "announcementDetail" btn data-id="{% url 'announcement-detail' pk=event.id %}" > {{event.title}} </button></td>
 					<td>{{event.description}}</td>
 					<td>{{event.dateCreated}}</td>
-					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"> Edit </a>
-					<a href="{% url 'announcement-delete' event.id %}"> Delete </a></td>
+					<td><a href="{% url 'schedule-edit' stype='announcement' pk=event.id %}"><i class="fas fa-pen"></i></a>
+					<button class= "deleteAnnouncement" btn data-id="{% url 'announcement-delete' event.id %}" ><i class="fas fa-trash-alt"></i></button></td>
 				{% endfor %}
 			<!--End of block for announcements-->
 			{% endif %}
 				</tr>
 		</table>
 		</div>
-	
 	</div>
 	</div>
 {% endblock %}
@@ -169,13 +233,28 @@
 
 <script>
 
-$(function() {
-	$("#menu a").each(function() {
-		if (this.href == window.location) {
-			$(this).css("color", "black");
-		};
+	$(function() {
+		$("#menu a").each(function() {
+			if (this.href == window.location) {
+				$(this).css("color", "black");
+			};
+		});
 	});
-});
 
+	$(".deleteEvent").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+	$(".deleteAnnouncement").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+	$(".eventDetails").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+
+	$(".announcementDetail").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
 </script>
 </html>

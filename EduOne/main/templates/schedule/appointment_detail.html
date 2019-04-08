@@ -1,14 +1,91 @@
-{% extends "common/header.html" %}
-
 {% block content %}
+<!DOCTYPE html>
+<head>	
 
-		<h2>{{object.apptTitle}}</h2>
-		<p>{{object.apptDescription}}</p>
-		<p>{{object.apptDate}}</p>
-		<p>{{object.apptTimeFrom}} to {{object.apptTimeTo}}</p>
-		<p>Status: {{object.apptStatus}}</p>
-		<a href="{% url 'schedule-pending-manage' pk=object.id status='approved' %}">Approve</a>
-		<a href="{% url 'appointment-update-staff' pk=object.id  %}">Reject</a>
-		<a href ="{% url 'schedule-manage' current='pending' %}"> Return </a>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    {% load staticfiles  %}
+    <link rel='stylesheet' href="{% static 'common/css/bootstrap.min.css' %}" type='text/css' />
+    
+	<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+</head>
+<style>
+	span {
+		position: absolute;
+		left: 96%;
+		top: 1%;
+	}
 
+	.btn-outline-success, .btn-outline-dark, .btn-outline-danger {
+		width: 70%;
+	}
+</style>
+
+<body>
+	<div class="container-fluid">
+		<div class="modal-header" style="border-bottom: none;">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+		</div>
+
+		<div class="row">
+				<div class="col-md-12 text-center">
+					<h4>Appointment Details</h4>
+				</div>
+			</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Appointment Title: {{ object.apptTitle }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Date: {{ object.apptDate }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Time: {{ object.apptTimeFrom }} to {{ object.apptTimeTo }}
+			</div>
+			</div>
+
+		<div class="row">
+			<div class="col-md-12 text-center">
+				Status: {{ object.apptStatus }}
+			</div>
+		</div>
+
+		<div class="row" style="margin-top: 3%;	margin-bottom: 3%;">
+			<div class="col-md-4 text-center">
+					<a href ="{% url 'schedule-manage' current='pending' %}" role="button" class="btn btn-outline-dark"> Return </a>		
+			</div>
+			<div class="col-md-4 text-center">
+					<a href="{% url 'schedule-pending-manage' pk=object.id status='approved' %}" role="button" class="btn btn-outline-success">Approve</a>
+			</div>
+
+			<div class ="col-md-4 text-center">
+				<button class="btn btn-outline-danger" id="reject" btn data-id="{% url 'appointment-update-staff' pk=object.id  %}"> Reject </button>
+			</div>
+
+
+		</div>
+		
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content"></div>
+				</div>
+			</div>
+	</div>
+</body>
+<script>
+	$("#reject").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+</script>
+</html>
 {% endblock %}

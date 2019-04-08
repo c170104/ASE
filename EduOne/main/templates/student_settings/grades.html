@@ -8,8 +8,8 @@
 <style>
 	h2 {
 		text-align: center;
-		font-size: 45px;
-		padding: 1%;
+		/*top right bottom left*/
+		padding: 1% 0 0 0;
 	}
 
 	#class {
@@ -29,6 +29,7 @@
 		padding-left: 1.5%;
 		padding-bottom: 2%;
 		margin-bottom: -1%;
+		margin-top: 3%;
 	}
 
 	table a {
@@ -37,30 +38,41 @@
 
 	table a:hover {
 		text-decoration: none;
-		color: #484848;
+		color: #6893C3;
 		font-weight: bold;
 
 	}
+
+	#manageGradesTable {
+		position: relative;
+		margin-top: 2%;
+	}
+
+	th {
+		background-color: #FA9483;
+	}
+
+
 </style>
 
 <body>
 	<div class="maincontainer">
-	<div class="container">
+	<div class="container-fluid">
 		{% if information.view == 'class'%}
 		<div class="row" id="class">
 			<h2>Class {{information.teacher_info.form_class.className}}</h2>
 		</div>
 
-		<div class="row" id="studentlist" style="padding: 1%;">
-				<h5 style="font-size: 15px;">Student List</h5>
-			</div>
+		<div class="row" id="studentlist" style="margin-top: 0.5%;">
+			<h5 style="font-size: 15px;">Student List</h5>
+		</div>
 		
 		<div class="row" id="teacher">
 			<p>Taken by: {{information.teacher_info}}</p>
 		</div>
 
-		<table class="table table-bordered">
-			<tr class="table-info">
+		<table class="table table-hover table-bordered">
+			<tr>
 				<th style="width: 10%;">S/N</th>
 				<th style="width: 45%;">Student Name</th>
 				<th>Tools</th>
@@ -76,11 +88,12 @@
 			{% endfor %}
 		</table>
 
+	<!--this table will show up after clicking on manage grades-->
 	{% elif information.view == 'student' %}
 		<h2>Manage Grades</h2>
-		<table>
+		<table class="table table-bordered table-hover" id="manageGradesTable">
 		<tr>
-			<th>Title</th>
+			<th style="width: 70%;">Title</th>
 			<th>Year</th>
 		</tr>
 		{% for page in information.pages %}

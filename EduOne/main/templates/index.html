@@ -1,23 +1,207 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 
 {% block content %}
-	<!--Display calendar only for the current month and year, need to pull all events related to user and pass it here-->
-		<!--Calendar will be highlighted in red if there are any events, and upon clicking show information-->
-		Calendar!
+<!DOCTYPE html>
+<style>
+	.calendar {
+		position: relative;
+		margin-top: 14.5%;
+	}
+	.month {
+		width: 100%;
+		background: #1abc9c;
+		text-align: center;
+		padding: 1%;
+		height: 1%;
+	}
 
-		<!--These will return 2 sets of queries events and appointments, where details can be displayed upon
-			clicking on the boxes in red-->
-		{% for event in calendar.values %}
-			{{event}}
-		{% endfor %}
-		<!--End-->
+	.month ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	.month ul li {
+		color: white;
+		text-transform: uppercase;
+		list-style-type: none;
+		padding-top: 1%;
+	}
+
+	.month .prev {
+		float: left;
+	}
+
+	.month .next {
+		float: right;
+
+	}
+
+	.weekdays {
+		background-color: #ddd;
+		padding: 1%;
+		margin: 0;
+	}
+
+	.weekdays li {
+		display: inline-block;
+		text-align: center;
+		color: #666;
+		width: 12%;
+	}
+
+	.days {
+		background: #eee;
+		padding: 2%;
+		margin: 0;
+
+	}
+
+	.days li {
+		list-style-type: none;
+		display: inline-block;
+		text-align: center;
+		color: #777;
+		width: 12%;
+		margin-bottom: 2%;
+		font-size: 15px;
+		padding: 2%;
+	}
+
+		@media screen and (max-width:720px) {
+	.weekdays li, .days li {width: 13.1%;}
+	}
+
+	@media screen and (max-width: 420px) {
+	.weekdays li, .days li {width: 12.5%;}
+	.days li .active {padding: 2px;}
+	}
+
+	@media screen and (max-width: 290px) {
+	.weekdays li, .days li {width: 12.2%;}
+	}
+
+	.btn-outline-success, .btn-primary {
+		width: 60%;
+		margin-bottom: 10%;
+	}
 
 
-	<h2>Announcements</h2>
-		{% for event in announcements  %}
-			<p>{{event.title}}</p>
-			<p>{{event.description}}</p>
-			<p>Date Posted: {{event.dateCreated}} </p>
-		{% endfor %}
+	.announcements {
+		position: relative;
+		margin-top: -4%;
 
+	}
+
+	.table-bordered th {
+		font-size: 23px;
+		border-top:1px solid #F6F6F6;
+		border-left: 1px solid #F6F6F6;
+		border-right: 1px solid #F6F6F6;
+
+	}
+	.dummy {
+		margin-bottom: 4%;
+	}
+
+	.title, .description, .dateposted{
+		/*top right bottom left*/
+		padding: 0% 0 1% 0;
+	}
+
+	.title {
+		font-size: 24px;
+	}
+
+	.description {
+		font-size: 15px;
+	}
+</style>
+<body>
+	<div class="container-fluid">
+			<div class="row">
+					<div class="col-md-5">
+							<div class="calendar">
+									<div class="month">
+										<ul>
+											<li class="prev">&#10094;</li>
+											<li class="next">&#10095;</li>
+											<li>April 2019</li>
+										</ul>
+									</div>
+						
+									<ul class="weekdays">
+										<li>Mo</li>
+										<li>Tu</li>
+										<li>We</li>
+										<li>Th</li>
+										<li>Fr</li>
+										<li>Sa</li>
+										<li>Su</li>
+									</ul>
+						
+									<ul class="days">
+										<li></li>
+										<li>1</li>
+										<li>2</li>
+										<li>3</li>
+										<li>4</li>
+										<li>5</li>
+										<li>6</li>
+										<li>7</li>
+										<li>8</li>
+										<li>9</li>
+										<li onclick="showDetails(10)"><span class="active">10</span></li>
+										<li>11</li>
+										<li>12</li>
+										<li>13</li>
+										<li>14</li>
+										<li>15</li>
+										<li>16</li>
+										<li>17</li>
+										<li>18</li>
+										<li>19</li>
+										<li>20</li>
+										<li>21</li>
+										<li>22</li>
+										<li>23</li>
+										<li>24</li>
+										<li>25</li>
+										<li>26</li>
+										<li>27</li>
+										<li>28</li>
+										<li>29</li>
+										<li>30</li>
+										<li>31</li>
+									</ul>
+								</div>
+					</div>
+		
+					<div class="col-md-7 text-center" style="margin-top: 3.5%;">
+						<div class="announcements">
+								<table class="table table-bordered">
+									<tr><th>Announcements</th></tr>
+									{% for event in announcements  %}
+										<tr>
+											<td style="text-align: left;">	
+											<div class="title">{{event.title}}</div>
+											<div class="description"><i>{{event.description}}</i></div>
+											<div class="dateposted">Date Posted: {{event.dateCreated}}</div> 
+											<div class="dummy"></div>
+											{% endfor %}
+											</td>
+											
+										</tr>
+								</table>
+						</div>
+								
+								
+						</div>
+							
+					</div>
+				</div>
+	</div>
+</body>
+
+
+</html>
 {% endblock %}

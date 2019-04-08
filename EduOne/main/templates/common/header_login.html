@@ -14,31 +14,50 @@
 
 </head>
 
-<body class="body" style="background-color:#f6f6f6">
-	<img src="{% static 'logo/eduone.jpeg' %}" width="100" height="100" class="d-inline-block align-center" alt="">
-</body>
+<style>
+    .checked {
+        color: orange;
+    }
+
+    #footer1{
+		position: absolute;
+		bottom: -25%;
+		width: 100%;
+		right: 1%;
+		height: 60px;
+	}
+</style>
+
+<body>
+    <div class="container-fluid">
+            <!--<div class="row">
+                <div class="col-md-12 text-right">
+                    <p>Join us on telegram!</p>
+                </div>
+            </div>-->
+        <div class="row" style="margin-top: 1.5%;">
+            <div class="col-md-12 text-center">
+                <img src="{% static 'logo/eduone.png' %}" width="350" height="200" class="" alt="">
+            </div>
+        </div>
+    </div>
+
 
     <main role="main">
         {% block content %} {% endblock %}
     </main>
 
-    <footer class="container">
-        <div class="row">
-            <div class="col">
-                <i>NTU CZ3005 2018/19 Semester 1<br>Advance Software Engineering Project<br><b>Team ReFormed</b></i>
+    <footer id="footer1">
+            <div class="row" style="margin-top: 1%;">
+                <div class="col-md-12 text-center">
+                    <b>Team ReFormed</b><br>
+                    NTU CZ3005 2018/19 Semester 1&ensp;Advance Software Engineering Project
+                </div>
             </div>
-            <div class="col text-right">
-                Join us on telegram!
-            </div>
-        </div>
     </footer>
+
 </body>
 
-<style>
-    .checked {
-    color: orange;
-}
-</style>
 
 
 </html>				
