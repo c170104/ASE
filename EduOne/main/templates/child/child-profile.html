@@ -14,28 +14,39 @@
         h2 {
             color: white;
         }
+        .col-sm-10 a :hover{
+            text-decoration: none;
+        }
 </style>
 
 <body>
     {% block content %}
-    <div class="container-fluid">
+    <div class="container">
             <div class="row" style="position: relative; margin-top: 1%;">
                     <div class="col-sm-12">
                             <h2 style="text-align: center;">My Child's Profile</h2>
                             
                     </div>
             </div>
-        <div class="col-sm-1"></div>
-        <div class="col-sm-10">
-            <table align="center">
-                    <tr><td><img src="/static/logo/profilepic.jpeg" width="150" height="150"></td></tr>
-                    <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
-                    <tr><td>Class: {{childStudent.form_class}}</td></tr>
-                    <tr><td>Date Of Birth: -</td></tr>
-                    <tr><td>Address: {{childStudent.home_address}}</td></tr>
-                    <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
-                </table>
+        <div class="row" style="margin-left: 20%;">
+                        <div class="col-sm-1"></div>
+                        <div class="column">
+                                        <tr><td><img src="/static/logo/profilepic.jpeg" width="150" height="150"></td></tr>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="column">
+                                <table>
+                                        
+                                         <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
+                                        <tr><td>Class: {{childStudent.form_class}}</td></tr>
+                                         <tr><td>Date Of Birth: -</td></tr>
+                                         <tr><td>Address: {{childStudent.home_address}}</td></tr>
+                                         <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
+                                </table>
+                        </div>
         </div>
+        
+        
     </br></br>
 
         <div class="row">
@@ -81,13 +92,13 @@
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
                         <h3 style ="text-align: center;">Teacher's Comments</h3>
-                        <table align="center">
+                        <table align="center" class='table table-bordered'>
                                 <tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
                                 {% for c in COMMENTLISTSLICED %}
                                 <tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
                                 {% endfor%}
-                                <tr><td><a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a></td></tr>
-                            </table>
+                        </table>
+                        <a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a>
                     </div>
         </div>
             
