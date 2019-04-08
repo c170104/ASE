@@ -1,50 +1,52 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 {% load widget_tweaks %}
 {% load static from staticfiles %}
-
+{% block content %}
 <!DOCTYPE html>
 <html>
 
 <head>
-        <meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 
 <style>
-    h2 {
-            color: white;
-        }
+
 </style>
 
 <body>
-    {% block content %}
-    <div class= "container">
-        <div class="row" style="position: relative; margin-top: 1%;">
-                <div class="col-sm-12">
-                        <h2 style="text-align: center ;">My Child's Profile</h2>
-                </div>
+
+    <div class= "container-fluid">
+        <div class="row" style="padding:1%;">
+            <div class="col-md-12 text-center">
+                <h2>My Child's Profile</h2>
+            </div>
         </div>
-        <div class= "row" style="margin-left: 20%;">
-                        <div class="col-sm-1"></div>
-                        <div class="column" >
-                                        <img src="/static/logo/profilepic.jpeg" width="150" height="150" >
+
+            <table class="table table-bordered">
+                {% for child in CHILDLIST %}
+                <tr>
+                    <td width="10%;" style="border-right: 1px solid #f6f6f6;">
+                        <img src="/static/logo/profilepic.jpeg" width="150" height="150" class="childImage">
+                    </td>
+                    <td>
+                        Name: {{child.first_name}} {{child.last_name}}<br>
+                        Class: {{child.form_class}}<br>
+                        Date Of Birth: 14/02/1995<br>
+                        Address: {{child.home_address}}<br>
+                        Emergency Contact: {{child.emergency_contact}}<br>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <a href="{% url 'child-profile' id=child.nric %}"> Detailed View </a>
+                            </div>
                         </div>
-                        <div class="col-sm-1"></div>
-                        <div class="column" >
-                        <table>
-                                        {% for child in CHILDLIST %}
-                                        <tr><td>Name: {{child.first_name}} {{child.last_name}}</td></tr>
-                                        <tr><td>Class: {{child.form_class}}</td></tr>
-                                        <tr><td>Date Of Birth: 14/02/1995</td></tr>
-                                        <tr><td>Address: {{child.home_address}}</td></tr>
-                                        <tr><td>Emergency Contact: {{child.emergency_contact}}</td></tr>
-                                        <tr><td><a href="{% url 'child-profile' id=child.nric %}"> Detailed View </a></td></tr>
-                                    {% endfor %}
-                        </table>
-                        </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
                 
-        </div>
     </div>
-    {% endblock %}
+
 </body>
 </html>
+{% endblock %}

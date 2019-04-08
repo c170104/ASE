@@ -1,4 +1,4 @@
-{% extends "common/header.html" %}
+{% include "common/header.html" %}
 {% load widget_tweaks %}
 {% load static from staticfiles %}
 
@@ -8,105 +8,149 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="{% static 'common/js/jquery.bootstrap.modal.forms.js' %}"></script>
+		<script src="{% static 'common/js/bootstrap.bundle.min.js' %}"></script>
 </head>
 
 <style>
-        h2 {
-            color: white;
-        }
-        .col-sm-10 a :hover{
-            text-decoration: none;
-        }
+	h2 {
+		padding: 1%;
+	}
+
+	#imageid {
+		border:1px solid black;
+		border-bottom: none;
+		/*top right bottom left*/
+		border-radius: 10px 10px 0 0;
+	}
+
+	#imageid img {
+		margin-top: 5%;
+	}
+
+	#detailsid {
+		border:1px solid black;
+		border-top: none;
+		border-radius: 0 0 10px 10px;
+		padding: 5%;
+	}
+
+	.text {
+		margin-left: -10%;	
+	}
+
+	.table-bordered tr td {
+		padding: 1%;
+	}
+
+	.table-bordered tr th {
+		padding: 1%;
+	}
+
+	#footer1 {
+		position: absolute;
+		top: 150%;
+
+	}
 </style>
 
 <body>
     {% block content %}
-    <div class="container">
-            <div class="row" style="position: relative; margin-top: 1%;">
-                    <div class="col-sm-12">
-                            <h2 style="text-align: center;">My Child's Profile</h2>
-                            
-                    </div>
-            </div>
-        <div class="row" style="margin-left: 20%;">
-                        <div class="col-sm-1"></div>
-                        <div class="column">
-                                        <tr><td><img src="/static/logo/profilepic.jpeg" width="150" height="150"></td></tr>
-                        </div>
-                        <div class="col-sm-1"></div>
-                        <div class="column">
-                                <table>
-                                        
-                                         <tr><td>Name: {{childStudent.first_name}} {{childStudent.last_name}}</td></tr>
-                                        <tr><td>Class: {{childStudent.form_class}}</td></tr>
-                                         <tr><td>Date Of Birth: -</td></tr>
-                                         <tr><td>Address: {{childStudent.home_address}}</td></tr>
-                                         <tr><td>Emergency Contact: {{childStudent.emergency_contact}}</td></tr>
-                                </table>
-                        </div>
-        </div>
-        
-        
-    </br></br>
+    <div class="container-fluid">
+        <div class="row">
+			<div class="col-sm-12 text-center">
+				<h2>My Child's Profile</h2>   
+			</div>
+		</div>
+		
 
         <div class="row">
-                <div class="col-sm-1" ></div>
-                <div class="col-sm-10">
-                        <h2 style ="text-align: center;">Report Book</h2>
-                        <table align="center">
-                                <tr><th>Examinations: </th><th>Date: </th></tr>
-                                {% for rcl in REPORTCARDLIST %}
-                                <tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
-                                {% endfor %}
-                            </table>
-                </div>
-        </div>
-    </br></br> </br></br>
+			<div class="col-sm-1"></div>
+			<div class="col-sm-3 text-center" id="imageid">
+				<img src="/static/logo/profilepic.jpeg" width="150" height="150">				
+			</div>
+			<div class="col-sm-8">
+				<table class=" table table-bordered">
+					<tr><th colspan="2">Report Book</th></tr>
+						<tr><th>Examinations: </th><th>Date: </th></tr>
+						{% for rcl in REPORTCARDLIST %}
+						<tr><td><a href="{% url 'report-card-page' id=childStudent.nric rcid=rcl.id %}">{{ rcl.examination_type }}</a></td><td>{{rcl.exam_date}}</td></tr>
+						{% endfor %}
+				</table>
+			</div>
+		</div>
 
-        <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-10">
-                        <h3 style ="text-align: center;">Student's Attendance</h3>
-                        <table align="center">
-                                <tr><th>Date</th><th>Present</th></tr>
-                                {% for i in WEEKLIST %}
-                                <tr>
-                                 <td>{{i}}</td>
-                                 {% for j in ATTENDANCELIST %}
-                                  {% if i == j.date %}
-                                 <td>Yes</td>
-                                 {% endif %}
-                                 {% endfor %}
-                                 </tr>
-                                 {% endfor %}
-                <tr><td><a href="{% url 'child-attendance' id=childStudent.nric %}" >View full attendance records</a></td></tr>
-                      </table>
-                </div>
-                </div>
+		<div class="row">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-3" id="detailsid">
+				<div class="text">
+						Name: {{childStudent.first_name}} {{childStudent.last_name}}<br>
+						Class: {{childStudent.form_class}}<br>
+						Address: {{childStudent.home_address}}<br>
+						Emergency Contact: {{childStudent.emergency_contact}}<br>
+				</div>
 
-        </div>
-        
-    </br></br> </br></br>
-        
-        <div class="row">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-10">
-                        <h3 style ="text-align: center;">Teacher's Comments</h3>
-                        <table align="center" class='table table-bordered'>
-                                <tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
-                                {% for c in COMMENTLISTSLICED %}
-                                <tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
-                                {% endfor%}
-                        </table>
-                        <a href ="{% url 'child-comments' id=childStudent.nric %}"> View past comments</a>
-                    </div>
-        </div>
-            
+			</div>
+			
+			<div class="col-sm-8">
+				<table class='table table-bordered'>
+					<tr>
+						<th colspan="3">{{childStudent.first_name}} {{childStudent.last_name}}'s comments</th>
+					</tr>
+						<tr><th>Teacher</th><th>Comment</th><th>Date</th></tr>
+						{% for c in COMMENTLISTSLICED %}
+						<tr><td>{{c.commentBy}}</td><td>{{c.comment}}</td><td>{{c.commentDate}}</td></tr>
+						{% endfor%}
+				</table>
+				<button class="viewComments btn btn-primary" btn data-id="{% url 'child-comments' id=childStudent.nric %}" data-toggle="tooltip" title="Delete grades" data-placement="bottom">View past comments</button>
+			
+			</div>
+		</div>
 
-    </div>        
-    {% endblock %}
+		<div class="row" style="margin-top: 5%;">
+			<div class="col-sm-1"></div>
+			<div class="col-sm-11">
+				<table class="table table-bordered">
+					<tr><th colspan="7">Attendance for the week 08/04/2019 - 12/04/2019</th></tr>
+						
+						<tr>
+						{% for i in WEEKLIST %}
+							<td>{{i}}</td>
+						{% endfor %}
+						</tr>
+
+						<tr>
+							{% for j in PRESENTLIST %}
+								<td>{{j}}</td>
+							{% endfor %}
+						</tr>
+					</table>		
+
+							
+
+							
+			<a href="{% url 'child-attendance' id=childStudent.nric %}" role="button" class="btn btn-primary">View full attendance records</a>
+					
+			</div>
+		</div>
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+        </div>
+
+      
+ 
 </body>
+<script>
+	$(".viewComments").each(function () {
+		$(this).modalForm({formURL: $(this).data('id')});
+	});
+</script>
 </html>
+{% endblock %}
 
 
 
