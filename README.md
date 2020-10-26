@@ -13,7 +13,7 @@ pip install pipenv
 Clone or download the [repository](https://github.com/c170104/ASE).
 
 ```bash
-git clone https://github.com/ibenrawkss/ASE
+git clone https://github.com/c170104/ASE
 ```
 
 Change directory into the folder ASE.
