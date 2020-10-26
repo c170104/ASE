@@ -10,7 +10,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install [pipenv
 pip install pipenv
 ```
 
-Clone or download the [repository](https://github.com/ibenrawkss/ASE).
+Clone or download the [repository](https://github.com/c170104/ASE).
 
 ```bash
 git clone https://github.com/ibenrawkss/ASE
