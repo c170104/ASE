@@ -166,13 +166,14 @@ def childprofile(request, id=None):
 	attendance = Attendance.objects.filter(student=childStudent)
 	ATTENDANCELIST = []
 	for i in attendance:
+		
 		ATTENDANCELIST.append(i)
 	ATTENDANCELIST.sort(key=lambda r: r.date, reverse = True)
 	# ATTENDANCELISTSLICED = ATTENDANCELIST[0:7]
 	WEEKLIST = [] # stores the current week monday to sunday
 	now = datetime.datetime.now() # get todays date
-	print(now.weekday()) # monday : 0 sunday : 6
-	print(now.date())
+	# print(now.weekday()) # monday : 0 sunday : 6
+	# print(now.date())
 	WEEKLIST.append(now.date())
 	toSun = 6-int(now.weekday()) # how many extra days to sunday
 	forMon = int(now.weekday())
@@ -182,6 +183,13 @@ def childprofile(request, id=None):
 	for i in range(toSun):
 		WEEKLIST.append(now.date()+timedelta(days=i+1))
 	WEEKLIST.sort()
+	PRESENTLIST = ["Not Present","Not Present","Not Present","Not Present","Not Present","Not Present","Not Present"]
+	for i in range(len(WEEKLIST)):
+		for j in range(len(ATTENDANCELIST)):
+			if ATTENDANCELIST[j].date == WEEKLIST[i]:
+				PRESENTLIST[i] = "Present"
+				break
+
 	DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 	# print(WEEKLIST)
 	# for i in range(toSun):
@@ -208,6 +216,7 @@ def childprofile(request, id=None):
 		'ATTENDANCELIST' : ATTENDANCELIST,
 		'WEEKLIST' : WEEKLIST,
 		'DAYS':DAYS,
+		'PRESENTLIST' : PRESENTLIST,
 		# 'ATTENDANCELISTSLICED' : ATTENDANCELISTSLICED,
 		'COMMENTLIST' : COMMENTLIST,
 		'COMMENTLISTSLICED' : COMMENTLISTSLICED,
